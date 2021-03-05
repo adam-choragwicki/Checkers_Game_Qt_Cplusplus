@@ -19,6 +19,7 @@ private:
     Ui::GameWindow *ui;
 
     QGraphicsScene m_Scene;
+    QGraphicsRectItem* m_pBoard = nullptr;
 
     void DrawBoard();
 };
