@@ -16,6 +16,7 @@ GameWindow::GameWindow(QWidget *parent)
     m_Scene.setBackgroundBrush(QBrush(BACKGROUND_COLOR));
 
     DrawBoard();
+    PopulateBoard();
 }
 
 GameWindow::~GameWindow()
@@ -58,6 +59,39 @@ void GameWindow::DrawBoard()
 
             tile->setPen(QPen(tile->brush().color()));
             m_Scene.addItem(tile);
+        }
+    }
+}
+
+void GameWindow::PopulateBoard()
+{
+    const QColor RED_PIECE_COLOR(220, 0, 0);
+    const QColor BLACK_PIECE_COLOR(50, 50, 50);
+    const QColor RED_PIECE_OUTLINE_COLOR(170, 0, 0);
+    const QColor BLACK_PIECE_OUTLINE_COLOR(0, 0, 0);
+    const int PIECE_SIZE = 80;
+    const int PIECE_OUTLINE_WIDTH = 0;
+    const int TILE_SIZE = 80;
+
+    for(int row = 0; row < 3; row++)
+    {
+        for(int column = 0; column < 8; column++)
+        {
+            QGraphicsEllipseItem* piece = new QGraphicsEllipseItem(column * TILE_SIZE, row * TILE_SIZE, PIECE_SIZE, PIECE_SIZE);
+            piece->setBrush(RED_PIECE_COLOR);
+            piece->setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+            m_Scene.addItem(piece);
+        }
+    }
+
+    for(int row = 5; row < 8; row++)
+    {
+        for(int column = 0; column < 8; column++)
+        {
+            QGraphicsEllipseItem* piece = new QGraphicsEllipseItem(column * TILE_SIZE, row * TILE_SIZE, PIECE_SIZE, PIECE_SIZE);
+            piece->setBrush(BLACK_PIECE_COLOR);
+            piece->setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+            m_Scene.addItem(piece);
         }
     }
 }

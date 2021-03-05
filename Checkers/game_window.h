@@ -22,4 +22,5 @@ private:
     QGraphicsRectItem* m_pBoard = nullptr;
 
     void DrawBoard();
+    void PopulateBoard();
 };
