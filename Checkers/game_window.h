@@ -2,6 +2,7 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include "common.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -23,4 +24,6 @@ private:
 
     void DrawBoard();
     void PopulateBoard();
+    std::vector<std::pair<int, int> > GenerateAllValidGameTilesCoordinates();
+    std::vector<std::pair<int, int> > GenerateStartingPiecesCoordinates(PLAYER player);
 };

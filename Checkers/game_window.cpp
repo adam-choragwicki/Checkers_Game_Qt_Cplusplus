@@ -1,6 +1,10 @@
 #include "game_window.h"
 #include "./ui_game_window.h"
 #include <QGraphicsRectItem>
+#include <iostream>
+#include "piece.h"
+
+using std::cout;
 
 GameWindow::GameWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,6 +15,7 @@ GameWindow::GameWindow(QWidget *parent)
     setWindowState(Qt::WindowMaximized);
 
     ui->graphicsView->setScene(&m_Scene);
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
 
     const QColor BACKGROUND_COLOR(0, 160, 0);
     m_Scene.setBackgroundBrush(QBrush(BACKGROUND_COLOR));
@@ -63,35 +68,112 @@ void GameWindow::DrawBoard()
     }
 }
 
-void GameWindow::PopulateBoard()
+std::vector<std::pair<int, int>> GameWindow::GenerateAllValidGameTilesCoordinates()
 {
-    const QColor RED_PIECE_COLOR(220, 0, 0);
-    const QColor BLACK_PIECE_COLOR(50, 50, 50);
-    const QColor RED_PIECE_OUTLINE_COLOR(170, 0, 0);
-    const QColor BLACK_PIECE_OUTLINE_COLOR(0, 0, 0);
-    const int PIECE_SIZE = 80;
-    const int PIECE_OUTLINE_WIDTH = 0;
-    const int TILE_SIZE = 80;
+    std::vector<std::pair<int, int>> validGameTilesCoordinates;
 
-    for(int row = 0; row < 3; row++)
+    bool chooseEvenColumns = true;
+
+    for(int row = 1; row <= 8; row++)
     {
-        for(int column = 0; column < 8; column++)
+        for(int column = 1; column <= 8; column++)
         {
-            QGraphicsEllipseItem* piece = new QGraphicsEllipseItem(column * TILE_SIZE, row * TILE_SIZE, PIECE_SIZE, PIECE_SIZE);
-            piece->setBrush(RED_PIECE_COLOR);
-            piece->setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-            m_Scene.addItem(piece);
+            if(chooseEvenColumns)
+            {
+                if(column % 2 == 0)
+                {
+                    validGameTilesCoordinates.push_back(std::pair<int, int>(row, column));
+                }
+            }
+            else
+            {
+                if(column % 2 != 0)
+                {
+                    validGameTilesCoordinates.push_back(std::pair<int, int>(row, column));
+                }
+            }
+        }
+        chooseEvenColumns ^= true;
+    }
+
+    return validGameTilesCoordinates;
+}
+
+std::vector<std::pair<int, int>> GameWindow::GenerateStartingPiecesCoordinates(PLAYER player)
+{
+    std::vector<std::pair<int, int>> startingPiecesCoordinates;
+
+    if(player == PLAYER_LOWER)
+    {
+        bool chooseEvenColumns = false;
+
+        for(int row = 6; row <= 8; row++)
+        {
+            for(int column = 1; column <= 8; column++)
+            {
+                if(chooseEvenColumns)
+                {
+                    if(column % 2 == 0)
+                    {
+                        startingPiecesCoordinates.push_back(std::pair<int, int>(row, column));
+                    }
+                }
+                else
+                {
+                    if(column % 2 != 0)
+                    {
+                        startingPiecesCoordinates.push_back(std::pair<int, int>(row, column));
+                    }
+                }
+            }
+            chooseEvenColumns ^= true;
+        }
+    }
+    else if(player == PLAYER_UPPER)
+    {
+        bool chooseEvenColumns = true;
+
+        for(int row = 1; row <= 3; row++)
+        {
+            for(int column = 1; column <= 8; column++)
+            {
+                if(chooseEvenColumns)
+                {
+                    if(column % 2 == 0)
+                    {
+                        startingPiecesCoordinates.push_back(std::pair<int, int>(row, column));
+                    }
+                }
+                else
+                {
+                    if(column % 2 != 0)
+                    {
+                        startingPiecesCoordinates.push_back(std::pair<int, int>(row, column));
+                    }
+                }
+            }
+            chooseEvenColumns ^= true;
         }
     }
 
-    for(int row = 5; row < 8; row++)
+    return startingPiecesCoordinates;
+}
+
+void GameWindow::PopulateBoard()
+{
+    std::vector<std::pair<int, int>> allValidGameTilesCoordinates = GenerateAllValidGameTilesCoordinates();
+    std::vector<std::pair<int, int>> playerLowerStartingPiecesCoordinates = GenerateStartingPiecesCoordinates(PLAYER_LOWER);
+    std::vector<std::pair<int, int>> playerUpperStartingPiecesCoordinates = GenerateStartingPiecesCoordinates(PLAYER_UPPER);
+
+    for(auto pieceCoordinates : playerUpperStartingPiecesCoordinates)
     {
-        for(int column = 0; column < 8; column++)
-        {
-            QGraphicsEllipseItem* piece = new QGraphicsEllipseItem(column * TILE_SIZE, row * TILE_SIZE, PIECE_SIZE, PIECE_SIZE);
-            piece->setBrush(BLACK_PIECE_COLOR);
-            piece->setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-            m_Scene.addItem(piece);
-        }
+        Piece* piece = new Piece(pieceCoordinates, PLAYER_UPPER);
+        m_Scene.addItem(piece);
+    }
+
+    for(auto pieceCoordinates : playerLowerStartingPiecesCoordinates)
+    {
+        Piece* piece = new Piece(pieceCoordinates, PLAYER_LOWER);
+        m_Scene.addItem(piece);
     }
 }

@@ -29,9 +29,12 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
+        common.h
         game_window.cpp
         game_window.h
         game_window.ui
+        piece.cpp
+        piece.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
