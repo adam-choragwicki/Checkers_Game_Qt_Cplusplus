@@ -24,6 +24,4 @@ private:
 
     void DrawBoard();
     void PopulateBoard();
-    std::vector<std::pair<int, int> > GenerateAllValidGameTilesCoordinates();
-    std::vector<std::pair<int, int> > GenerateStartingPiecesCoordinates(PLAYER player);
 };

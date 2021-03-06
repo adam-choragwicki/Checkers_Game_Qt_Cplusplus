@@ -35,6 +35,8 @@ set(PROJECT_SOURCES
         game_window.ui
         piece.cpp
         piece.h
+        logic.cpp
+        logic.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
