@@ -37,6 +37,10 @@ set(PROJECT_SOURCES
         piece.h
         logic.cpp
         logic.h
+        board.cpp
+        board.h
+        tile.cpp
+        tile.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

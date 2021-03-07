@@ -31,11 +31,11 @@ std::vector<std::pair<int, int>> Logic::GenerateAllValidGameTilesCoordinates()
     return validGameTilesCoordinates;
 }
 
-std::vector<std::pair<int, int>> Logic::GenerateStartingPiecesCoordinates(PLAYER player)
+std::vector<std::pair<int, int>> Logic::GenerateStartingPiecesCoordinates(Player player)
 {
     std::vector<std::pair<int, int>> startingPiecesCoordinates;
 
-    if(player == PLAYER_LOWER)
+    if(player == Player::Down)
     {
         bool chooseEvenColumns = false;
 
@@ -61,7 +61,7 @@ std::vector<std::pair<int, int>> Logic::GenerateStartingPiecesCoordinates(PLAYER
             chooseEvenColumns ^= true;
         }
     }
-    else if(player == PLAYER_UPPER)
+    else if(player == Player::Up)
     {
         bool chooseEvenColumns = true;
 
