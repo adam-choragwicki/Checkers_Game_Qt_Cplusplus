@@ -7,12 +7,17 @@ class Piece : public QGraphicsEllipseItem
 {
 public:
     Piece(std::pair<int, int>& coordinates, Player player);
+    void MoveToTile(int row, int column);
+    int GetRow() {return m_Row;}
+    int GetColumn() {return m_Column;}
+
+    static Piece* GetCurrentlyChosenPiece() {return m_CurrentlyChosenPiece;}
 
 private:
-    static Piece* m_PieceCurrentlyChosen;
+    static Piece* m_CurrentlyChosenPiece;
 
-    int row;
-    int column;
+    int m_Row;
+    int m_Column;
 
     const int PIECE_OFFSET_X = 15;
     const int PIECE_OFFSET_Y = 15;
@@ -31,4 +36,5 @@ private:
 
     void Clicked();
     void Unclicked();
+    void ResetCurrentlyChosenPiece();
 };

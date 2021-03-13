@@ -6,6 +6,7 @@ class Board : public QGraphicsRectItem
 {
 public:
     Board(QGraphicsScene& scene);
+    static void ProcessTileClicked(int row, int column, bool tileIsPlayable);
 
 private:
     const int BOARD_POSITION_X = 0;
