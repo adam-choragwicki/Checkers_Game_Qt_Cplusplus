@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include "common.h"
+#include "board.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -13,14 +14,15 @@ class GameWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    GameWindow(QWidget *parent = nullptr);
+    GameWindow(QWidget* parent = nullptr);
     ~GameWindow();
 
 private:
-    Ui::GameWindow *ui;
+    Ui::GameWindow* ui;
 
     QGraphicsScene m_Scene;
 
-    void DrawBoard();
-    void PopulateBoard();
+    Board* m_pBoard = nullptr;
+
+    void CreateAndPopulateBoard(QGraphicsScene& scene);
 };
