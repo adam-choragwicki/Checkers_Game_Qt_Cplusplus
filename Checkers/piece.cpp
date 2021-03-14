@@ -4,15 +4,12 @@
 
 Piece* Piece::m_ActivePiece = nullptr;
 
-Piece::Piece(std::pair<int, int>& coordinates, Player player) : m_Player(player)
+Piece::Piece(Coordinates coordinates, Player player) : m_Coordinates(coordinates.Row(), coordinates.Column()), m_Player(player)
 {
-    QGraphicsEllipseItem::setRect((coordinates.second - 1) * Common::TILE_SIZE + PIECE_OFFSET_X,
-                                  (coordinates.first - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y,
+    QGraphicsEllipseItem::setRect((coordinates.Column() - 1) * Common::TILE_SIZE + PIECE_OFFSET_X,
+                                  (coordinates.Row() - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y,
                                   PIECE_SIZE,
                                   PIECE_SIZE);
-
-    m_Row = coordinates.first;
-    m_Column = coordinates.second;
 
     if(m_Player == Player::Down)
     {
@@ -41,13 +38,13 @@ void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
 void Piece::Clicked()
 {
-    qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Row, m_Column);
+    qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
     setPen(QPen(QBrush(PIECE_ACTIVE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
 }
 
 void Piece::Unclicked()
 {
-    qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Row, m_Column);
+    qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
 
     if(m_Player == Player::Down)
     {
@@ -71,8 +68,7 @@ void Piece::MoveToTile(int row, int column)
 {
     qDebug("%s=(%d,%d)", __FUNCTION__, row, column);
 
-    m_Row = row;
-    m_Column = column;
+    m_Coordinates.Modify(row, column);
 
     QGraphicsEllipseItem::setRect((column - 1) * Common::TILE_SIZE + PIECE_OFFSET_X,
                                   (row - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y,

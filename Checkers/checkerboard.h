@@ -17,7 +17,7 @@ private:
     const int BOARD_OUTLINE_WIDTH = 10;
     const QColor BOARD_OUTLINE_COLOR{150, 100, 40};
 
-    static std::map<std::pair<int, int>, Piece*> m_PiecesPlacement;
+    static std::map<Coordinates, Piece*> m_PiecesPlacement;
 
     void CreateTiles(QGraphicsScene& scene);
     void CreatePieces(QGraphicsScene& scene);

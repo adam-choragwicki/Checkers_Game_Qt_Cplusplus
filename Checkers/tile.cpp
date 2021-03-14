@@ -3,7 +3,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "checkerboard.h"
 
-Tile::Tile(int row, int column) : m_Row(row), m_Column(column)
+Tile::Tile(int row, int column) : m_Coordinates(row, column)
 {
     QGraphicsRectItem::setRect((column - 1) * Common::TILE_SIZE,
                                (row - 1) * Common::TILE_SIZE,
@@ -38,6 +38,6 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        Checkerboard::ProcessTileClicked(m_Row, m_Column, m_Playable);
+        Checkerboard::ProcessTileClicked(m_Coordinates.Row(), m_Coordinates.Column(), m_Playable);
     }
 }

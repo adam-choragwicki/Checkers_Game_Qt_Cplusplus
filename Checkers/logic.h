@@ -1,12 +1,13 @@
 #pragma once
 #include <vector>
 #include "common.h"
+#include "coordinates.h"
 
 class Logic
 {
 public:
     Logic() = delete;
     Logic(const Logic&) = delete;
-    static std::vector<std::pair<int, int> > GenerateAllValidGameTilesCoordinates();
-    static std::vector<std::pair<int, int> > GenerateStartingPiecesCoordinates(Player player);
+    static std::vector<Coordinates> GenerateAllValidGameTilesCoordinates();
+    static std::vector<Coordinates> GenerateStartingPiecesCoordinates(Player player);
 };

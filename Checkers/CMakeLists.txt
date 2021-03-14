@@ -41,6 +41,8 @@ set(PROJECT_SOURCES
         checkerboard.h
         tile.cpp
         tile.h
+        coordinates.cpp
+        coordinates.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

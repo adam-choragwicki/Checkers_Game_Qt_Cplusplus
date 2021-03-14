@@ -2,22 +2,22 @@
 
 #include <QGraphicsEllipseItem>
 #include "common.h"
+#include "coordinates.h"
 
 class Piece : public QGraphicsEllipseItem
 {
 public:
-    Piece(std::pair<int, int>& coordinates, Player player);
+    Piece(Coordinates coordinates, Player player);
     void MoveToTile(int row, int column);
-    int GetRow() {return m_Row;}
-    int GetColumn() {return m_Column;}
+    int Row() const {return m_Coordinates.Row();}
+    int Column() const {return m_Coordinates.Column();}
 
     static Piece* GetActivePiece() {return m_ActivePiece;}
 
 private:
     static Piece* m_ActivePiece;
 
-    int m_Row;
-    int m_Column;
+    Coordinates m_Coordinates;
 
     const int PIECE_OFFSET_X = 15;
     const int PIECE_OFFSET_Y = 15;

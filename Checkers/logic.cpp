@@ -1,8 +1,8 @@
 #include "logic.h"
 
-std::vector<std::pair<int, int>> Logic::GenerateAllValidGameTilesCoordinates()
+std::vector<Coordinates> Logic::GenerateAllValidGameTilesCoordinates()
 {
-    std::vector<std::pair<int, int>> validGameTilesCoordinates;
+    std::vector<Coordinates> validGameTilesCoordinates;
 
     bool chooseEvenColumns = true;
 
@@ -14,14 +14,14 @@ std::vector<std::pair<int, int>> Logic::GenerateAllValidGameTilesCoordinates()
             {
                 if(column % 2 == 0)
                 {
-                    validGameTilesCoordinates.push_back(std::pair<int, int>(row, column));
+                    validGameTilesCoordinates.push_back(Coordinates(row, column));
                 }
             }
             else
             {
                 if(column % 2 != 0)
                 {
-                    validGameTilesCoordinates.push_back(std::pair<int, int>(row, column));
+                    validGameTilesCoordinates.push_back(Coordinates(row, column));
                 }
             }
         }
@@ -31,9 +31,9 @@ std::vector<std::pair<int, int>> Logic::GenerateAllValidGameTilesCoordinates()
     return validGameTilesCoordinates;
 }
 
-std::vector<std::pair<int, int>> Logic::GenerateStartingPiecesCoordinates(Player player)
+std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
 {
-    std::vector<std::pair<int, int>> startingPiecesCoordinates;
+    std::vector<Coordinates> startingPiecesCoordinates;
 
     if(player == Player::Down)
     {
@@ -47,14 +47,14 @@ std::vector<std::pair<int, int>> Logic::GenerateStartingPiecesCoordinates(Player
                 {
                     if(column % 2 == 0)
                     {
-                        startingPiecesCoordinates.push_back(std::pair<int, int>(row, column));
+                        startingPiecesCoordinates.push_back(Coordinates(row, column));
                     }
                 }
                 else
                 {
                     if(column % 2 != 0)
                     {
-                        startingPiecesCoordinates.push_back(std::pair<int, int>(row, column));
+                        startingPiecesCoordinates.push_back(Coordinates(row, column));
                     }
                 }
             }
@@ -73,14 +73,14 @@ std::vector<std::pair<int, int>> Logic::GenerateStartingPiecesCoordinates(Player
                 {
                     if(column % 2 == 0)
                     {
-                        startingPiecesCoordinates.push_back(std::pair<int, int>(row, column));
+                        startingPiecesCoordinates.push_back(Coordinates(row, column));
                     }
                 }
                 else
                 {
                     if(column % 2 != 0)
                     {
-                        startingPiecesCoordinates.push_back(std::pair<int, int>(row, column));
+                        startingPiecesCoordinates.push_back(Coordinates(row, column));
                     }
                 }
             }
