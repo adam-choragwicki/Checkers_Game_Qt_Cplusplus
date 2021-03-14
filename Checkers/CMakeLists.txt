@@ -37,8 +37,8 @@ set(PROJECT_SOURCES
         piece.h
         logic.cpp
         logic.h
-        board.cpp
-        board.h
+        checkerboard.cpp
+        checkerboard.h
         tile.cpp
         tile.h
 )

@@ -1,7 +1,7 @@
 #include "tile.h"
 #include <QPen>
 #include <QGraphicsSceneMouseEvent>
-#include "board.h"
+#include "checkerboard.h"
 
 Tile::Tile(int row, int column) : m_Row(row), m_Column(column)
 {
@@ -38,6 +38,6 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        Board::ProcessTileClicked(m_Row, m_Column, m_Playable);
+        Checkerboard::ProcessTileClicked(m_Row, m_Column, m_Playable);
     }
 }

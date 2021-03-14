@@ -25,6 +25,6 @@ GameWindow::~GameWindow()
 
 void GameWindow::CreateAndPopulateBoard(QGraphicsScene& scene)
 {
-    m_pBoard = new Board(scene);
+    m_pBoard = new Checkerboard(scene);
     m_Scene.addItem(m_pBoard);
 }

@@ -1,13 +1,13 @@
-#include "board.h"
+#include "checkerboard.h"
 #include "logic.h"
 #include "tile.h"
 #include <QPen>
 #include <QGraphicsScene>
 #include <QDebug>
 
-std::map<std::pair<int, int>, Piece*> Board::m_PiecesPlacement;
+std::map<std::pair<int, int>, Piece*> Checkerboard::m_PiecesPlacement;
 
-Board::Board(QGraphicsScene& scene)
+Checkerboard::Checkerboard(QGraphicsScene& scene)
 {
     QGraphicsRectItem::setRect(BOARD_POSITION_X, BOARD_POSITION_Y, BOARD_SIZE, BOARD_SIZE);
     setPen(QPen(BOARD_OUTLINE_COLOR, BOARD_OUTLINE_WIDTH));
@@ -16,7 +16,7 @@ Board::Board(QGraphicsScene& scene)
     CreatePieces(scene);
 }
 
-void Board::CreateTiles(QGraphicsScene& scene)
+void Checkerboard::CreateTiles(QGraphicsScene& scene)
 {
     for(int row = 1; row <= 8; row++)
     {
@@ -29,7 +29,7 @@ void Board::CreateTiles(QGraphicsScene& scene)
     }
 }
 
-void Board::CreatePieces(QGraphicsScene& scene)
+void Checkerboard::CreatePieces(QGraphicsScene& scene)
 {
     std::vector<std::pair<int, int>> playerLowerStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::Down);
     std::vector<std::pair<int, int>> playerUpperStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::Up);
@@ -49,7 +49,7 @@ void Board::CreatePieces(QGraphicsScene& scene)
     }
 }
 
-void Board::ProcessTileClicked(const int row, const int column, bool tileIsPlayable)
+void Checkerboard::ProcessTileClicked(const int row, const int column, bool tileIsPlayable)
 {
     if(tileIsPlayable)
     {
@@ -72,18 +72,23 @@ void Board::ProcessTileClicked(const int row, const int column, bool tileIsPlaya
 
     if(activePiece && tileIsPlayable)
     {
-        qDebug("Active piece=(%d,%d)", activePiece->GetRow(), activePiece->GetColumn());
-        qDebug("Destination tile=(%d,%d)", row, column);
+        MovePiece(activePiece, row, column);
+    }
+}
 
-        if(m_PiecesPlacement.at(std::pair(row, column)) == nullptr)
-        {
-            m_PiecesPlacement[std::pair(activePiece->GetRow(), activePiece->GetColumn())] = nullptr;
-            m_PiecesPlacement[std::pair(row, column)] = activePiece;
-            activePiece->MoveToTile(row, column);
-        }
-        else
-        {
-            qDebug("Destination tile is not empty!");
-        }
+void Checkerboard::MovePiece(Piece* activePiece, const int row, const int column)
+{
+    qDebug("Active piece=(%d,%d)", activePiece->GetRow(), activePiece->GetColumn());
+    qDebug("Destination tile=(%d,%d)", row, column);
+
+    if(m_PiecesPlacement.at(std::pair(row, column)) == nullptr)
+    {
+        m_PiecesPlacement[std::pair(activePiece->GetRow(), activePiece->GetColumn())] = nullptr;
+        m_PiecesPlacement[std::pair(row, column)] = activePiece;
+        activePiece->MoveToTile(row, column);
+    }
+    else
+    {
+        qDebug("Destination tile is not empty!");
     }
 }

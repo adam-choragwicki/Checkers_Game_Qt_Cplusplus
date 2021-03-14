@@ -4,10 +4,10 @@
 #include <map>
 #include "piece.h"
 
-class Board : public QGraphicsRectItem
+class Checkerboard : public QGraphicsRectItem
 {
 public:
-    Board(QGraphicsScene& scene);
+    Checkerboard(QGraphicsScene& scene);
     static void ProcessTileClicked(const int row, const int column, bool tileIsPlayable);
 
 private:
@@ -21,4 +21,5 @@ private:
 
     void CreateTiles(QGraphicsScene& scene);
     void CreatePieces(QGraphicsScene& scene);
+    static void MovePiece(Piece* activePiece, const int row, const int column);
 };

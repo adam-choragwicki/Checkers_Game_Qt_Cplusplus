@@ -3,7 +3,7 @@
 #include <QMainWindow>
 #include <QGraphicsScene>
 #include "common.h"
-#include "board.h"
+#include "checkerboard.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -22,7 +22,7 @@ private:
 
     QGraphicsScene m_Scene;
 
-    Board* m_pBoard = nullptr;
+    Checkerboard* m_pBoard = nullptr;
 
     void CreateAndPopulateBoard(QGraphicsScene& scene);
 };
