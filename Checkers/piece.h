@@ -11,10 +11,10 @@ public:
     int GetRow() {return m_Row;}
     int GetColumn() {return m_Column;}
 
-    static Piece* GetCurrentlyChosenPiece() {return m_CurrentlyChosenPiece;}
+    static Piece* GetActivePiece() {return m_ActivePiece;}
 
 private:
-    static Piece* m_CurrentlyChosenPiece;
+    static Piece* m_ActivePiece;
 
     int m_Row;
     int m_Column;
@@ -28,7 +28,7 @@ private:
     const QColor BLACK_PIECE_OUTLINE_COLOR{0, 0, 0};
     const QColor RED_PIECE_COLOR{220, 0, 0};
     const QColor RED_PIECE_OUTLINE_COLOR{170, 0, 0};
-    const QColor PIECE_CHOSEN_OUTLINE_COLOR{255, 255, 0};
+    const QColor PIECE_ACTIVE_OUTLINE_COLOR{255, 255, 0};
 
     Player m_Player;
 
@@ -36,5 +36,5 @@ private:
 
     void Clicked();
     void Unclicked();
-    void ResetCurrentlyChosenPiece();
+    void ResetActivePiecePointer();
 };

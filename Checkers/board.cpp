@@ -1,10 +1,11 @@
 #include "board.h"
-#include "piece.h"
 #include "logic.h"
 #include "tile.h"
 #include <QPen>
 #include <QGraphicsScene>
 #include <QDebug>
+
+std::map<std::pair<int, int>, Piece*> Board::m_PiecesPlacement;
 
 Board::Board(QGraphicsScene& scene)
 {
@@ -22,6 +23,7 @@ void Board::CreateTiles(QGraphicsScene& scene)
         for(int column = 1; column <= 8; column++)
         {
             Tile* tile = new Tile(row, column);
+            m_PiecesPlacement[std::pair(row, column)] = nullptr;
             scene.addItem(tile);
         }
     }
@@ -35,34 +37,53 @@ void Board::CreatePieces(QGraphicsScene& scene)
     for(auto pieceCoordinates : playerLowerStartingPiecesCoordinates)
     {
         Piece* piece = new Piece(pieceCoordinates, Player::Down);
+        m_PiecesPlacement[std::pair(pieceCoordinates.first, pieceCoordinates.second)] = piece;
         scene.addItem(piece);
     }
 
     for(auto pieceCoordinates : playerUpperStartingPiecesCoordinates)
     {
         Piece* piece = new Piece(pieceCoordinates, Player::Up);
+        m_PiecesPlacement[std::pair(pieceCoordinates.first, pieceCoordinates.second)] = piece;
         scene.addItem(piece);
     }
 }
 
-void Board::ProcessTileClicked(int row, int column, bool tileIsPlayable)
+void Board::ProcessTileClicked(const int row, const int column, bool tileIsPlayable)
 {
     if(tileIsPlayable)
     {
-        qDebug("Clicked tile (%d,%d)->PLAYABLE", row, column);
+        if(m_PiecesPlacement.at(std::pair(row, column)) == nullptr)
+        {
+            qDebug("Clicked tile (%d,%d) is PLAYABLE and EMPTY", row, column);
+        }
+        else
+        {
+            qDebug("Clicked tile (%d,%d) is PLAYABLE and THERE IS PIECE ON IT", row, column);
+        }
     }
     else
     {
+        assert(m_PiecesPlacement.at(std::pair(row, column)) == nullptr);
         qDebug("Clicked tile (%d,%d)", row, column);
     }
 
-    Piece* pieceCurrentlyChosen = Piece::GetCurrentlyChosenPiece();
+    Piece* activePiece = Piece::GetActivePiece();
 
-    if(pieceCurrentlyChosen && tileIsPlayable)
+    if(activePiece && tileIsPlayable)
     {
-        qDebug("Currently chosen piece=(%d,%d)", pieceCurrentlyChosen->GetRow(), pieceCurrentlyChosen->GetColumn());
+        qDebug("Active piece=(%d,%d)", activePiece->GetRow(), activePiece->GetColumn());
         qDebug("Destination tile=(%d,%d)", row, column);
 
-        pieceCurrentlyChosen->MoveToTile(row, column);
+        if(m_PiecesPlacement.at(std::pair(row, column)) == nullptr)
+        {
+            m_PiecesPlacement[std::pair(activePiece->GetRow(), activePiece->GetColumn())] = nullptr;
+            m_PiecesPlacement[std::pair(row, column)] = activePiece;
+            activePiece->MoveToTile(row, column);
+        }
+        else
+        {
+            qDebug("Destination tile is not empty!");
+        }
     }
 }

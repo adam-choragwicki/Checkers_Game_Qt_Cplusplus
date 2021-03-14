@@ -2,7 +2,7 @@
 #include <QPen>
 #include <QGraphicsSceneMouseEvent>
 
-Piece* Piece::m_CurrentlyChosenPiece = nullptr;
+Piece* Piece::m_ActivePiece = nullptr;
 
 Piece::Piece(std::pair<int, int>& coordinates, Player player) : m_Player(player)
 {
@@ -30,22 +30,25 @@ void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        if(m_CurrentlyChosenPiece != nullptr)
+        if(m_ActivePiece != nullptr)
         {
-            m_CurrentlyChosenPiece->Unclicked();
+            m_ActivePiece->Unclicked();
         }
-        m_CurrentlyChosenPiece = this;
-        m_CurrentlyChosenPiece->Clicked();
+        m_ActivePiece = this;
+        m_ActivePiece->Clicked();
     }
 }
 
 void Piece::Clicked()
 {
-    setPen(QPen(QBrush(PIECE_CHOSEN_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+    qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Row, m_Column);
+    setPen(QPen(QBrush(PIECE_ACTIVE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
 }
 
 void Piece::Unclicked()
 {
+    qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Row, m_Column);
+
     if(m_Player == Player::Down)
     {
         setBrush(BLACK_PIECE_COLOR);
@@ -58,14 +61,18 @@ void Piece::Unclicked()
     }
 }
 
-void Piece::ResetCurrentlyChosenPiece()
+void Piece::ResetActivePiecePointer()
 {
-    m_CurrentlyChosenPiece = nullptr;
+    qDebug("Clearing active piece pointer");
+    m_ActivePiece = nullptr;
 }
 
 void Piece::MoveToTile(int row, int column)
 {
     qDebug("%s=(%d,%d)", __FUNCTION__, row, column);
+
+    m_Row = row;
+    m_Column = column;
 
     QGraphicsEllipseItem::setRect((column - 1) * Common::TILE_SIZE + PIECE_OFFSET_X,
                                   (row - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y,
@@ -73,5 +80,5 @@ void Piece::MoveToTile(int row, int column)
                                   PIECE_SIZE);
 
     Unclicked();
-    ResetCurrentlyChosenPiece();
+    ResetActivePiecePointer();
 }
