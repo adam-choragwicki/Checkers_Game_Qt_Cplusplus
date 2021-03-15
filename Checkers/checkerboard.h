@@ -21,7 +21,8 @@ private:
 
     void CreateTiles(QGraphicsScene& scene);
     void CreatePieces(QGraphicsScene& scene);
+    static bool CheckMove(Piece* activePiece, const int targetRow, const int targetColumn);
     static void MovePiece(Piece* activePiece, const int targetRow, const int targetColumn);
     static bool CheckCapture(Piece* activePiece, const int targetRow, const int targetColumn);
-    static void Capture(Piece* activePiece, const int row, const int column);
+    static void CapturePiece(Piece* activePiece, const int row, const int column);
 };

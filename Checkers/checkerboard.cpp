@@ -80,16 +80,16 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
     {
         if(CheckCapture(activePiece, targetRow, targetColumn))
         {
-            Capture(activePiece, targetRow, targetColumn);
+            CapturePiece(activePiece, targetRow, targetColumn);
         }
-        else
+        else if(CheckMove(activePiece, targetRow, targetColumn))
         {
             MovePiece(activePiece, targetRow, targetColumn);
         }
     }
 }
 
-void Checkerboard::MovePiece(Piece* activePiece, const int targetRow, const int targetColumn)
+bool Checkerboard::CheckMove(Piece *activePiece, const int targetRow, const int targetColumn)
 {
     qDebug("Active piece is on tile=(%d,%d)", activePiece->Row(), activePiece->Column());
     qDebug("Destination tile=(%d,%d)", targetRow, targetColumn);
@@ -106,12 +106,12 @@ void Checkerboard::MovePiece(Piece* activePiece, const int targetRow, const int 
             //Movement up is permitted
             if((targetRow == activePiece->Row() - 1) && ((targetColumn == activePiece->Column() - 1) || (targetColumn == activePiece->Column() + 1)))
             {
-
+                return true;
             }
             else
             {
                 qDebug("Move not permitted");
-                return;
+                return false;
             }
         }
         else if(activePiecePlayer == Player::Up)
@@ -119,12 +119,12 @@ void Checkerboard::MovePiece(Piece* activePiece, const int targetRow, const int 
             //Movement down is permitted
             if(targetRow == activePiece->Row() + 1 && ((targetColumn == activePiece->Column() - 1) || (targetColumn == activePiece->Column() + 1)))
             {
-
+                return true;
             }
             else
             {
                 qDebug("Move not permitted");
-                return;
+                return false;
             }
         }
         else
@@ -132,14 +132,20 @@ void Checkerboard::MovePiece(Piece* activePiece, const int targetRow, const int 
             assert(false);
         }
 
-        m_PiecesPlacement[Coordinates(activePiece->Row(), activePiece->Column())] = nullptr;
-        m_PiecesPlacement[Coordinates(targetRow, targetColumn)] = activePiece;
-        activePiece->MoveToTile(targetRow, targetColumn);
+        return true;
     }
     else
     {
         qDebug("Destination tile is not empty!");
+        return false;
     }
+}
+
+void Checkerboard::MovePiece(Piece* activePiece, const int targetRow, const int targetColumn)
+{
+    m_PiecesPlacement[Coordinates(activePiece->Row(), activePiece->Column())] = nullptr;
+    m_PiecesPlacement[Coordinates(targetRow, targetColumn)] = activePiece;
+    activePiece->MoveToTile(targetRow, targetColumn);
 }
 
 bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const int targetColumn)
@@ -290,7 +296,7 @@ bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const i
     }
 }
 
-void Checkerboard::Capture(Piece *activePiece, const int row, const int column)
+void Checkerboard::CapturePiece(Piece *activePiece, const int row, const int column)
 {
     qDebug("Capture executed!");
 }
