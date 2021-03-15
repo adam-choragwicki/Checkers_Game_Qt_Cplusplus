@@ -84,11 +84,47 @@ void Checkerboard::ProcessTileClicked(const int row, const int column, bool tile
 
 void Checkerboard::MovePiece(Piece* activePiece, const int row, const int column)
 {
-    qDebug("Active piece=(%d,%d)", activePiece->Row(), activePiece->Column());
+    qDebug("Active piece is on tile=(%d,%d)", activePiece->Row(), activePiece->Column());
     qDebug("Destination tile=(%d,%d)", row, column);
 
-    if(m_PiecesPlacement.at(Coordinates(row, column)) == nullptr)
+    Player activePiecePlayer = activePiece->GetPlayer();
+
+    Piece* pieceOnTargetTile = m_PiecesPlacement.at(Coordinates(row, column));
+
+    //If target tile is empty
+    if(pieceOnTargetTile == nullptr)
     {
+        if(activePiecePlayer == Player::Down)
+        {
+            //Movement up is permitted
+            if((row == activePiece->Row() - 1) && ((column == activePiece->Column() - 1) || (column == activePiece->Column() + 1)))
+            {
+
+            }
+            else
+            {
+                qDebug("Move not permitted");
+                return;
+            }
+        }
+        else if(activePiecePlayer == Player::Up)
+        {
+            //Movement down is permitted
+            if(row == activePiece->Row() + 1 && ((column == activePiece->Column() - 1) || (column == activePiece->Column() + 1)))
+            {
+
+            }
+            else
+            {
+                qDebug("Move not permitted");
+                return;
+            }
+        }
+        else
+        {
+            assert(false);
+        }
+
         m_PiecesPlacement[Coordinates(activePiece->Row(), activePiece->Column())] = nullptr;
         m_PiecesPlacement[Coordinates(row, column)] = activePiece;
         activePiece->MoveToTile(row, column);

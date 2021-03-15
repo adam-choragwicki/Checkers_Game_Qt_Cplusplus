@@ -11,6 +11,7 @@ public:
     void MoveToTile(int row, int column);
     int Row() const {return m_Coordinates.Row();}
     int Column() const {return m_Coordinates.Column();}
+    Player GetPlayer() const {return m_Player;}
 
     static Piece* GetActivePiece() {return m_ActivePiece;}
 
