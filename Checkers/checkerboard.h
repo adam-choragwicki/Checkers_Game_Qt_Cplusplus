@@ -8,7 +8,7 @@ class Checkerboard : public QGraphicsRectItem
 {
 public:
     Checkerboard(QGraphicsScene& scene);
-    static void ProcessTileClicked(const int row, const int column, bool tileIsPlayable);
+    static void ProcessTileClicked(const int targetRow, const int targetColumn, bool tileIsPlayable);
 
 private:
     const int BOARD_POSITION_X = 0;
@@ -21,5 +21,7 @@ private:
 
     void CreateTiles(QGraphicsScene& scene);
     void CreatePieces(QGraphicsScene& scene);
-    static void MovePiece(Piece* activePiece, const int row, const int column);
+    static void MovePiece(Piece* activePiece, const int targetRow, const int targetColumn);
+    static bool CheckCapture(Piece* activePiece, const int targetRow, const int targetColumn);
+    static void Capture(Piece* activePiece, const int row, const int column);
 };

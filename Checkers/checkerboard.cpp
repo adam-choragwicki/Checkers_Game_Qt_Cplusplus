@@ -55,41 +55,48 @@ void Checkerboard::CreatePieces(QGraphicsScene& scene)
     }
 }
 
-void Checkerboard::ProcessTileClicked(const int row, const int column, bool tileIsPlayable)
+void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColumn, bool tileIsPlayable)
 {
     if(tileIsPlayable)
     {
-        if(m_PiecesPlacement.at(Coordinates(row, column)) == nullptr)
+        if(m_PiecesPlacement.at(Coordinates(targetRow, targetColumn)) == nullptr)
         {
-            qDebug("Clicked tile (%d,%d) is PLAYABLE and EMPTY", row, column);
+            qDebug("Clicked tile (%d,%d) is PLAYABLE and EMPTY", targetRow, targetColumn);
         }
         else
         {
-            qDebug("Clicked tile (%d,%d) is PLAYABLE and THERE IS PIECE ON IT", row, column);
+            qDebug("Clicked tile (%d,%d) is PLAYABLE and THERE IS PIECE ON IT", targetRow, targetColumn);
         }
     }
     else
     {
-        assert(m_PiecesPlacement.at(Coordinates(row, column)) == nullptr);
-        qDebug("Clicked tile (%d,%d)", row, column);
+        assert(m_PiecesPlacement.at(Coordinates(targetRow, targetColumn)) == nullptr);
+        qDebug("Clicked tile (%d,%d)", targetRow, targetColumn);
     }
 
     Piece* activePiece = Piece::GetActivePiece();
 
     if(activePiece && tileIsPlayable)
     {
-        MovePiece(activePiece, row, column);
+        if(CheckCapture(activePiece, targetRow, targetColumn))
+        {
+            Capture(activePiece, targetRow, targetColumn);
+        }
+        else
+        {
+            MovePiece(activePiece, targetRow, targetColumn);
+        }
     }
 }
 
-void Checkerboard::MovePiece(Piece* activePiece, const int row, const int column)
+void Checkerboard::MovePiece(Piece* activePiece, const int targetRow, const int targetColumn)
 {
     qDebug("Active piece is on tile=(%d,%d)", activePiece->Row(), activePiece->Column());
-    qDebug("Destination tile=(%d,%d)", row, column);
+    qDebug("Destination tile=(%d,%d)", targetRow, targetColumn);
 
     Player activePiecePlayer = activePiece->GetPlayer();
 
-    Piece* pieceOnTargetTile = m_PiecesPlacement.at(Coordinates(row, column));
+    Piece* pieceOnTargetTile = m_PiecesPlacement.at(Coordinates(targetRow, targetColumn));
 
     //If target tile is empty
     if(pieceOnTargetTile == nullptr)
@@ -97,7 +104,7 @@ void Checkerboard::MovePiece(Piece* activePiece, const int row, const int column
         if(activePiecePlayer == Player::Down)
         {
             //Movement up is permitted
-            if((row == activePiece->Row() - 1) && ((column == activePiece->Column() - 1) || (column == activePiece->Column() + 1)))
+            if((targetRow == activePiece->Row() - 1) && ((targetColumn == activePiece->Column() - 1) || (targetColumn == activePiece->Column() + 1)))
             {
 
             }
@@ -110,7 +117,7 @@ void Checkerboard::MovePiece(Piece* activePiece, const int row, const int column
         else if(activePiecePlayer == Player::Up)
         {
             //Movement down is permitted
-            if(row == activePiece->Row() + 1 && ((column == activePiece->Column() - 1) || (column == activePiece->Column() + 1)))
+            if(targetRow == activePiece->Row() + 1 && ((targetColumn == activePiece->Column() - 1) || (targetColumn == activePiece->Column() + 1)))
             {
 
             }
@@ -126,11 +133,164 @@ void Checkerboard::MovePiece(Piece* activePiece, const int row, const int column
         }
 
         m_PiecesPlacement[Coordinates(activePiece->Row(), activePiece->Column())] = nullptr;
-        m_PiecesPlacement[Coordinates(row, column)] = activePiece;
-        activePiece->MoveToTile(row, column);
+        m_PiecesPlacement[Coordinates(targetRow, targetColumn)] = activePiece;
+        activePiece->MoveToTile(targetRow, targetColumn);
     }
     else
     {
         qDebug("Destination tile is not empty!");
     }
+}
+
+bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const int targetColumn)
+{
+    Player activePiecePlayer = activePiece->GetPlayer();
+
+    Piece* pieceOnTargetTile = m_PiecesPlacement.at(Coordinates(targetRow, targetColumn));
+
+    //If target tile is empty
+    if(pieceOnTargetTile == nullptr)
+    {
+        if(activePiecePlayer == Player::Down)
+        {
+            //Movement up is permitted
+            if(targetRow == activePiece->Row() - 2)
+            {
+                if(targetColumn == activePiece->Column() - 2)
+                {
+                    Piece* pieceBetweenActivePieceAndTargetTile = m_PiecesPlacement.at(Coordinates(activePiece->Row() - 1, activePiece->Column() - 1));
+
+                    if(pieceBetweenActivePieceAndTargetTile)
+                    {
+                        if(pieceBetweenActivePieceAndTargetTile->GetPlayer() == Player::Up)
+                        {
+                            qDebug("Capture is possible");
+                            return true;
+                        }
+                        else
+                        {
+                            qDebug("Cannot capture over your own piece");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        qDebug("Tile between is empty, capture impossible");
+                        return false;
+                    }
+                }
+                else if(targetColumn == activePiece->Column() + 2)
+                {
+                    Piece* pieceBetweenActivePieceAndTargetTile = m_PiecesPlacement.at(Coordinates(activePiece->Row() - 1, activePiece->Column() + 1));
+
+                    if(pieceBetweenActivePieceAndTargetTile)
+                    {
+                        if(pieceBetweenActivePieceAndTargetTile->GetPlayer() == Player::Up)
+                        {
+                            qDebug("Capture is possible");
+                            return true;
+                        }
+                        else
+                        {
+                            qDebug("Cannot capture over your own piece");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        qDebug("Tile between is empty, capture impossible");
+                        return false;
+                    }
+                }
+                else
+                {
+                    qDebug("Capture target is not 2 columns away");
+                    return false;
+                }
+            }
+            else
+            {
+                qDebug("Capture target is not 2 rows away");
+                return false;
+            }
+        }
+        else if(activePiecePlayer == Player::Up)
+        {
+            //Movement down is permitted
+            if(targetRow == activePiece->Row() + 2)
+            {
+                if(targetColumn == activePiece->Column() - 2)
+                {
+                    Piece* pieceBetweenActivePieceAndTargetTile = m_PiecesPlacement.at(Coordinates(activePiece->Row() + 1, activePiece->Column() - 1));
+
+                    if(pieceBetweenActivePieceAndTargetTile)
+                    {
+                        if(pieceBetweenActivePieceAndTargetTile->GetPlayer() == Player::Down)
+                        {
+                            qDebug("Capture is possible");
+                            return true;
+                        }
+                        else
+                        {
+                            qDebug("Cannot capture over your own piece");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        qDebug("Tile between is empty, capture impossible");
+                        return false;
+                    }
+                }
+                else if(targetColumn == activePiece->Column() + 2)
+                {
+                    Piece* pieceBetweenActivePieceAndTargetTile = m_PiecesPlacement.at(Coordinates(activePiece->Row() + 1, activePiece->Column() + 1));
+
+                    if(pieceBetweenActivePieceAndTargetTile)
+                    {
+                        if(pieceBetweenActivePieceAndTargetTile->GetPlayer() == Player::Down)
+                        {
+                            qDebug("Capture is possible");
+                            return true;
+                        }
+                        else
+                        {
+                            qDebug("Cannot capture over your own piece");
+                            return false;
+                        }
+                    }
+                    else
+                    {
+                        qDebug("Tile between is empty, capture impossible");
+                        return false;
+                    }
+                }
+                else
+                {
+                    qDebug("Capture target is not 2 columns away");
+                    return false;
+                }
+            }
+            else
+            {
+                qDebug("Capture target is not 2 rows away");
+                return false;
+            }
+        }
+        else
+        {
+            assert(false);
+            return false;
+        }
+    }
+    else
+    {
+        qDebug("Destination tile is not empty!");
+        return false;
+    }
+}
+
+void Checkerboard::Capture(Piece *activePiece, const int row, const int column)
+{
+    qDebug("Capture executed!");
 }
