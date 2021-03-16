@@ -296,7 +296,11 @@ bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const i
     }
 }
 
-void Checkerboard::CapturePiece(Piece *activePiece, const int row, const int column)
+void Checkerboard::CapturePiece(Piece *activePiece, const int targetRow, const int targetColumn)
 {
     qDebug("Capture executed!");
+    Coordinates pieceBetween((targetRow + activePiece->Row()) / 2, (targetColumn + activePiece->Column()) / 2);
+    delete m_PiecesPlacement.at(pieceBetween);
+    m_PiecesPlacement[pieceBetween] = nullptr;
+    MovePiece(activePiece, targetRow, targetColumn);
 }
