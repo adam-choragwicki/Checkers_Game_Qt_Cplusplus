@@ -39,7 +39,7 @@ void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
 void Piece::Clicked()
 {
     qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
-    setPen(QPen(QBrush(PIECE_ACTIVE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+    setPen(QPen(QBrush(ACTIVE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
 }
 
 void Piece::Unclicked()
@@ -62,6 +62,34 @@ void Piece::ResetActivePiecePointer()
 {
     qDebug("Clearing active piece pointer");
     m_ActivePiece = nullptr;
+}
+
+void Piece::Mark()
+{
+    if(m_Player == Player::Down)
+    {
+        setBrush(BLACK_PIECE_COLOR);
+        setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+    }
+    else if(m_Player == Player::Up)
+    {
+        setBrush(RED_PIECE_COLOR);
+        setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+    }
+}
+
+void Piece::Unmark()
+{
+    if(m_Player == Player::Down)
+    {
+        setBrush(BLACK_PIECE_COLOR);
+        setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+    }
+    else if(m_Player == Player::Up)
+    {
+        setBrush(RED_PIECE_COLOR);
+        setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+    }
 }
 
 void Piece::MoveToTile(int row, int column)

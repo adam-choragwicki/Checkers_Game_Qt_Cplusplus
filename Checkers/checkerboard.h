@@ -25,4 +25,6 @@ private:
     static void MovePiece(Piece* activePiece, const int targetRow, const int targetColumn);
     static bool CheckCapture(Piece* activePiece, const int targetRow, const int targetColumn);
     static void CapturePiece(Piece* activePiece, const int targetRow, const int targetColumn);
+    static void WhichPiecesCanMove();
+    static void MarkPiece(Piece* piece);
 };

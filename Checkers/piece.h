@@ -12,6 +12,8 @@ public:
     int Row() const {return m_Coordinates.Row();}
     int Column() const {return m_Coordinates.Column();}
     Player GetPlayer() const {return m_Player;}
+    void Mark();
+    void Unmark();
 
     static Piece* GetActivePiece() {return m_ActivePiece;}
 
@@ -23,13 +25,14 @@ private:
     const int PIECE_OFFSET_X = 15;
     const int PIECE_OFFSET_Y = 15;
     const int PIECE_SIZE = 50;
-    const int PIECE_OUTLINE_WIDTH = 6;
+    const int PIECE_OUTLINE_WIDTH = 4;
 
     const QColor BLACK_PIECE_COLOR{50, 50, 50};
     const QColor BLACK_PIECE_OUTLINE_COLOR{0, 0, 0};
     const QColor RED_PIECE_COLOR{220, 0, 0};
     const QColor RED_PIECE_OUTLINE_COLOR{170, 0, 0};
-    const QColor PIECE_ACTIVE_OUTLINE_COLOR{255, 255, 0};
+    const QColor ACTIVE_PIECE_OUTLINE_COLOR{255, 255, 255};
+    const QColor MOVE_POSSIBLE_PIECE_OUTLINE_COLOR{255, 255, 0};
 
     Player m_Player;
 

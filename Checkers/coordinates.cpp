@@ -1,5 +1,5 @@
 #include "coordinates.h"
-#include <cassert>
+#include <stdexcept>
 
 Coordinates::Coordinates(int row, int column)
 {
@@ -10,7 +10,7 @@ Coordinates::Coordinates(int row, int column)
     }
     else
     {
-        assert(false);
+        throw std::out_of_range("Error! Coordinates out of range");
     }
 }
 
