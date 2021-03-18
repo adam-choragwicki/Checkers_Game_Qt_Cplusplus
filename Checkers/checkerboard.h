@@ -21,12 +21,8 @@ private:
 
     void CreateTiles(QGraphicsScene& scene);
     void CreatePieces(QGraphicsScene& scene);
-    static bool CheckMovePossibility(Piece* piece, const int targetRow, const int targetColumn);
-    static void MovePiece(Piece* piece, const int targetRow, const int targetColumn);
-    static bool CheckCapturePossibility(Piece* piece, const int targetRow, const int targetColumn);
-    static void CapturePiece(Piece* piece, const int targetRow, const int targetColumn);
-    static std::vector<Piece*> WhichPiecesCanMove();
-    static std::vector<Piece*> WhichPiecesCanCapture();
     static void MarkPieces(std::vector<Piece*>& pieces);
     static void UnmarkAllPieces();
+    static void MovePiece(Piece* piece, const int targetRow, const int targetColumn);
+    static void CapturePiece(Piece* piece, const int targetRow, const int targetColumn);
 };
