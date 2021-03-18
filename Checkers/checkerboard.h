@@ -25,6 +25,8 @@ private:
     static void MovePiece(Piece* piece, const int targetRow, const int targetColumn);
     static bool CheckCapturePossibility(Piece* piece, const int targetRow, const int targetColumn);
     static void CapturePiece(Piece* piece, const int targetRow, const int targetColumn);
-    static void WhichPiecesCanMove();
-    static void MarkPiece(Piece* piece);
+    static std::vector<Piece*> WhichPiecesCanMove();
+    static std::vector<Piece*> WhichPiecesCanCapture();
+    static void MarkPieces(std::vector<Piece*>& pieces);
+    static void UnmarkAllPieces();
 };

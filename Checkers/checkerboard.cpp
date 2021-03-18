@@ -6,8 +6,6 @@
 #include <QDebug>
 #include <memory>
 
-bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2);
-
 std::map<Coordinates, Piece*> Checkerboard::m_PiecesPlacement;
 
 Checkerboard::Checkerboard(QGraphicsScene& scene)
@@ -17,7 +15,9 @@ Checkerboard::Checkerboard(QGraphicsScene& scene)
 
     CreateTiles(scene);
     CreatePieces(scene);
-    WhichPiecesCanMove();
+
+    std::vector<Piece*> piecesWhichCanMove = WhichPiecesCanMove();
+    MarkPieces(piecesWhichCanMove);
 }
 
 void Checkerboard::CreateTiles(QGraphicsScene& scene)
@@ -90,7 +90,19 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
         }
     }
 
-    WhichPiecesCanMove();
+    UnmarkAllPieces();
+
+    std::vector<Piece*> piecesWhichCanCapture = WhichPiecesCanCapture();
+
+    if(piecesWhichCanCapture.size() == 0)
+    {
+        std::vector<Piece*> piecesWhichCanMove = WhichPiecesCanMove();
+        MarkPieces(piecesWhichCanMove);
+    }
+    else
+    {
+        MarkPieces(piecesWhichCanCapture);
+    }
 }
 
 bool Checkerboard::CheckMovePossibility(Piece* piece, const int targetRow, const int targetColumn)
@@ -309,8 +321,10 @@ void Checkerboard::CapturePiece(Piece* piece, const int targetRow, const int tar
     MovePiece(piece, targetRow, targetColumn);
 }
 
-void Checkerboard::WhichPiecesCanMove()
+std::vector<Piece*> Checkerboard::WhichPiecesCanMove()
 {
+    std::vector<Piece*> piecesWhichCanMove;
+
     for(auto piece: m_PiecesPlacement)
     {
         if(piece.second != nullptr)
@@ -328,13 +342,13 @@ void Checkerboard::WhichPiecesCanMove()
                 try {
                     moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() - 1);
                 }
-                catch(std::out_of_range exception) {
+                catch(std::out_of_range& exception) {
                     moveOption1 = nullptr;
                 }
 
                 try {
                     moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() + 1);
-                }  catch(std::out_of_range exception) {
+                }  catch(std::out_of_range& exception) {
                     moveOption2 = nullptr;
                 }
 
@@ -342,7 +356,8 @@ void Checkerboard::WhichPiecesCanMove()
                 {
                     if(m_PiecesPlacement.at(*moveOption1) == nullptr)
                     {
-                        MarkPiece(piece.second);
+                        piecesWhichCanMove.push_back(piece.second);
+
                     }
                 }
 
@@ -350,7 +365,7 @@ void Checkerboard::WhichPiecesCanMove()
                 {
                     if(m_PiecesPlacement.at(*moveOption2) == nullptr)
                     {
-                        MarkPiece(piece.second);
+                        piecesWhichCanMove.push_back(piece.second);
                     }
                 }
             }
@@ -365,13 +380,13 @@ void Checkerboard::WhichPiecesCanMove()
                 try {
                     moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() - 1);
                 }
-                catch(std::out_of_range exception) {
+                catch(std::out_of_range& exception) {
                     moveOption1 = nullptr;
                 }
 
                 try {
                     moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() + 1);
-                }  catch(std::out_of_range exception) {
+                }  catch(std::out_of_range& exception) {
                     moveOption2 = nullptr;
                 }
 
@@ -379,7 +394,7 @@ void Checkerboard::WhichPiecesCanMove()
                 {
                     if(m_PiecesPlacement.at(*moveOption1) == nullptr)
                     {
-                        MarkPiece(piece.second);
+                        piecesWhichCanMove.push_back(piece.second);
                     }
                 }
 
@@ -387,7 +402,7 @@ void Checkerboard::WhichPiecesCanMove()
                 {
                     if(m_PiecesPlacement.at(*moveOption2) == nullptr)
                     {
-                        MarkPiece(piece.second);
+                        piecesWhichCanMove.push_back(piece.second);
                     }
                 }
             }
@@ -395,9 +410,117 @@ void Checkerboard::WhichPiecesCanMove()
             qDebug("Piece=(%d,%d)", piece.second->Row(), piece.second->Column());
         }
     }
+
+    return piecesWhichCanMove;
 }
 
-void Checkerboard::MarkPiece(Piece* piece)
+std::vector<Piece*> Checkerboard::WhichPiecesCanCapture()
 {
-    piece->Mark();
+    std::vector<Piece*> piecesWhichCanCapture;
+
+    for(auto piecePlacement : m_PiecesPlacement)
+    {
+        if(piecePlacement.second != nullptr)
+        {
+            Player piecePlayer = piecePlacement.second->GetPlayer();
+
+            if(piecePlayer == Player::Down)
+            {
+                //Movement up is permitted
+                Coordinates pieceCoordinates(piecePlacement.second->Row(), piecePlacement.second->Column());
+
+                std::unique_ptr<Coordinates> moveOption1;
+                std::unique_ptr<Coordinates> moveOption2;
+
+                try {
+                    moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
+                }
+                catch(std::out_of_range& exception) {
+                    moveOption1 = nullptr;
+                }
+
+                try {
+                    moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
+                }
+                catch(std::out_of_range& exception) {
+                    moveOption2 = nullptr;
+                }
+
+                if(moveOption1)
+                {
+                    if(CheckCapturePossibility(piecePlacement.second, moveOption1->Row(), moveOption1->Column()))
+                    {
+                        piecesWhichCanCapture.push_back(piecePlacement.second);
+                    }
+                }
+
+                if(moveOption2)
+                {
+                    if(CheckCapturePossibility(piecePlacement.second, moveOption2->Row(), moveOption2->Column()))
+                    {
+                        piecesWhichCanCapture.push_back(piecePlacement.second);
+                    }
+                }
+            }
+            else if(piecePlayer == Player::Up)
+            {
+                //Movement down is permitted
+                Coordinates pieceCoordinates(piecePlacement.second->Row(), piecePlacement.second->Column());
+
+                std::unique_ptr<Coordinates> moveOption1;
+                std::unique_ptr<Coordinates> moveOption2;
+
+                try {
+                    moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
+                }
+                catch(std::out_of_range& exception) {
+                    moveOption1 = nullptr;
+                }
+
+                try {
+                    moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
+                }
+                catch(std::out_of_range& exception) {
+                    moveOption2 = nullptr;
+                }
+
+                if(moveOption1)
+                {
+                    if(CheckCapturePossibility(piecePlacement.second, moveOption1->Row(), moveOption1->Column()))
+                    {
+                        piecesWhichCanCapture.push_back(piecePlacement.second);
+                    }
+                }
+
+                if(moveOption2)
+                {
+                    if(CheckCapturePossibility(piecePlacement.second, moveOption2->Row(), moveOption2->Column()))
+                    {
+                        piecesWhichCanCapture.push_back(piecePlacement.second);
+                    }
+                }
+            }
+        }
+    }
+
+    return piecesWhichCanCapture;
+}
+
+void Checkerboard::MarkPieces(std::vector<Piece*>& pieces)
+{
+    for(auto piece : pieces)
+    {
+        piece->Mark();
+    }
+}
+
+void Checkerboard::UnmarkAllPieces()
+{
+    for(auto piecePlacement : m_PiecesPlacement)
+    {
+        if(piecePlacement.second != nullptr)
+        {
+            piecePlacement.second->Unmark();
+        }
+    }
 }

@@ -14,3 +14,5 @@ private:
     int m_Row;
     int m_Column;
 };
+
+bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2);
