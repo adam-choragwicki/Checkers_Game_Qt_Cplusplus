@@ -80,11 +80,11 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
 
     if(activePiece && tileIsPlayable)
     {
-        if(CheckCapture(activePiece, targetRow, targetColumn))
+        if(CheckCapturePossibility(activePiece, targetRow, targetColumn))
         {
             CapturePiece(activePiece, targetRow, targetColumn);
         }
-        else if(CheckMove(activePiece, targetRow, targetColumn))
+        else if(CheckMovePossibility(activePiece, targetRow, targetColumn))
         {
             MovePiece(activePiece, targetRow, targetColumn);
         }
@@ -93,22 +93,22 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
     WhichPiecesCanMove();
 }
 
-bool Checkerboard::CheckMove(Piece *activePiece, const int targetRow, const int targetColumn)
+bool Checkerboard::CheckMovePossibility(Piece* piece, const int targetRow, const int targetColumn)
 {
-    qDebug("Active piece is on tile=(%d,%d)", activePiece->Row(), activePiece->Column());
+    qDebug("Piece is on tile=(%d,%d)", piece->Row(), piece->Column());
     qDebug("Destination tile=(%d,%d)", targetRow, targetColumn);
 
-    Player activePiecePlayer = activePiece->GetPlayer();
+    Player piecePlayer = piece->GetPlayer();
 
     Piece* pieceOnTargetTile = m_PiecesPlacement.at(Coordinates(targetRow, targetColumn));
 
     //If target tile is empty
     if(pieceOnTargetTile == nullptr)
     {
-        if(activePiecePlayer == Player::Down)
+        if(piecePlayer == Player::Down)
         {
             //Movement up is permitted
-            if((targetRow == activePiece->Row() - 1) && ((targetColumn == activePiece->Column() - 1) || (targetColumn == activePiece->Column() + 1)))
+            if((targetRow == piece->Row() - 1) && ((targetColumn == piece->Column() - 1) || (targetColumn == piece->Column() + 1)))
             {
                 return true;
             }
@@ -118,10 +118,10 @@ bool Checkerboard::CheckMove(Piece *activePiece, const int targetRow, const int 
                 return false;
             }
         }
-        else if(activePiecePlayer == Player::Up)
+        else if(piecePlayer == Player::Up)
         {
             //Movement down is permitted
-            if(targetRow == activePiece->Row() + 1 && ((targetColumn == activePiece->Column() - 1) || (targetColumn == activePiece->Column() + 1)))
+            if(targetRow == piece->Row() + 1 && ((targetColumn == piece->Column() - 1) || (targetColumn == piece->Column() + 1)))
             {
                 return true;
             }
@@ -145,34 +145,34 @@ bool Checkerboard::CheckMove(Piece *activePiece, const int targetRow, const int 
     }
 }
 
-void Checkerboard::MovePiece(Piece* activePiece, const int targetRow, const int targetColumn)
+void Checkerboard::MovePiece(Piece* piece, const int targetRow, const int targetColumn)
 {
-    m_PiecesPlacement[Coordinates(activePiece->Row(), activePiece->Column())] = nullptr;
-    m_PiecesPlacement[Coordinates(targetRow, targetColumn)] = activePiece;
-    activePiece->MoveToTile(targetRow, targetColumn);
+    m_PiecesPlacement[Coordinates(piece->Row(), piece->Column())] = nullptr;
+    m_PiecesPlacement[Coordinates(targetRow, targetColumn)] = piece;
+    piece->MoveToTile(targetRow, targetColumn);
 }
 
-bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const int targetColumn)
+bool Checkerboard::CheckCapturePossibility(Piece* piece, const int targetRow, const int targetColumn)
 {
-    Player activePiecePlayer = activePiece->GetPlayer();
+    Player piecePlayer = piece->GetPlayer();
 
     Piece* pieceOnTargetTile = m_PiecesPlacement.at(Coordinates(targetRow, targetColumn));
 
     //If target tile is empty
     if(pieceOnTargetTile == nullptr)
     {
-        if(activePiecePlayer == Player::Down)
+        if(piecePlayer == Player::Down)
         {
             //Movement up is permitted
-            if(targetRow == activePiece->Row() - 2)
+            if(targetRow == piece->Row() - 2)
             {
-                if(targetColumn == activePiece->Column() - 2)
+                if(targetColumn == piece->Column() - 2)
                 {
-                    Piece* pieceBetweenActivePieceAndTargetTile = m_PiecesPlacement.at(Coordinates(activePiece->Row() - 1, activePiece->Column() - 1));
+                    Piece* pieceBetweenThisPieceAndTargetTile = m_PiecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() - 1));
 
-                    if(pieceBetweenActivePieceAndTargetTile)
+                    if(pieceBetweenThisPieceAndTargetTile)
                     {
-                        if(pieceBetweenActivePieceAndTargetTile->GetPlayer() == Player::Up)
+                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Up)
                         {
                             qDebug("Capture is possible");
                             return true;
@@ -189,13 +189,13 @@ bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const i
                         return false;
                     }
                 }
-                else if(targetColumn == activePiece->Column() + 2)
+                else if(targetColumn == piece->Column() + 2)
                 {
-                    Piece* pieceBetweenActivePieceAndTargetTile = m_PiecesPlacement.at(Coordinates(activePiece->Row() - 1, activePiece->Column() + 1));
+                    Piece* pieceBetweenThisPieceAndTargetTile = m_PiecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() + 1));
 
-                    if(pieceBetweenActivePieceAndTargetTile)
+                    if(pieceBetweenThisPieceAndTargetTile)
                     {
-                        if(pieceBetweenActivePieceAndTargetTile->GetPlayer() == Player::Up)
+                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Up)
                         {
                             qDebug("Capture is possible");
                             return true;
@@ -224,18 +224,18 @@ bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const i
                 return false;
             }
         }
-        else if(activePiecePlayer == Player::Up)
+        else if(piecePlayer == Player::Up)
         {
             //Movement down is permitted
-            if(targetRow == activePiece->Row() + 2)
+            if(targetRow == piece->Row() + 2)
             {
-                if(targetColumn == activePiece->Column() - 2)
+                if(targetColumn == piece->Column() - 2)
                 {
-                    Piece* pieceBetweenActivePieceAndTargetTile = m_PiecesPlacement.at(Coordinates(activePiece->Row() + 1, activePiece->Column() - 1));
+                    Piece* pieceBetweenThisPieceAndTargetTile = m_PiecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() - 1));
 
-                    if(pieceBetweenActivePieceAndTargetTile)
+                    if(pieceBetweenThisPieceAndTargetTile)
                     {
-                        if(pieceBetweenActivePieceAndTargetTile->GetPlayer() == Player::Down)
+                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Down)
                         {
                             qDebug("Capture is possible");
                             return true;
@@ -252,13 +252,13 @@ bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const i
                         return false;
                     }
                 }
-                else if(targetColumn == activePiece->Column() + 2)
+                else if(targetColumn == piece->Column() + 2)
                 {
-                    Piece* pieceBetweenActivePieceAndTargetTile = m_PiecesPlacement.at(Coordinates(activePiece->Row() + 1, activePiece->Column() + 1));
+                    Piece* pieceBetweenThisPieceAndTargetTile = m_PiecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() + 1));
 
-                    if(pieceBetweenActivePieceAndTargetTile)
+                    if(pieceBetweenThisPieceAndTargetTile)
                     {
-                        if(pieceBetweenActivePieceAndTargetTile->GetPlayer() == Player::Down)
+                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Down)
                         {
                             qDebug("Capture is possible");
                             return true;
@@ -300,13 +300,13 @@ bool Checkerboard::CheckCapture(Piece *activePiece, const int targetRow, const i
     }
 }
 
-void Checkerboard::CapturePiece(Piece *activePiece, const int targetRow, const int targetColumn)
+void Checkerboard::CapturePiece(Piece* piece, const int targetRow, const int targetColumn)
 {
     qDebug("Capture executed!");
-    Coordinates pieceBetween((targetRow + activePiece->Row()) / 2, (targetColumn + activePiece->Column()) / 2);
+    Coordinates pieceBetween((targetRow + piece->Row()) / 2, (targetColumn + piece->Column()) / 2);
     delete m_PiecesPlacement.at(pieceBetween);
     m_PiecesPlacement[pieceBetween] = nullptr;
-    MovePiece(activePiece, targetRow, targetColumn);
+    MovePiece(piece, targetRow, targetColumn);
 }
 
 void Checkerboard::WhichPiecesCanMove()
@@ -315,9 +315,9 @@ void Checkerboard::WhichPiecesCanMove()
     {
         if(piece.second != nullptr)
         {
-            Player activePiecePlayer = piece.second->GetPlayer();
+            Player piecePlayer = piece.second->GetPlayer();
 
-            if(activePiecePlayer == Player::Down)
+            if(piecePlayer == Player::Down)
             {
                 //Movement up is permitted
                 Coordinates pieceCoordinates(piece.second->Row(), piece.second->Column());
@@ -354,7 +354,7 @@ void Checkerboard::WhichPiecesCanMove()
                     }
                 }
             }
-            else if(activePiecePlayer == Player::Up)
+            else if(piecePlayer == Player::Up)
             {
                 //Movement down is permitted
                 Coordinates pieceCoordinates(piece.second->Row(), piece.second->Column());
@@ -397,7 +397,7 @@ void Checkerboard::WhichPiecesCanMove()
     }
 }
 
-void Checkerboard::MarkPiece(Piece *piece)
+void Checkerboard::MarkPiece(Piece* piece)
 {
     piece->Mark();
 }

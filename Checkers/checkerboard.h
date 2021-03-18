@@ -21,10 +21,10 @@ private:
 
     void CreateTiles(QGraphicsScene& scene);
     void CreatePieces(QGraphicsScene& scene);
-    static bool CheckMove(Piece* activePiece, const int targetRow, const int targetColumn);
-    static void MovePiece(Piece* activePiece, const int targetRow, const int targetColumn);
-    static bool CheckCapture(Piece* activePiece, const int targetRow, const int targetColumn);
-    static void CapturePiece(Piece* activePiece, const int targetRow, const int targetColumn);
+    static bool CheckMovePossibility(Piece* piece, const int targetRow, const int targetColumn);
+    static void MovePiece(Piece* piece, const int targetRow, const int targetColumn);
+    static bool CheckCapturePossibility(Piece* piece, const int targetRow, const int targetColumn);
+    static void CapturePiece(Piece* piece, const int targetRow, const int targetColumn);
     static void WhichPiecesCanMove();
     static void MarkPiece(Piece* piece);
 };
