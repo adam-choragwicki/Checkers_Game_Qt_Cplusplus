@@ -3,6 +3,7 @@
 #include <QGraphicsEllipseItem>
 #include "common.h"
 #include "coordinates.h"
+#include <QTimer>
 
 class Piece : public QGraphicsEllipseItem
 {
@@ -36,9 +37,12 @@ private:
 
     Player m_Player;
 
+    QTimer m_AnimationTimer;
+
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
     void Clicked();
     void Unclicked();
     void ResetActivePiecePointer();
+    void AnimateFromCurrentToNewCoordinates(Coordinates& currentCoordinates, Coordinates& newCoordinates);
 };

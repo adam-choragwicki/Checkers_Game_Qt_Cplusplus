@@ -94,8 +94,8 @@ std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
 
 bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const int targetRow, const int targetColumn)
 {
-    qDebug("Piece is on tile=(%d,%d)", piece->Row(), piece->Column());
-    qDebug("Destination tile=(%d,%d)", targetRow, targetColumn);
+    //qDebug("Piece is on tile=(%d,%d)", piece->Row(), piece->Column());
+    //qDebug("Destination tile=(%d,%d)", targetRow, targetColumn);
 
     Player piecePlayer = piece->GetPlayer();
 
@@ -113,7 +113,7 @@ bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates,
             }
             else
             {
-                qDebug("Move not permitted");
+                //qDebug("Move not permitted");
                 return false;
             }
         }
@@ -126,7 +126,7 @@ bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates,
             }
             else
             {
-                qDebug("Move not permitted");
+                //qDebug("Move not permitted");
                 return false;
             }
         }
@@ -139,7 +139,7 @@ bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates,
     }
     else
     {
-        qDebug("Destination tile is not empty!");
+        //qDebug("Destination tile is not empty!");
         return false;
     }
 }
@@ -166,18 +166,18 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                     {
                         if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Up)
                         {
-                            qDebug("Capture is possible");
+                            //qDebug("Capture is possible");
                             return true;
                         }
                         else
                         {
-                            qDebug("Cannot capture over your own piece");
+                            //qDebug("Cannot capture over your own piece");
                             return false;
                         }
                     }
                     else
                     {
-                        qDebug("Tile between is empty, capture impossible");
+                        //qDebug("Tile between is empty, capture impossible");
                         return false;
                     }
                 }
@@ -189,30 +189,30 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                     {
                         if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Up)
                         {
-                            qDebug("Capture is possible");
+                            //qDebug("Capture is possible");
                             return true;
                         }
                         else
                         {
-                            qDebug("Cannot capture over your own piece");
+                            //qDebug("Cannot capture over your own piece");
                             return false;
                         }
                     }
                     else
                     {
-                        qDebug("Tile between is empty, capture impossible");
+                        //qDebug("Tile between is empty, capture impossible");
                         return false;
                     }
                 }
                 else
                 {
-                    qDebug("Capture target is not 2 columns away");
+                    //qDebug("Capture target is not 2 columns away");
                     return false;
                 }
             }
             else
             {
-                qDebug("Capture target is not 2 rows away");
+                //qDebug("Capture target is not 2 rows away");
                 return false;
             }
         }
@@ -229,18 +229,18 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                     {
                         if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Down)
                         {
-                            qDebug("Capture is possible");
+                            //qDebug("Capture is possible");
                             return true;
                         }
                         else
                         {
-                            qDebug("Cannot capture over your own piece");
+                            //qDebug("Cannot capture over your own piece");
                             return false;
                         }
                     }
                     else
                     {
-                        qDebug("Tile between is empty, capture impossible");
+                        //qDebug("Tile between is empty, capture impossible");
                         return false;
                     }
                 }
@@ -252,30 +252,30 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                     {
                         if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Down)
                         {
-                            qDebug("Capture is possible");
+                            //qDebug("Capture is possible");
                             return true;
                         }
                         else
                         {
-                            qDebug("Cannot capture over your own piece");
+                            //qDebug("Cannot capture over your own piece");
                             return false;
                         }
                     }
                     else
                     {
-                        qDebug("Tile between is empty, capture impossible");
+                        //qDebug("Tile between is empty, capture impossible");
                         return false;
                     }
                 }
                 else
                 {
-                    qDebug("Capture target is not 2 columns away");
+                    //qDebug("Capture target is not 2 columns away");
                     return false;
                 }
             }
             else
             {
-                qDebug("Capture target is not 2 rows away");
+                //qDebug("Capture target is not 2 rows away");
                 return false;
             }
         }
@@ -287,7 +287,7 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
     }
     else
     {
-        qDebug("Destination tile is not empty!");
+        //qDebug("Destination tile is not empty!");
         return false;
     }
 }
@@ -377,8 +377,6 @@ std::vector<Piece*> Logic::WhichPiecesCanMove(const std::map<Coordinates, Piece*
                     }
                 }
             }
-
-            qDebug("Piece=(%d,%d)", piece.second->Row(), piece.second->Column());
         }
     }
 

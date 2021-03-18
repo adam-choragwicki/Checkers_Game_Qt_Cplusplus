@@ -60,17 +60,17 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
     {
         if(m_PiecesPlacement.at(Coordinates(targetRow, targetColumn)) == nullptr)
         {
-            qDebug("Clicked tile (%d,%d) is PLAYABLE and EMPTY", targetRow, targetColumn);
+            //qDebug("Clicked tile (%d,%d) is PLAYABLE and EMPTY", targetRow, targetColumn);
         }
         else
         {
-            qDebug("Clicked tile (%d,%d) is PLAYABLE and THERE IS PIECE ON IT", targetRow, targetColumn);
+            //qDebug("Clicked tile (%d,%d) is PLAYABLE and THERE IS PIECE ON IT", targetRow, targetColumn);
         }
     }
     else
     {
         assert(m_PiecesPlacement.at(Coordinates(targetRow, targetColumn)) == nullptr);
-        qDebug("Clicked tile (%d,%d)", targetRow, targetColumn);
+        //qDebug("Clicked tile (%d,%d)", targetRow, targetColumn);
     }
 
     Piece* activePiece = Piece::GetActivePiece();
@@ -130,9 +130,9 @@ void Checkerboard::MovePiece(Piece* piece, const int targetRow, const int target
 
 void Checkerboard::CapturePiece(Piece* piece, const int targetRow, const int targetColumn)
 {
-    qDebug("Capture executed!");
+    //qDebug("Capture executed!");
     Coordinates pieceBetween((targetRow + piece->Row()) / 2, (targetColumn + piece->Column()) / 2);
+    MovePiece(piece, targetRow, targetColumn);
     delete m_PiecesPlacement.at(pieceBetween);
     m_PiecesPlacement[pieceBetween] = nullptr;
-    MovePiece(piece, targetRow, targetColumn);
 }
