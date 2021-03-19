@@ -3,7 +3,6 @@
 #include <QGraphicsEllipseItem>
 #include "common.h"
 #include "coordinates.h"
-#include <QTimer>
 
 class Piece : public QGraphicsEllipseItem
 {
@@ -36,8 +35,7 @@ private:
     const QColor MOVE_POSSIBLE_PIECE_OUTLINE_COLOR{255, 255, 0};
 
     Player m_Player;
-
-    QTimer m_AnimationTimer;
+    bool m_Marked = false;
 
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 

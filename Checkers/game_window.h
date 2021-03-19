@@ -22,7 +22,7 @@ private:
 
     QGraphicsScene m_Scene;
 
-    Checkerboard* m_pBoard = nullptr;
+    Checkerboard* m_pCheckerboard = nullptr;
 
     void CreateAndPopulateBoard(QGraphicsScene& scene);
 };

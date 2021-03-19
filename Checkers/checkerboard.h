@@ -25,4 +25,5 @@ private:
     static void UnmarkAllPieces();
     static void MovePiece(Piece* piece, const int targetRow, const int targetColumn);
     static void CapturePiece(Piece* piece, const int targetRow, const int targetColumn);
+    static void EndTurn();
 };

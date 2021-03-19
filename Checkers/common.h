@@ -12,7 +12,13 @@ enum class TileColor
     WHITE = 2
 };
 
-namespace Common
+class Common
 {
-const int TILE_SIZE = 80;
-}
+public:
+    static const int TILE_SIZE = 80;
+    static Player& GetActivePlayer() {return m_ActivePlayer;}
+    static void SetActivePlayer(Player newActivePlayer) {m_ActivePlayer = newActivePlayer;}
+
+private:
+    static Player m_ActivePlayer;
+};

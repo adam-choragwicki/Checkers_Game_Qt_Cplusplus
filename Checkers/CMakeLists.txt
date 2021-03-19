@@ -30,6 +30,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 set(PROJECT_SOURCES
         main.cpp
         common.h
+        common.cpp
         game_window.cpp
         game_window.h
         game_window.ui

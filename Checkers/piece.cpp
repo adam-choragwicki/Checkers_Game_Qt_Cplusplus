@@ -30,12 +30,19 @@ void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        if(m_ActivePiece != nullptr)
+        //Allow selecting only marked pieces which have valid moves available
+        if(m_Marked)
         {
-            m_ActivePiece->Unclicked();
+            if(this->GetPlayer() == Common::GetActivePlayer())
+            {
+                if(m_ActivePiece != nullptr)
+                {
+                    m_ActivePiece->Unclicked();
+                }
+                m_ActivePiece = this;
+                m_ActivePiece->Clicked();
+            }
         }
-        m_ActivePiece = this;
-        m_ActivePiece->Clicked();
     }
 }
 
@@ -69,6 +76,8 @@ void Piece::ResetActivePiecePointer()
 
 void Piece::Mark()
 {
+    m_Marked = true;
+
     if(m_Player == Player::Down)
     {
         setBrush(BLACK_PIECE_COLOR);
@@ -79,10 +88,16 @@ void Piece::Mark()
         setBrush(RED_PIECE_COLOR);
         setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
     }
+    else
+    {
+        assert(false);
+    }
 }
 
 void Piece::Unmark()
 {
+    m_Marked = false;
+
     if(m_Player == Player::Down)
     {
         setBrush(BLACK_PIECE_COLOR);
@@ -92,6 +107,10 @@ void Piece::Unmark()
     {
         setBrush(RED_PIECE_COLOR);
         setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+    }
+    else
+    {
+        assert(false);
     }
 }
 

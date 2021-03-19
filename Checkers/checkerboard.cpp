@@ -15,8 +15,17 @@ Checkerboard::Checkerboard(QGraphicsScene& scene)
     CreateTiles(scene);
     CreatePieces(scene);
 
-    std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(m_PiecesPlacement);
-    MarkPieces(piecesWhichCanMove);
+    std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(Common::GetActivePlayer(), m_PiecesPlacement);
+
+    if(piecesWhichCanCapture.size() == 0)
+    {
+        std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(Common::GetActivePlayer(), m_PiecesPlacement);
+        MarkPieces(piecesWhichCanMove);
+    }
+    else
+    {
+        MarkPieces(piecesWhichCanCapture);
+    }
 }
 
 void Checkerboard::CreateTiles(QGraphicsScene& scene)
@@ -80,20 +89,22 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
         if(Logic::CheckCapturePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
         {
             CapturePiece(activePiece, targetRow, targetColumn);
+            EndTurn();
         }
         else if(Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
         {
             MovePiece(activePiece, targetRow, targetColumn);
+            EndTurn();
         }
     }
 
     UnmarkAllPieces();
 
-    std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(m_PiecesPlacement);
+    std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(Common::GetActivePlayer(), m_PiecesPlacement);
 
     if(piecesWhichCanCapture.size() == 0)
     {
-        std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(m_PiecesPlacement);
+        std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(Common::GetActivePlayer(), m_PiecesPlacement);
         MarkPieces(piecesWhichCanMove);
     }
     else
@@ -135,4 +146,20 @@ void Checkerboard::CapturePiece(Piece* piece, const int targetRow, const int tar
     MovePiece(piece, targetRow, targetColumn);
     delete m_PiecesPlacement.at(pieceBetween);
     m_PiecesPlacement[pieceBetween] = nullptr;
+}
+
+void Checkerboard::EndTurn()
+{
+    if(Common::GetActivePlayer() == Player::Down)
+    {
+        Common::SetActivePlayer(Player::Up);
+    }
+    else if(Common::GetActivePlayer() == Player::Up)
+    {
+        Common::SetActivePlayer(Player::Down);
+    }
+    else
+    {
+        assert(false);
+    }
 }
