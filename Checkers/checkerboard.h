@@ -18,12 +18,16 @@ private:
     const QColor BOARD_OUTLINE_COLOR{150, 100, 40};
 
     static std::map<Coordinates, Piece*> m_PiecesPlacement;
+    static Piece* m_MultiCaptureInProgressPiece;
 
     void CreateTiles(QGraphicsScene& scene);
     void CreatePieces(QGraphicsScene& scene);
+    void CreatePiecesCustomCoordinates(QGraphicsScene& scene);
     static void MarkPieces(std::vector<Piece*>& pieces);
     static void UnmarkAllPieces();
     static void MovePiece(Piece* piece, const int targetRow, const int targetColumn);
     static void CapturePiece(Piece* piece, const int targetRow, const int targetColumn);
     static void EndTurn();
+
+    static bool IsMultiCaptureInProgress();
 };

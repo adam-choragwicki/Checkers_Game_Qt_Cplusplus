@@ -39,7 +39,7 @@ void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
                 {
                     m_ActivePiece->Unclicked();
                 }
-                m_ActivePiece = this;
+                this->SetActivePiecePointer();
                 m_ActivePiece->Clicked();
             }
         }
@@ -54,7 +54,7 @@ void Piece::Clicked()
 
 void Piece::Unclicked()
 {
-    //qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
+    qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
 
     if(m_Player == Player::Down)
     {
@@ -68,13 +68,24 @@ void Piece::Unclicked()
     }
 }
 
+void Piece::SetActivePiecePointer()
+{
+    qDebug("%s", __FUNCTION__);
+    m_ActivePiece = this;
+}
+
 void Piece::ResetActivePiecePointer()
 {
-    qDebug("Clearing active piece pointer");
+    qDebug("%s", __FUNCTION__);
     m_ActivePiece = nullptr;
 }
 
-void Piece::Mark()
+void Piece::MarkActive()
+{
+    Clicked();
+}
+
+void Piece::MarkValidMoveAvailable()
 {
     m_Marked = true;
 
@@ -118,7 +129,7 @@ void Piece::MoveToTile(int row, int column)
 {
     qDebug("%s=(%d,%d)", __FUNCTION__, row, column);
 
-    //Increase Z value so that piece is drawn over captured piece
+    /*Increase Z value so that piece is drawn over captured piece*/
     setZValue(1);
 
     Coordinates currentCoordinates(m_Coordinates.Row(), m_Coordinates.Column());
@@ -129,7 +140,7 @@ void Piece::MoveToTile(int row, int column)
     Unclicked();
     ResetActivePiecePointer();
 
-    //Reset Z value
+    /*Reset Z value*/
     setZValue(0);
 }
 

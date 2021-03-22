@@ -398,85 +398,97 @@ std::vector<Piece*> Logic::WhichPiecesCanCapture(Player activePlayer, const std:
 
             if(piecePlayer == activePlayer)
             {
-                if(piecePlayer == Player::Down)
+                if(CheckIfPieceCanCapture(piecePlacement.second, piecesPlacement))
                 {
-                    //Movement up is permitted
-                    Coordinates pieceCoordinates(piecePlacement.second->Row(), piecePlacement.second->Column());
-
-                    std::unique_ptr<Coordinates> moveOption1;
-                    std::unique_ptr<Coordinates> moveOption2;
-
-                    try {
-                        moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
-                    }
-                    catch(std::out_of_range& exception) {
-                        moveOption1 = nullptr;
-                    }
-
-                    try {
-                        moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
-                    }
-                    catch(std::out_of_range& exception) {
-                        moveOption2 = nullptr;
-                    }
-
-                    if(moveOption1)
-                    {
-                        if(CheckCapturePossibility(piecePlacement.second, piecesPlacement, moveOption1->Row(), moveOption1->Column()))
-                        {
-                            piecesWhichCanCapture.push_back(piecePlacement.second);
-                        }
-                    }
-
-                    if(moveOption2)
-                    {
-                        if(CheckCapturePossibility(piecePlacement.second, piecesPlacement, moveOption2->Row(), moveOption2->Column()))
-                        {
-                            piecesWhichCanCapture.push_back(piecePlacement.second);
-                        }
-                    }
-                }
-                else if(piecePlayer == Player::Up)
-                {
-                    //Movement down is permitted
-                    Coordinates pieceCoordinates(piecePlacement.second->Row(), piecePlacement.second->Column());
-
-                    std::unique_ptr<Coordinates> moveOption1;
-                    std::unique_ptr<Coordinates> moveOption2;
-
-                    try {
-                        moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
-                    }
-                    catch(std::out_of_range& exception) {
-                        moveOption1 = nullptr;
-                    }
-
-                    try {
-                        moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
-                    }
-                    catch(std::out_of_range& exception) {
-                        moveOption2 = nullptr;
-                    }
-
-                    if(moveOption1)
-                    {
-                        if(CheckCapturePossibility(piecePlacement.second, piecesPlacement, moveOption1->Row(), moveOption1->Column()))
-                        {
-                            piecesWhichCanCapture.push_back(piecePlacement.second);
-                        }
-                    }
-
-                    if(moveOption2)
-                    {
-                        if(CheckCapturePossibility(piecePlacement.second, piecesPlacement, moveOption2->Row(), moveOption2->Column()))
-                        {
-                            piecesWhichCanCapture.push_back(piecePlacement.second);
-                        }
-                    }
+                    piecesWhichCanCapture.push_back(piecePlacement.second);
                 }
             }
         }
     }
 
     return piecesWhichCanCapture;
+}
+
+bool Logic::CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement)
+{
+    Player piecePlayer = piece->GetPlayer();
+
+    if(piecePlayer == Player::Down)
+    {
+        //Movement up is permitted
+        Coordinates pieceCoordinates(piece->Row(), piece->Column());
+
+        std::unique_ptr<Coordinates> moveOption1;
+        std::unique_ptr<Coordinates> moveOption2;
+
+        try {
+            moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
+        }
+        catch(std::out_of_range& exception) {
+            moveOption1 = nullptr;
+        }
+
+        try {
+            moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
+        }
+        catch(std::out_of_range& exception) {
+            moveOption2 = nullptr;
+        }
+
+        if(moveOption1)
+        {
+            if(CheckCapturePossibility(piece, piecesPlacement, moveOption1->Row(), moveOption1->Column()))
+            {
+                return true;
+            }
+        }
+
+        if(moveOption2)
+        {
+            if(CheckCapturePossibility(piece, piecesPlacement, moveOption2->Row(), moveOption2->Column()))
+            {
+                return true;
+            }
+        }
+    }
+    else if(piecePlayer == Player::Up)
+    {
+        //Movement down is permitted
+        Coordinates pieceCoordinates(piece->Row(), piece->Column());
+
+        std::unique_ptr<Coordinates> moveOption1;
+        std::unique_ptr<Coordinates> moveOption2;
+
+        try {
+            moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
+        }
+        catch(std::out_of_range& exception) {
+            moveOption1 = nullptr;
+        }
+
+        try {
+            moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
+        }
+        catch(std::out_of_range& exception) {
+            moveOption2 = nullptr;
+        }
+
+        if(moveOption1)
+        {
+            if(CheckCapturePossibility(piece, piecesPlacement, moveOption1->Row(), moveOption1->Column()))
+            {
+                return true;
+            }
+        }
+
+        if(moveOption2)
+        {
+            if(CheckCapturePossibility(piece, piecesPlacement, moveOption2->Row(), moveOption2->Column()))
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

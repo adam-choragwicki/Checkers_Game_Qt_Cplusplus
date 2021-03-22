@@ -6,6 +6,7 @@
 #include <QDebug>
 
 std::map<Coordinates, Piece*> Checkerboard::m_PiecesPlacement;
+Piece* Checkerboard::m_MultiCaptureInProgressPiece = nullptr;
 
 Checkerboard::Checkerboard(QGraphicsScene& scene)
 {
@@ -14,6 +15,7 @@ Checkerboard::Checkerboard(QGraphicsScene& scene)
 
     CreateTiles(scene);
     CreatePieces(scene);
+    //CreatePiecesCustomCoordinates(scene);
 
     std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(Common::GetActivePlayer(), m_PiecesPlacement);
 
@@ -63,6 +65,26 @@ void Checkerboard::CreatePieces(QGraphicsScene& scene)
     }
 }
 
+void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
+{
+    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(7, 6)};
+    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(2, 5), Coordinates(4, 5), Coordinates(6, 5)};
+
+    for(auto pieceCoordinates : customCoordinatesPlayerDown)
+    {
+        Piece* piece = new Piece(pieceCoordinates, Player::Down);
+        m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
+        scene.addItem(piece);
+    }
+
+    for(auto pieceCoordinates : customCoordinatesPlayerUp)
+    {
+        Piece* piece = new Piece(pieceCoordinates, Player::Up);
+        m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
+        scene.addItem(piece);
+    }
+}
+
 void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColumn, bool tileIsPlayable)
 {
     if(tileIsPlayable)
@@ -89,27 +111,46 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
         if(Logic::CheckCapturePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
         {
             CapturePiece(activePiece, targetRow, targetColumn);
+
+            if(Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement))
+            {
+                qDebug("SetMultiCaptureInProgressPiece");
+                m_MultiCaptureInProgressPiece = activePiece;
+
+                activePiece->SetActivePiecePointer();
+                activePiece->MarkActive();
+                return;
+            }
+            else
+            {
+                qDebug("ResetMultiCaptureInProgressPiece");
+                m_MultiCaptureInProgressPiece = nullptr;
+            }
+
             EndTurn();
         }
-        else if(Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
+        else if(!IsMultiCaptureInProgress() && !Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement) && Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
         {
             MovePiece(activePiece, targetRow, targetColumn);
             EndTurn();
         }
     }
 
-    UnmarkAllPieces();
-
-    std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(Common::GetActivePlayer(), m_PiecesPlacement);
-
-    if(piecesWhichCanCapture.size() == 0)
+    if(!IsMultiCaptureInProgress())
     {
-        std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(Common::GetActivePlayer(), m_PiecesPlacement);
-        MarkPieces(piecesWhichCanMove);
-    }
-    else
-    {
-        MarkPieces(piecesWhichCanCapture);
+        UnmarkAllPieces();
+
+        std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(Common::GetActivePlayer(), m_PiecesPlacement);
+
+        if(piecesWhichCanCapture.size() == 0)
+        {
+            std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(Common::GetActivePlayer(), m_PiecesPlacement);
+            MarkPieces(piecesWhichCanMove);
+        }
+        else
+        {
+            MarkPieces(piecesWhichCanCapture);
+        }
     }
 }
 
@@ -117,7 +158,7 @@ void Checkerboard::MarkPieces(std::vector<Piece*>& pieces)
 {
     for(auto piece : pieces)
     {
-        piece->Mark();
+        piece->MarkValidMoveAvailable();
     }
 }
 
@@ -141,7 +182,7 @@ void Checkerboard::MovePiece(Piece* piece, const int targetRow, const int target
 
 void Checkerboard::CapturePiece(Piece* piece, const int targetRow, const int targetColumn)
 {
-    //qDebug("Capture executed!");
+    qDebug("Capture executed!");
     Coordinates pieceBetween((targetRow + piece->Row()) / 2, (targetColumn + piece->Column()) / 2);
     MovePiece(piece, targetRow, targetColumn);
     delete m_PiecesPlacement.at(pieceBetween);
@@ -162,4 +203,9 @@ void Checkerboard::EndTurn()
     {
         assert(false);
     }
+}
+
+bool Checkerboard::IsMultiCaptureInProgress()
+{
+    return m_MultiCaptureInProgressPiece != nullptr;
 }
