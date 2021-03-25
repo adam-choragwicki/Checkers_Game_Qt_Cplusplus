@@ -7,7 +7,7 @@
 class Tile : public QGraphicsRectItem
 {
 public:
-    Tile(int row, int column);
+    Tile(int row, int column, QGraphicsItem* parent);
     bool IsPlayable() const {return m_Playable;}
 
 private:

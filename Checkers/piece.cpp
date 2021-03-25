@@ -7,7 +7,7 @@
 
 Piece* Piece::m_ActivePiece = nullptr;
 
-Piece::Piece(Coordinates coordinates, Player player) : m_Coordinates(coordinates.Row(), coordinates.Column()), m_Player(player)
+Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent) : QGraphicsEllipseItem(parent), m_Coordinates(coordinates.Row(), coordinates.Column()), m_Player(player)
 {
     QGraphicsEllipseItem::setRect((coordinates.Column() - 1) * Common::TILE_SIZE + PIECE_OFFSET_X,
                                   (coordinates.Row() - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y,
@@ -72,6 +72,39 @@ void Piece::SetActivePiecePointer()
 {
     qDebug("%s", __FUNCTION__);
     m_ActivePiece = this;
+}
+
+void Piece::Promote()
+{
+    m_Promoted = true;
+
+    const QList<QPoint> crownPolygonShapeCoordinates = {QPoint(0 , 0),
+                                                        QPoint(6 , 8),
+                                                        QPoint(12, 0),
+                                                        QPoint(18, 8),
+                                                        QPoint(23, 0),
+                                                        QPoint(29, 8),
+                                                        QPoint(34, 0),
+                                                        QPoint(33, 20),
+                                                        QPoint(2 , 20)};
+
+
+    const int CROWN_OFFSET_X = 8;
+    const int CROWN_OFFSET_Y = 15;
+
+    QPolygon crown;
+
+    for(int i = 0; i <= 8; i++)
+    {
+        crown << QPoint((m_Coordinates.Column() - 1) * Common::TILE_SIZE + PIECE_OFFSET_X + crownPolygonShapeCoordinates.at(i).x() + CROWN_OFFSET_X,
+                        (m_Coordinates.Row() - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y + crownPolygonShapeCoordinates.at(i).y() + CROWN_OFFSET_Y);
+    }
+
+    const QColor CROWN_COLOR(150, 150, 150);
+    crownItem = new QGraphicsPolygonItem(crown, this);
+    crownItem->setBrush(CROWN_COLOR);
+
+    qDebug("Drawing crown on (%d,%d)", m_Coordinates.Row(), m_Coordinates.Column());
 }
 
 void Piece::ResetActivePiecePointer()
@@ -184,11 +217,18 @@ void Piece::AnimateFromCurrentToNewCoordinates(Coordinates& currentCoordinates, 
 
     const double factor = 5;
 
-    const int limit = abs(rowDifference) * Common::TILE_SIZE / factor;
+    const int limit = (abs(rowDifference) * Common::TILE_SIZE) / factor;
 
     for(int i = 0; i < limit; i++)
     {
-        moveBy(factor * stepColumn, factor * stepRow);
+        const QRectF newRect(QPointF(rect().topLeft().x() + factor * stepColumn, rect().topLeft().y() + factor * stepRow), rect().size());
+        setRect(newRect);
+
+        if(crownItem)
+        {
+            crownItem->moveBy(factor * stepColumn, factor * stepRow);
+        }
+
         QApplication::processEvents();
         std::this_thread::sleep_for(1ms);
     }

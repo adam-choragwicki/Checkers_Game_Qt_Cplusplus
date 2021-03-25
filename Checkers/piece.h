@@ -7,7 +7,7 @@
 class Piece : public QGraphicsEllipseItem
 {
 public:
-    Piece(Coordinates coordinates, Player player);
+    Piece(Coordinates coordinates, Player player, QGraphicsItem* parent);
     void MoveToTile(int row, int column);
     int Row() const {return m_Coordinates.Row();}
     int Column() const {return m_Coordinates.Column();}
@@ -16,6 +16,8 @@ public:
     void MarkValidMoveAvailable();
     void Unmark();
     void SetActivePiecePointer();
+    void Promote();
+    bool IsPromoted() const {return m_Promoted;}
 
     static Piece* GetActivePiece() {return m_ActivePiece;}
 
@@ -23,6 +25,8 @@ private:
     static Piece* m_ActivePiece;
 
     Coordinates m_Coordinates;
+
+    QGraphicsPolygonItem* crownItem = nullptr;
 
     const int PIECE_OFFSET_X = 15;
     const int PIECE_OFFSET_Y = 15;
@@ -38,11 +42,12 @@ private:
 
     Player m_Player;
     bool m_Marked = false;
-
-    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    bool m_Promoted = false;
 
     void Clicked();
     void Unclicked();
     void ResetActivePiecePointer();
     void AnimateFromCurrentToNewCoordinates(Coordinates& currentCoordinates, Coordinates& newCoordinates);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 };

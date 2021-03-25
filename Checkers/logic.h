@@ -16,4 +16,5 @@ public:
     static std::vector<Piece*> WhichPiecesCanMove(Player activePlayer, const std::map<Coordinates, Piece*>& piecesPlacement);
     static std::vector<Piece*> WhichPiecesCanCapture(Player activePlayer, const std::map<Coordinates, Piece*>& piecesPlacement);
     static bool CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement);
+    static bool CheckPromotion(const Piece* piece);
 };

@@ -8,7 +8,7 @@
 std::map<Coordinates, Piece*> Checkerboard::m_PiecesPlacement;
 Piece* Checkerboard::m_MultiCaptureInProgressPiece = nullptr;
 
-Checkerboard::Checkerboard(QGraphicsScene& scene)
+Checkerboard::Checkerboard(QGraphicsScene& scene) : QGraphicsRectItem(nullptr)
 {
     QGraphicsRectItem::setRect(BOARD_POSITION_X, BOARD_POSITION_Y, BOARD_SIZE, BOARD_SIZE);
     setPen(QPen(BOARD_OUTLINE_COLOR, BOARD_OUTLINE_WIDTH));
@@ -36,7 +36,7 @@ void Checkerboard::CreateTiles(QGraphicsScene& scene)
     {
         for(int column = 1; column <= 8; column++)
         {
-            Tile* tile = new Tile(row, column);
+            Tile* tile = new Tile(row, column, this);
             m_PiecesPlacement[Coordinates(row, column)] = nullptr;
             scene.addItem(tile);
         }
@@ -52,14 +52,14 @@ void Checkerboard::CreatePieces(QGraphicsScene& scene)
 
     for(auto pieceCoordinates : playerLowerStartingPiecesCoordinates)
     {
-        Piece* piece = new Piece(pieceCoordinates, Player::Down);
+        Piece* piece = new Piece(pieceCoordinates, Player::Down, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
 
     for(auto pieceCoordinates : playerUpperStartingPiecesCoordinates)
     {
-        Piece* piece = new Piece(pieceCoordinates, Player::Up);
+        Piece* piece = new Piece(pieceCoordinates, Player::Up, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
@@ -67,19 +67,36 @@ void Checkerboard::CreatePieces(QGraphicsScene& scene)
 
 void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
 {
-    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(7, 6)};
-    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(2, 5), Coordinates(4, 5), Coordinates(6, 5)};
+    //    GENERAL TEST
+    //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(5, 4)};
+    //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(7, 6)};
+
+    //    MULTICAPTURE TEST
+    //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(7, 6)};
+    //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(2, 5), Coordinates(4, 5), Coordinates(6, 5)};
+
+    //    PROMOTION (crown generation) TEST
+    //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(2, 3)};
+    //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(7, 6)};
+
+    //    BACKWARD MOVEMENT TEST
+    //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(2, 3)};
+    //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(7, 6)};
+
+    //BACKWARD CAPTURE TEST
+    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(4, 3)};
+    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(6, 5)};
 
     for(auto pieceCoordinates : customCoordinatesPlayerDown)
     {
-        Piece* piece = new Piece(pieceCoordinates, Player::Down);
+        Piece* piece = new Piece(pieceCoordinates, Player::Down, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
 
     for(auto pieceCoordinates : customCoordinatesPlayerUp)
     {
-        Piece* piece = new Piece(pieceCoordinates, Player::Up);
+        Piece* piece = new Piece(pieceCoordinates, Player::Up, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
@@ -127,11 +144,22 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
                 m_MultiCaptureInProgressPiece = nullptr;
             }
 
+            if(!activePiece->IsPromoted() && Logic::CheckPromotion(activePiece))
+            {
+                activePiece->Promote();
+            }
+
             EndTurn();
         }
-        else if(!IsMultiCaptureInProgress() && !Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement) && Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
+        else if(!IsMultiCaptureInProgress() && Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
         {
             MovePiece(activePiece, targetRow, targetColumn);
+
+            if(!activePiece->IsPromoted() && Logic::CheckPromotion(activePiece))
+            {
+                activePiece->Promote();
+            }
+
             EndTurn();
         }
     }

@@ -3,7 +3,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "checkerboard.h"
 
-Tile::Tile(int row, int column) : m_Coordinates(row, column)
+Tile::Tile(int row, int column, QGraphicsItem* parent) : QGraphicsRectItem(parent), m_Coordinates(row, column)
 {
     QGraphicsRectItem::setRect((column - 1) * Common::TILE_SIZE,
                                (row - 1) * Common::TILE_SIZE,
