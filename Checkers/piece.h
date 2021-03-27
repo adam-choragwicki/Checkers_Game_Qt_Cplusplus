@@ -28,19 +28,19 @@ private:
 
     QGraphicsPolygonItem* crownItem = nullptr;
 
-    const int PIECE_OFFSET_X = 15;
-    const int PIECE_OFFSET_Y = 15;
-    const int PIECE_SIZE = 50;
-    const int PIECE_OUTLINE_WIDTH = 5;
+    static const int PIECE_OFFSET_X = 15;
+    static const int PIECE_OFFSET_Y = 15;
+    static const int PIECE_SIZE = 50;
+    static const int PIECE_OUTLINE_WIDTH = 5;
 
-    const QColor BLACK_PIECE_COLOR{50, 50, 50};
-    const QColor BLACK_PIECE_OUTLINE_COLOR{0, 0, 0};
-    const QColor RED_PIECE_COLOR{220, 0, 0};
-    const QColor RED_PIECE_OUTLINE_COLOR{170, 0, 0};
-    const QColor ACTIVE_PIECE_OUTLINE_COLOR{255, 255, 255};
-    const QColor MOVE_POSSIBLE_PIECE_OUTLINE_COLOR{255, 255, 0};
+    static constexpr QColor BLACK_PIECE_COLOR{50, 50, 50};
+    static constexpr QColor BLACK_PIECE_OUTLINE_COLOR{0, 0, 0};
+    static constexpr QColor RED_PIECE_COLOR{220, 0, 0};
+    static constexpr QColor RED_PIECE_OUTLINE_COLOR{170, 0, 0};
+    static constexpr QColor ACTIVE_PIECE_OUTLINE_COLOR{255, 255, 255};
+    static constexpr QColor MOVE_POSSIBLE_PIECE_OUTLINE_COLOR{255, 255, 0};
 
-    Player m_Player;
+    const Player m_Player;
     bool m_Marked = false;
     bool m_Promoted = false;
 

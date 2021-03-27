@@ -4,6 +4,7 @@
 #include <QPen>
 #include <QGraphicsScene>
 #include <QDebug>
+#include <algorithm>
 
 std::map<Coordinates, Piece*> Checkerboard::m_PiecesPlacement;
 Piece* Checkerboard::m_MultiCaptureInProgressPiece = nullptr;
@@ -32,17 +33,27 @@ Checkerboard::Checkerboard(QGraphicsScene& scene) : QGraphicsRectItem(nullptr)
 
 void Checkerboard::CreateTiles(QGraphicsScene& scene)
 {
+    std::vector<Coordinates> playableTilesCoordinates = Logic::GeneratePlayableTilesCoordinates();
+
     for(int row = 1; row <= 8; row++)
     {
         for(int column = 1; column <= 8; column++)
         {
-            Tile* tile = new Tile(row, column, this);
-            m_PiecesPlacement[Coordinates(row, column)] = nullptr;
-            scene.addItem(tile);
+            const Coordinates coordinates(row, column);
+            bool playable = false;
+
+            //Check if the tile is playable
+            if(std::find(playableTilesCoordinates.cbegin(), playableTilesCoordinates.cend(), coordinates) != playableTilesCoordinates.cend())
+            {
+                playable = true;
+                m_PiecesPlacement[Coordinates(row, column)] = nullptr;
+            }
+
+            scene.addItem(new Tile(row, column, playable, this));
         }
     }
 
-    assert(m_PiecesPlacement.size() == 64);
+    assert(m_PiecesPlacement.size() == 32);
 }
 
 void Checkerboard::CreatePieces(QGraphicsScene& scene)
@@ -104,22 +115,21 @@ void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
 
 void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColumn, bool tileIsPlayable)
 {
-    if(tileIsPlayable)
-    {
-        if(m_PiecesPlacement.at(Coordinates(targetRow, targetColumn)) == nullptr)
-        {
-            //qDebug("Clicked tile (%d,%d) is PLAYABLE and EMPTY", targetRow, targetColumn);
-        }
-        else
-        {
-            //qDebug("Clicked tile (%d,%d) is PLAYABLE and THERE IS PIECE ON IT", targetRow, targetColumn);
-        }
-    }
-    else
-    {
-        assert(m_PiecesPlacement.at(Coordinates(targetRow, targetColumn)) == nullptr);
-        //qDebug("Clicked tile (%d,%d)", targetRow, targetColumn);
-    }
+//    if(tileIsPlayable)
+//    {
+//        if(m_PiecesPlacement.at(Coordinates(targetRow, targetColumn)) == nullptr)
+//        {
+//            qDebug("Clicked tile (%d,%d) is PLAYABLE and EMPTY", targetRow, targetColumn);
+//        }
+//        else
+//        {
+//            qDebug("Clicked tile (%d,%d) is PLAYABLE and THERE IS PIECE ON IT", targetRow, targetColumn);
+//        }
+//    }
+//    else
+//    {
+//        qDebug("Clicked tile (%d,%d)", targetRow, targetColumn);
+//    }
 
     Piece* activePiece = Piece::GetActivePiece();
 
@@ -151,7 +161,7 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
 
             EndTurn();
         }
-        else if(!IsMultiCaptureInProgress() && Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
+        else if(!IsMultiCaptureInProgress() && !Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement) && Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
         {
             MovePiece(activePiece, targetRow, targetColumn);
 

@@ -9,12 +9,13 @@ class Logic
 public:
     Logic() = delete;
     Logic(const Logic&) = delete;
-    static std::vector<Coordinates> GenerateAllValidGameTilesCoordinates();
+    static std::vector<Coordinates> GeneratePlayableTilesCoordinates();
     static std::vector<Coordinates> GenerateStartingPiecesCoordinates(Player player);
     static bool CheckMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const int targetRow, const int targetColumn);
     static bool CheckCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const int targetRow, const int targetColumn);
     static std::vector<Piece*> WhichPiecesCanMove(Player activePlayer, const std::map<Coordinates, Piece*>& piecesPlacement);
     static std::vector<Piece*> WhichPiecesCanCapture(Player activePlayer, const std::map<Coordinates, Piece*>& piecesPlacement);
+    static bool CheckIfPieceCanMove(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement);
     static bool CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement);
     static bool CheckPromotion(const Piece* piece);
 };

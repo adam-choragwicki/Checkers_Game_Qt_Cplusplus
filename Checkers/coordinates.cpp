@@ -46,3 +46,8 @@ bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
         }
     }
 }
+
+bool operator==(const Coordinates& coordinates1, const Coordinates& coordinates2)
+{
+    return (coordinates1.Row() == coordinates2.Row()) && (coordinates1.Column() == coordinates2.Column());
+}

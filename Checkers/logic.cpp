@@ -1,32 +1,29 @@
 #include "logic.h"
 #include <memory>
 
-std::vector<Coordinates> Logic::GenerateAllValidGameTilesCoordinates()
+std::vector<Coordinates> Logic::GeneratePlayableTilesCoordinates()
 {
     std::vector<Coordinates> validGameTilesCoordinates;
-
-    bool chooseEvenColumns = true;
 
     for(int row = 1; row <= 8; row++)
     {
         for(int column = 1; column <= 8; column++)
         {
-            if(chooseEvenColumns)
-            {
-                if(column % 2 == 0)
-                {
-                    validGameTilesCoordinates.push_back(Coordinates(row, column));
-                }
-            }
-            else
+            if(row % 2 == 0)
             {
                 if(column % 2 != 0)
                 {
                     validGameTilesCoordinates.push_back(Coordinates(row, column));
                 }
             }
+            else
+            {
+                if(column % 2 == 0)
+                {
+                    validGameTilesCoordinates.push_back(Coordinates(row, column));
+                }
+            }
         }
-        chooseEvenColumns ^= true;
     }
 
     return validGameTilesCoordinates;
@@ -38,13 +35,11 @@ std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
 
     if(player == Player::Down)
     {
-        bool chooseEvenColumns = false;
-
         for(int row = 6; row <= 8; row++)
         {
             for(int column = 1; column <= 8; column++)
             {
-                if(chooseEvenColumns)
+                if(row % 2 != 0)
                 {
                     if(column % 2 == 0)
                     {
@@ -59,18 +54,15 @@ std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
                     }
                 }
             }
-            chooseEvenColumns ^= true;
         }
     }
     else if(player == Player::Up)
     {
-        bool chooseEvenColumns = true;
-
         for(int row = 1; row <= 3; row++)
         {
             for(int column = 1; column <= 8; column++)
             {
-                if(chooseEvenColumns)
+                if(row % 2 != 0)
                 {
                     if(column % 2 == 0)
                     {
@@ -85,7 +77,6 @@ std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
                     }
                 }
             }
-            chooseEvenColumns ^= true;
         }
     }
 
@@ -97,9 +88,8 @@ bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates,
     //qDebug("Piece is on tile=(%d,%d)", piece->Row(), piece->Column());
     //qDebug("Destination tile=(%d,%d)", targetRow, targetColumn);
 
-    Player piecePlayer = piece->GetPlayer();
-
-    Piece* pieceOnTargetTile = piecesPlacement.at(Coordinates(targetRow, targetColumn));
+    const Player piecePlayer = piece->GetPlayer();
+    const Piece* pieceOnTargetTile = piecesPlacement.at(Coordinates(targetRow, targetColumn));
 
     //If target tile is empty
     if(pieceOnTargetTile == nullptr)
@@ -158,9 +148,8 @@ bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates,
 
 bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const int targetRow, const int targetColumn)
 {
-    Player piecePlayer = piece->GetPlayer();
-
-    Piece* pieceOnTargetTile = piecesPlacement.at(Coordinates(targetRow, targetColumn));
+    const Player piecePlayer = piece->GetPlayer();
+    const Piece* pieceOnTargetTile = piecesPlacement.at(Coordinates(targetRow, targetColumn));
 
     //If target tile is empty
     if(pieceOnTargetTile == nullptr)
@@ -416,158 +405,17 @@ std::vector<Piece*> Logic::WhichPiecesCanMove(Player activePlayer, const std::ma
 {
     std::vector<Piece*> piecesWhichCanMove;
 
-    for(auto piece: piecesPlacement)
+    for(auto piecePlacement: piecesPlacement)
     {
-        if(piece.second != nullptr)
+        if(piecePlacement.second != nullptr)
         {
-            Player piecePlayer = piece.second->GetPlayer();
+            const Player piecePlayer = piecePlacement.second->GetPlayer();
 
             if(piecePlayer == activePlayer)
             {
-                if(piecePlayer == Player::Down)
+                if(CheckIfPieceCanMove(piecePlacement.second, piecesPlacement))
                 {
-                    //Movement up is permitted
-                    Coordinates pieceCoordinates(piece.second->Row(), piece.second->Column());
-
-                    std::unique_ptr<Coordinates> moveOption1;
-                    std::unique_ptr<Coordinates> moveOption2;
-                    std::unique_ptr<Coordinates> moveOption3;
-                    std::unique_ptr<Coordinates> moveOption4;
-
-                    try {
-                        moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() - 1);
-                    }
-                    catch(std::out_of_range& exception) {
-                        moveOption1 = nullptr;
-                    }
-
-                    try {
-                        moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() + 1);
-                    }
-                    catch(std::out_of_range& exception) {
-                        moveOption2 = nullptr;
-                    }
-
-                    if(piece.second->IsPromoted())
-                    {
-                        try {
-                            moveOption3 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() - 1);
-                        }
-                        catch(std::out_of_range& exception) {
-                            moveOption3 = nullptr;
-                        }
-
-                        try {
-                            moveOption4 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() + 1);
-                        }
-                        catch(std::out_of_range& exception) {
-                            moveOption4 = nullptr;
-                        }
-                    }
-
-                    if(moveOption1)
-                    {
-                        if(piecesPlacement.at(*moveOption1) == nullptr)
-                        {
-                            piecesWhichCanMove.push_back(piece.second);
-
-                        }
-                    }
-
-                    if(moveOption2)
-                    {
-                        if(piecesPlacement.at(*moveOption2) == nullptr)
-                        {
-                            piecesWhichCanMove.push_back(piece.second);
-                        }
-                    }
-
-                    if(moveOption3)
-                    {
-                        if(piecesPlacement.at(*moveOption3) == nullptr)
-                        {
-                            piecesWhichCanMove.push_back(piece.second);
-                        }
-                    }
-
-                    if(moveOption4)
-                    {
-                        if(piecesPlacement.at(*moveOption4) == nullptr)
-                        {
-                            piecesWhichCanMove.push_back(piece.second);
-                        }
-                    }
-                }
-                else if(piecePlayer == Player::Up)
-                {
-                    //Movement down is permitted
-                    Coordinates pieceCoordinates(piece.second->Row(), piece.second->Column());
-
-                    std::unique_ptr<Coordinates> moveOption1;
-                    std::unique_ptr<Coordinates> moveOption2;
-                    std::unique_ptr<Coordinates> moveOption3;
-                    std::unique_ptr<Coordinates> moveOption4;
-
-                    try {
-                        moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() - 1);
-                    }
-                    catch(std::out_of_range& exception) {
-                        moveOption1 = nullptr;
-                    }
-
-                    try {
-                        moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() + 1);
-                    }  catch(std::out_of_range& exception) {
-                        moveOption2 = nullptr;
-                    }
-
-                    if(piece.second->IsPromoted())
-                    {
-                        try {
-                            moveOption3 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() - 1);
-                        }
-                        catch(std::out_of_range& exception) {
-                            moveOption3 = nullptr;
-                        }
-
-                        try {
-                            moveOption4 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() + 1);
-                        }  catch(std::out_of_range& exception) {
-                            moveOption4 = nullptr;
-                        }
-                    }
-
-                    if(moveOption1)
-                    {
-                        if(piecesPlacement.at(*moveOption1) == nullptr)
-                        {
-                            piecesWhichCanMove.push_back(piece.second);
-                        }
-                    }
-
-                    if(moveOption2)
-                    {
-                        if(piecesPlacement.at(*moveOption2) == nullptr)
-                        {
-                            piecesWhichCanMove.push_back(piece.second);
-                        }
-                    }
-
-                    if(moveOption3)
-                    {
-                        if(piecesPlacement.at(*moveOption3) == nullptr)
-                        {
-                            piecesWhichCanMove.push_back(piece.second);
-                        }
-                    }
-
-                    if(moveOption4)
-                    {
-                        if(piecesPlacement.at(*moveOption4) == nullptr)
-                        {
-                            piecesWhichCanMove.push_back(piece.second);
-                        }
-                    }
+                    piecesWhichCanMove.push_back(piecePlacement.second);
                 }
             }
         }
@@ -584,7 +432,7 @@ std::vector<Piece*> Logic::WhichPiecesCanCapture(Player activePlayer, const std:
     {
         if(piecePlacement.second != nullptr)
         {
-            Player piecePlayer = piecePlacement.second->GetPlayer();
+            const Player piecePlayer = piecePlacement.second->GetPlayer();
 
             if(piecePlayer == activePlayer)
             {
@@ -599,78 +447,51 @@ std::vector<Piece*> Logic::WhichPiecesCanCapture(Player activePlayer, const std:
     return piecesWhichCanCapture;
 }
 
-bool Logic::CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement)
+bool Logic::CheckIfPieceCanMove(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement)
 {
-    Player piecePlayer = piece->GetPlayer();
+    const Player piecePlayer = piece->GetPlayer();
 
     if(piecePlayer == Player::Down)
     {
         //Movement up is permitted
-        Coordinates pieceCoordinates(piece->Row(), piece->Column());
-
-        std::unique_ptr<Coordinates> moveOption1;
-        std::unique_ptr<Coordinates> moveOption2;
-        std::unique_ptr<Coordinates> moveOption3;
-        std::unique_ptr<Coordinates> moveOption4;
+        const Coordinates pieceCoordinates(piece->Row(), piece->Column());
+        std::array<std::unique_ptr<Coordinates>, 4> moveOptions;
 
         try {
-            moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
+            moveOptions[0] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() - 1);
         }
         catch(std::out_of_range& exception) {
-            moveOption1 = nullptr;
+            moveOptions[0] = nullptr;
         }
 
         try {
-            moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
+            moveOptions[1] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() + 1);
         }
         catch(std::out_of_range& exception) {
-            moveOption2 = nullptr;
+            moveOptions[1] = nullptr;
         }
 
         if(piece->IsPromoted())
         {
             try {
-                moveOption3 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
+                moveOptions[2] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() - 1);
             }
             catch(std::out_of_range& exception) {
-                moveOption3 = nullptr;
+                moveOptions[2] = nullptr;
             }
 
             try {
-                moveOption4 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
+                moveOptions[3] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() + 1);
             }
             catch(std::out_of_range& exception) {
-                moveOption4 = nullptr;
+                moveOptions[3] = nullptr;
             }
         }
 
-        if(moveOption1)
+        for(auto& moveOption : moveOptions)
         {
-            if(CheckCapturePossibility(piece, piecesPlacement, moveOption1->Row(), moveOption1->Column()))
-            {
-                return true;
-            }
-        }
-
-        if(moveOption2)
-        {
-            if(CheckCapturePossibility(piece, piecesPlacement, moveOption2->Row(), moveOption2->Column()))
-            {
-                return true;
-            }
-        }
-
-        if(moveOption3)
-        {
-            if(CheckCapturePossibility(piece, piecesPlacement, moveOption3->Row(), moveOption3->Column()))
-            {
-                return true;
-            }
-        }
-
-        if(moveOption4)
-        {
-            if(CheckCapturePossibility(piece, piecesPlacement, moveOption4->Row(), moveOption4->Column()))
+            //If move option is valid and the target tile is empty
+            if(moveOption && piecesPlacement.at(*moveOption) == nullptr)
             {
                 return true;
             }
@@ -679,70 +500,142 @@ bool Logic::CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinate
     else if(piecePlayer == Player::Up)
     {
         //Movement down is permitted
-        Coordinates pieceCoordinates(piece->Row(), piece->Column());
-
-        std::unique_ptr<Coordinates> moveOption1;
-        std::unique_ptr<Coordinates> moveOption2;
-        std::unique_ptr<Coordinates> moveOption3;
-        std::unique_ptr<Coordinates> moveOption4;
+        const Coordinates pieceCoordinates(piece->Row(), piece->Column());
+        std::array<std::unique_ptr<Coordinates>, 4> moveOptions;
 
         try {
-            moveOption1 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
+            moveOptions[0] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() - 1);
         }
         catch(std::out_of_range& exception) {
-            moveOption1 = nullptr;
+            moveOptions[0] = nullptr;
         }
 
         try {
-            moveOption2 = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
+            moveOptions[1] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() + 1);
         }
         catch(std::out_of_range& exception) {
-            moveOption2 = nullptr;
+            moveOptions[1] = nullptr;
         }
 
         if(piece->IsPromoted())
         {
             try {
-                moveOption3 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
+                moveOptions[2] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() - 1);
             }
             catch(std::out_of_range& exception) {
-                moveOption3 = nullptr;
+                moveOptions[2] = nullptr;
             }
 
             try {
-                moveOption4 = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
-            }  catch(std::out_of_range& exception) {
-                moveOption4 = nullptr;
+                moveOptions[3] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() + 1);
+            }
+            catch(std::out_of_range& exception) {
+                moveOptions[3] = nullptr;
             }
         }
 
-        if(moveOption1)
+        for(auto& moveOption : moveOptions)
         {
-            if(CheckCapturePossibility(piece, piecesPlacement, moveOption1->Row(), moveOption1->Column()))
+            //If move option is valid and the target tile is empty
+            if(moveOption && piecesPlacement.at(*moveOption) == nullptr)
             {
                 return true;
             }
         }
+    }
 
-        if(moveOption2)
+    return false;
+}
+
+bool Logic::CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement)
+{
+    const Player piecePlayer = piece->GetPlayer();
+
+    if(piecePlayer == Player::Down)
+    {
+        //Movement up is permitted
+        const Coordinates pieceCoordinates(piece->Row(), piece->Column());
+        std::array<std::unique_ptr<Coordinates>, 4> moveOptions;
+
+        try {
+            moveOptions[0] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
+        }
+        catch(std::out_of_range& exception) {
+            moveOptions[0] = nullptr;
+        }
+
+        try {
+            moveOptions[1] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
+        }
+        catch(std::out_of_range& exception) {
+            moveOptions[1] = nullptr;
+        }
+
+        if(piece->IsPromoted())
         {
-            if(CheckCapturePossibility(piece, piecesPlacement, moveOption2->Row(), moveOption2->Column()))
+            try {
+                moveOptions[2] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
+            }
+            catch(std::out_of_range& exception) {
+                moveOptions[2] = nullptr;
+            }
+
+            try {
+                moveOptions[3] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
+            }
+            catch(std::out_of_range& exception) {
+                moveOptions[3] = nullptr;
+            }
+        }
+
+        for(auto& moveOption : moveOptions)
+        {
+            if(moveOption && CheckCapturePossibility(piece, piecesPlacement, moveOption->Row(), moveOption->Column()))
             {
                 return true;
             }
         }
+    }
+    else if(piecePlayer == Player::Up)
+    {
+        //Movement down is permitted
+        const Coordinates pieceCoordinates(piece->Row(), piece->Column());
+        std::array<std::unique_ptr<Coordinates>, 4> moveOptions;
 
-        if(moveOption3)
+        try {
+            moveOptions[0] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
+        }
+        catch(std::out_of_range& exception) {
+            moveOptions[0] = nullptr;
+        }
+
+        try {
+            moveOptions[1] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
+        }
+        catch(std::out_of_range& exception) {
+            moveOptions[1] = nullptr;
+        }
+
+        if(piece->IsPromoted())
         {
-            if(CheckCapturePossibility(piece, piecesPlacement, moveOption3->Row(), moveOption3->Column()))
-            {
-                return true;
+            try {
+                moveOptions[2] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
+            }
+            catch(std::out_of_range& exception) {
+                moveOptions[2] = nullptr;
+            }
+
+            try {
+                moveOptions[3] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
+            }
+            catch(std::out_of_range& exception) {
+                moveOptions[3] = nullptr;
             }
         }
 
-        if(moveOption4)
+        for(auto& moveOption : moveOptions)
         {
-            if(CheckCapturePossibility(piece, piecesPlacement, moveOption4->Row(), moveOption4->Column()))
+            if(moveOption && CheckCapturePossibility(piece, piecesPlacement, moveOption->Row(), moveOption->Column()))
             {
                 return true;
             }

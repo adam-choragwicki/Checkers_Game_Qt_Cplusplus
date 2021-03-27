@@ -7,16 +7,14 @@
 class Tile : public QGraphicsRectItem
 {
 public:
-    Tile(int row, int column, QGraphicsItem* parent);
+    Tile(int row, int column, bool playable, QGraphicsItem* parent);
     bool IsPlayable() const {return m_Playable;}
 
 private:
-    const QColor BROWN_TILE_COLOR{140, 90, 40};
-    const QColor WHITE_TILE_COLOR{230, 200, 160};
-
+    static constexpr QColor BROWN_TILE_COLOR{140, 90, 40};
+    static constexpr QColor WHITE_TILE_COLOR{230, 200, 160};
     const Coordinates m_Coordinates;
-
-    bool m_Playable = false;
+    const bool m_Playable;
 
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 };

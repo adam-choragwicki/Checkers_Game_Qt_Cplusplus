@@ -24,6 +24,10 @@ Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent) : QG
         setBrush(RED_PIECE_COLOR);
         setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
     }
+    else
+    {
+        assert(false);
+    }
 }
 
 void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
