@@ -11,8 +11,8 @@ public:
     Logic(const Logic&) = delete;
     static std::vector<Coordinates> GeneratePlayableTilesCoordinates();
     static std::vector<Coordinates> GenerateStartingPiecesCoordinates(Player player);
-    static bool CheckMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const int targetRow, const int targetColumn);
-    static bool CheckCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const int targetRow, const int targetColumn);
+    static bool CheckMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetCoordinates);
+    static bool CheckCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetCoordinates);
     static std::vector<Piece*> WhichPiecesCanMove(Player activePlayer, const std::map<Coordinates, Piece*>& piecesPlacement);
     static std::vector<Piece*> WhichPiecesCanCapture(Player activePlayer, const std::map<Coordinates, Piece*>& piecesPlacement);
     static bool CheckIfPieceCanMove(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement);

@@ -83,13 +83,13 @@ std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
     return startingPiecesCoordinates;
 }
 
-bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const int targetRow, const int targetColumn)
+bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetCoordinates)
 {
     //qDebug("Piece is on tile=(%d,%d)", piece->Row(), piece->Column());
     //qDebug("Destination tile=(%d,%d)", targetRow, targetColumn);
 
     const Player piecePlayer = piece->GetPlayer();
-    const Piece* pieceOnTargetTile = piecesPlacement.at(Coordinates(targetRow, targetColumn));
+    const Piece* pieceOnTargetTile = piecesPlacement.at(targetCoordinates);
 
     //If target tile is empty
     if(pieceOnTargetTile == nullptr)
@@ -97,12 +97,12 @@ bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates,
         if(piecePlayer == Player::Down)
         {
             //Movement up is permitted
-            if((targetRow == piece->Row() - 1) && ((targetColumn == piece->Column() - 1) || (targetColumn == piece->Column() + 1)))
+            if((targetCoordinates.Row() == piece->Row() - 1) && ((targetCoordinates.Column() == piece->Column() - 1) || (targetCoordinates.Column() == piece->Column() + 1)))
             {
                 return true;
             }
             //Movement down is permitted for promoted piece
-            else if(piece->IsPromoted() == true && (targetRow == piece->Row() + 1) && ((targetColumn == piece->Column() - 1) || (targetColumn == piece->Column() + 1)))
+            else if(piece->IsPromoted() == true && (targetCoordinates.Row() == piece->Row() + 1) && ((targetCoordinates.Column() == piece->Column() - 1) || (targetCoordinates.Column() == piece->Column() + 1)))
             {
                 qDebug("Movement down is permitted for promoted piece");
                 return true;
@@ -116,12 +116,12 @@ bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates,
         else if(piecePlayer == Player::Up)
         {
             //Movement down is permitted
-            if(targetRow == piece->Row() + 1 && ((targetColumn == piece->Column() - 1) || (targetColumn == piece->Column() + 1)))
+            if(targetCoordinates.Row() == piece->Row() + 1 && ((targetCoordinates.Column() == piece->Column() - 1) || (targetCoordinates.Column() == piece->Column() + 1)))
             {
                 return true;
             }
             //Movement up is permitted for promoted piece
-            else if(piece->IsPromoted() == true && (targetRow == piece->Row() - 1) && ((targetColumn == piece->Column() - 1) || (targetColumn == piece->Column() + 1)))
+            else if(piece->IsPromoted() == true && (targetCoordinates.Row() == piece->Row() - 1) && ((targetCoordinates.Column() == piece->Column() - 1) || (targetCoordinates.Column() == piece->Column() + 1)))
             {
                 qDebug("Movement up is permitted for promoted piece");
                 return true;
@@ -146,10 +146,10 @@ bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates,
     }
 }
 
-bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const int targetRow, const int targetColumn)
+bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetCoordinates)
 {
     const Player piecePlayer = piece->GetPlayer();
-    const Piece* pieceOnTargetTile = piecesPlacement.at(Coordinates(targetRow, targetColumn));
+    const Piece* pieceOnTargetTile = piecesPlacement.at(Coordinates(targetCoordinates.Row(), targetCoordinates.Column()));
 
     //If target tile is empty
     if(pieceOnTargetTile == nullptr)
@@ -157,9 +157,9 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
         if(piecePlayer == Player::Down)
         {
             //Movement up is permitted
-            if(targetRow == piece->Row() - 2)
+            if(targetCoordinates.Row() == piece->Row() - 2)
             {
-                if(targetColumn == piece->Column() - 2)
+                if(targetCoordinates.Column() == piece->Column() - 2)
                 {
                     Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() - 1));
 
@@ -182,7 +182,7 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                         return false;
                     }
                 }
-                else if(targetColumn == piece->Column() + 2)
+                else if(targetCoordinates.Column() == piece->Column() + 2)
                 {
                     Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() + 1));
 
@@ -211,9 +211,9 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                     return false;
                 }
             }
-            else if(piece->IsPromoted() && (targetRow == piece->Row() + 2))
+            else if(piece->IsPromoted() && (targetCoordinates.Row() == piece->Row() + 2))
             {
-                if(targetColumn == piece->Column() - 2)
+                if(targetCoordinates.Column() == piece->Column() - 2)
                 {
                     Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() - 1));
 
@@ -236,7 +236,7 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                         return false;
                     }
                 }
-                else if(targetColumn == piece->Column() + 2)
+                else if(targetCoordinates.Column() == piece->Column() + 2)
                 {
                     Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() + 1));
 
@@ -274,9 +274,9 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
         else if(piecePlayer == Player::Up)
         {
             //Movement down is permitted
-            if(targetRow == piece->Row() + 2)
+            if(targetCoordinates.Row() == piece->Row() + 2)
             {
-                if(targetColumn == piece->Column() - 2)
+                if(targetCoordinates.Column() == piece->Column() - 2)
                 {
                     Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() - 1));
 
@@ -299,7 +299,7 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                         return false;
                     }
                 }
-                else if(targetColumn == piece->Column() + 2)
+                else if(targetCoordinates.Column() == piece->Column() + 2)
                 {
                     Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() + 1));
 
@@ -328,9 +328,9 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                     return false;
                 }
             }
-            else if(piece->IsPromoted() && (targetRow == piece->Row() - 2))
+            else if(piece->IsPromoted() && (targetCoordinates.Row() == piece->Row() - 2))
             {
-                if(targetColumn == piece->Column() - 2)
+                if(targetCoordinates.Column() == piece->Column() - 2)
                 {
                     Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() - 1));
 
@@ -353,7 +353,7 @@ bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinat
                         return false;
                     }
                 }
-                else if(targetColumn == piece->Column() + 2)
+                else if(targetCoordinates.Column() == piece->Column() + 2)
                 {
                     Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() + 1));
 
@@ -405,7 +405,7 @@ std::vector<Piece*> Logic::WhichPiecesCanMove(Player activePlayer, const std::ma
 {
     std::vector<Piece*> piecesWhichCanMove;
 
-    for(auto piecePlacement: piecesPlacement)
+    for(auto& piecePlacement: piecesPlacement)
     {
         if(piecePlacement.second != nullptr)
         {
@@ -428,7 +428,7 @@ std::vector<Piece*> Logic::WhichPiecesCanCapture(Player activePlayer, const std:
 {
     std::vector<Piece*> piecesWhichCanCapture;
 
-    for(auto piecePlacement : piecesPlacement)
+    for(auto& piecePlacement : piecesPlacement)
     {
         if(piecePlacement.second != nullptr)
         {
@@ -590,7 +590,7 @@ bool Logic::CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinate
 
         for(auto& moveOption : moveOptions)
         {
-            if(moveOption && CheckCapturePossibility(piece, piecesPlacement, moveOption->Row(), moveOption->Column()))
+            if(moveOption && CheckCapturePossibility(piece, piecesPlacement, Coordinates(moveOption->Row(), moveOption->Column())))
             {
                 return true;
             }
@@ -635,7 +635,7 @@ bool Logic::CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinate
 
         for(auto& moveOption : moveOptions)
         {
-            if(moveOption && CheckCapturePossibility(piece, piecesPlacement, moveOption->Row(), moveOption->Column()))
+            if(moveOption && CheckCapturePossibility(piece, piecesPlacement, Coordinates(moveOption->Row(), moveOption->Column())))
             {
                 return true;
             }
@@ -647,16 +647,20 @@ bool Logic::CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinate
 
 bool Logic::CheckPromotion(const Piece* piece)
 {
+    if(piece->IsPromoted())
+    {
+        return false;
+    }
+
     const Player piecePlayer = piece->GetPlayer();
     const Coordinates pieceCoordinates(piece->Row(), piece->Column());
 
     if(piecePlayer == Player::Down)
     {
         //Movement up is permitted
-
         if(pieceCoordinates.Row() == 1)
         {
-            qDebug("Promotion");
+            //qDebug("Promotion");
             return true;
         }
     }
@@ -665,7 +669,7 @@ bool Logic::CheckPromotion(const Piece* piece)
         //Movement down is permitted
         if(pieceCoordinates.Row() == 8)
         {
-            qDebug("Promotion");
+            //qDebug("Promotion");
             return true;
         }
     }

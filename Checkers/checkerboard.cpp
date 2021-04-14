@@ -49,7 +49,7 @@ void Checkerboard::CreateTiles(QGraphicsScene& scene)
                 m_PiecesPlacement[Coordinates(row, column)] = nullptr;
             }
 
-            scene.addItem(new Tile(row, column, playable, this));
+            scene.addItem(new Tile(Coordinates(row, column), playable, this));
         }
     }
 
@@ -61,14 +61,14 @@ void Checkerboard::CreatePieces(QGraphicsScene& scene)
     std::vector<Coordinates> playerLowerStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::Down);
     std::vector<Coordinates> playerUpperStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::Up);
 
-    for(auto pieceCoordinates : playerLowerStartingPiecesCoordinates)
+    for(auto& pieceCoordinates : playerLowerStartingPiecesCoordinates)
     {
         Piece* piece = new Piece(pieceCoordinates, Player::Down, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
 
-    for(auto pieceCoordinates : playerUpperStartingPiecesCoordinates)
+    for(auto& pieceCoordinates : playerUpperStartingPiecesCoordinates)
     {
         Piece* piece = new Piece(pieceCoordinates, Player::Up, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
@@ -98,14 +98,14 @@ void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
     std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(4, 3)};
     std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(6, 5)};
 
-    for(auto pieceCoordinates : customCoordinatesPlayerDown)
+    for(auto& pieceCoordinates : customCoordinatesPlayerDown)
     {
         Piece* piece = new Piece(pieceCoordinates, Player::Down, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
 
-    for(auto pieceCoordinates : customCoordinatesPlayerUp)
+    for(auto& pieceCoordinates : customCoordinatesPlayerUp)
     {
         Piece* piece = new Piece(pieceCoordinates, Player::Up, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
@@ -135,7 +135,7 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
 
     if(activePiece && tileIsPlayable)
     {
-        if(Logic::CheckCapturePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
+        if(Logic::CheckCapturePossibility(activePiece, m_PiecesPlacement, Coordinates(targetRow, targetColumn)))
         {
             CapturePiece(activePiece, targetRow, targetColumn);
 
@@ -161,7 +161,7 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
 
             EndTurn();
         }
-        else if(!IsMultiCaptureInProgress() && !Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement) && Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetRow, targetColumn))
+        else if(!IsMultiCaptureInProgress() && !Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement) && Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, Coordinates(targetRow, targetColumn)))
         {
             MovePiece(activePiece, targetRow, targetColumn);
 
@@ -194,7 +194,7 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
 
 void Checkerboard::MarkPieces(std::vector<Piece*>& pieces)
 {
-    for(auto piece : pieces)
+    for(auto& piece : pieces)
     {
         piece->MarkValidMoveAvailable();
     }
@@ -202,7 +202,7 @@ void Checkerboard::MarkPieces(std::vector<Piece*>& pieces)
 
 void Checkerboard::UnmarkAllPieces()
 {
-    for(auto piecePlacement : m_PiecesPlacement)
+    for(auto& piecePlacement : m_PiecesPlacement)
     {
         if(piecePlacement.second != nullptr)
         {
@@ -215,7 +215,7 @@ void Checkerboard::MovePiece(Piece* piece, const int targetRow, const int target
 {
     m_PiecesPlacement[Coordinates(piece->Row(), piece->Column())] = nullptr;
     m_PiecesPlacement[Coordinates(targetRow, targetColumn)] = piece;
-    piece->MoveToTile(targetRow, targetColumn);
+    piece->MoveToTile(Coordinates(targetRow, targetColumn));
 }
 
 void Checkerboard::CapturePiece(Piece* piece, const int targetRow, const int targetColumn)

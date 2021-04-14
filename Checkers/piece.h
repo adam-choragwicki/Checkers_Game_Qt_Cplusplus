@@ -7,10 +7,11 @@
 class Piece : public QGraphicsEllipseItem
 {
 public:
-    Piece(Coordinates coordinates, Player player, QGraphicsItem* parent);
-    void MoveToTile(int row, int column);
+    Piece(Coordinates coordinates, Player player, QGraphicsItem* parent=nullptr, bool promoted=false);
+    void MoveToTile(Coordinates coordinates);
     int Row() const {return m_Coordinates.Row();}
     int Column() const {return m_Coordinates.Column();}
+    Coordinates& GetCoordinates() {return m_Coordinates;}
     Player GetPlayer() const {return m_Player;}
     void MarkActive();
     void MarkValidMoveAvailable();

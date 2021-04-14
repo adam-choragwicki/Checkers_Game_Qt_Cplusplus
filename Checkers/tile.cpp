@@ -3,10 +3,10 @@
 #include <QGraphicsSceneMouseEvent>
 #include "checkerboard.h"
 
-Tile::Tile(int row, int column, bool playable, QGraphicsItem* parent) : QGraphicsRectItem(parent), m_Coordinates(row, column), m_Playable(playable)
+Tile::Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent) : QGraphicsRectItem(parent), m_Coordinates(coordinates.Row(), coordinates.Column()), m_Playable(playable)
 {
-    QGraphicsRectItem::setRect((column - 1) * Common::TILE_SIZE,
-                               (row - 1) * Common::TILE_SIZE,
+    QGraphicsRectItem::setRect((coordinates.Column() - 1) * Common::TILE_SIZE,
+                               (coordinates.Row() - 1) * Common::TILE_SIZE,
                                Common::TILE_SIZE,
                                Common::TILE_SIZE);
 

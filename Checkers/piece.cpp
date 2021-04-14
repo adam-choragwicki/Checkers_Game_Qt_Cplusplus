@@ -7,7 +7,7 @@
 
 Piece* Piece::m_ActivePiece = nullptr;
 
-Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent) : QGraphicsEllipseItem(parent), m_Coordinates(coordinates.Row(), coordinates.Column()), m_Player(player)
+Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent, bool promoted) : QGraphicsEllipseItem(parent), m_Coordinates(coordinates.Row(), coordinates.Column()), m_Player(player)
 {
     QGraphicsEllipseItem::setRect((coordinates.Column() - 1) * Common::TILE_SIZE + PIECE_OFFSET_X,
                                   (coordinates.Row() - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y,
@@ -27,6 +27,11 @@ Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent) : QG
     else
     {
         assert(false);
+    }
+
+    if(promoted)
+    {
+        Promote();
     }
 }
 
@@ -108,7 +113,7 @@ void Piece::Promote()
     crownItem = new QGraphicsPolygonItem(crown, this);
     crownItem->setBrush(CROWN_COLOR);
 
-    qDebug("Drawing crown on (%d,%d)", m_Coordinates.Row(), m_Coordinates.Column());
+    //qDebug("Drawing crown on (%d,%d)", m_Coordinates.Row(), m_Coordinates.Column());
 }
 
 void Piece::ResetActivePiecePointer()
@@ -162,15 +167,15 @@ void Piece::Unmark()
     }
 }
 
-void Piece::MoveToTile(int row, int column)
+void Piece::MoveToTile(Coordinates coordinates)
 {
-    qDebug("%s=(%d,%d)", __FUNCTION__, row, column);
+    qDebug("%s=(%d,%d)", __FUNCTION__, coordinates.Row(), coordinates.Column());
 
     /*Increase Z value so that piece is drawn over captured piece*/
     setZValue(1);
 
     Coordinates currentCoordinates(m_Coordinates.Row(), m_Coordinates.Column());
-    Coordinates newCoordinates(row, column);
+    Coordinates newCoordinates(coordinates.Row(), coordinates.Column());
 
     AnimateFromCurrentToNewCoordinates(currentCoordinates, newCoordinates);
 
