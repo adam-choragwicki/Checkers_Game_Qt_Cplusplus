@@ -20,6 +20,7 @@ Tile::Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent) : QGra
     }
 
     setPen(QPen(brush().color()));
+    setAcceptHoverEvents(true);
 }
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent* event)
@@ -28,4 +29,9 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent* event)
     {
         Checkerboard::ProcessTileClicked(m_Coordinates.Row(), m_Coordinates.Column(), m_Playable);
     }
+}
+
+void Tile::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
+{
+    setToolTip(QString::number(m_Coordinates.Row()) + "," + QString::number(m_Coordinates.Column()));
 }

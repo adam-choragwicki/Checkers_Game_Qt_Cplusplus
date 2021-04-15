@@ -17,4 +17,5 @@ private:
     const bool m_Playable;
 
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
 };
