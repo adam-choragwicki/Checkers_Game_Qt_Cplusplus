@@ -4,6 +4,8 @@
 #include <QApplication>
 #include <chrono>
 #include <thread>
+#include "logic.h"
+#include <exception>
 
 Piece* Piece::m_ActivePiece = nullptr;
 
@@ -13,6 +15,13 @@ Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent, bool
                                   (coordinates.Row() - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y,
                                   PIECE_SIZE,
                                   PIECE_SIZE);
+
+    std::vector<Coordinates> playableTileCoordinates = Logic::GeneratePlayableTilesCoordinates();
+
+    if(std::find(playableTileCoordinates.begin(), playableTileCoordinates.end(), coordinates) == playableTileCoordinates.end())
+    {
+        throw std::logic_error("Error, trying to put piece on non-playable tile");
+    }
 
     if(m_Player == Player::Down)
     {
