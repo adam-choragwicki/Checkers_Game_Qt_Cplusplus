@@ -23,12 +23,12 @@ Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent, bool
         throw std::logic_error("Error, trying to put piece on non-playable tile");
     }
 
-    if(m_Player == Player::Down)
+    if(m_Player == Player::DOWN)
     {
         setBrush(BLACK_PIECE_COLOR);
         setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
     }
-    else if(m_Player == Player::Up)
+    else if(m_Player == Player::UP)
     {
         setBrush(RED_PIECE_COLOR);
         setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
@@ -74,12 +74,12 @@ void Piece::Unclicked()
 {
     qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
 
-    if(m_Player == Player::Down)
+    if(m_Player == Player::DOWN)
     {
         setBrush(BLACK_PIECE_COLOR);
         setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
     }
-    else if(m_Player == Player::Up)
+    else if(m_Player == Player::UP)
     {
         setBrush(RED_PIECE_COLOR);
         setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
@@ -140,12 +140,12 @@ void Piece::MarkValidMoveAvailable()
 {
     m_Marked = true;
 
-    if(m_Player == Player::Down)
+    if(m_Player == Player::DOWN)
     {
         setBrush(BLACK_PIECE_COLOR);
         setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
     }
-    else if(m_Player == Player::Up)
+    else if(m_Player == Player::UP)
     {
         setBrush(RED_PIECE_COLOR);
         setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
@@ -160,12 +160,12 @@ void Piece::Unmark()
 {
     m_Marked = false;
 
-    if(m_Player == Player::Down)
+    if(m_Player == Player::DOWN)
     {
         setBrush(BLACK_PIECE_COLOR);
         setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
     }
-    else if(m_Player == Player::Up)
+    else if(m_Player == Player::UP)
     {
         setBrush(RED_PIECE_COLOR);
         setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));

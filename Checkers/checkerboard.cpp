@@ -58,19 +58,19 @@ void Checkerboard::CreateTiles(QGraphicsScene& scene)
 
 void Checkerboard::CreatePieces(QGraphicsScene& scene)
 {
-    std::vector<Coordinates> playerLowerStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::Down);
-    std::vector<Coordinates> playerUpperStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::Up);
+    std::vector<Coordinates> playerLowerStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::DOWN);
+    std::vector<Coordinates> playerUpperStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::UP);
 
     for(auto& pieceCoordinates : playerLowerStartingPiecesCoordinates)
     {
-        Piece* piece = new Piece(pieceCoordinates, Player::Down, this);
+        Piece* piece = new Piece(pieceCoordinates, Player::DOWN, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
 
     for(auto& pieceCoordinates : playerUpperStartingPiecesCoordinates)
     {
-        Piece* piece = new Piece(pieceCoordinates, Player::Up, this);
+        Piece* piece = new Piece(pieceCoordinates, Player::UP, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
@@ -100,14 +100,14 @@ void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
 
     for(auto& pieceCoordinates : customCoordinatesPlayerDown)
     {
-        Piece* piece = new Piece(pieceCoordinates, Player::Down, this);
+        Piece* piece = new Piece(pieceCoordinates, Player::DOWN, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
 
     for(auto& pieceCoordinates : customCoordinatesPlayerUp)
     {
-        Piece* piece = new Piece(pieceCoordinates, Player::Up, this);
+        Piece* piece = new Piece(pieceCoordinates, Player::UP, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
         scene.addItem(piece);
     }
@@ -154,7 +154,7 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
                 m_MultiCaptureInProgressPiece = nullptr;
             }
 
-            if(!activePiece->IsPromoted() && Logic::CheckPromotion(activePiece))
+            if(!activePiece->IsPromoted() && Logic::CheckPromotionEligibility(activePiece))
             {
                 activePiece->Promote();
             }
@@ -165,7 +165,7 @@ void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColum
         {
             MovePiece(activePiece, targetRow, targetColumn);
 
-            if(!activePiece->IsPromoted() && Logic::CheckPromotion(activePiece))
+            if(!activePiece->IsPromoted() && Logic::CheckPromotionEligibility(activePiece))
             {
                 activePiece->Promote();
             }
@@ -229,13 +229,13 @@ void Checkerboard::CapturePiece(Piece* piece, const int targetRow, const int tar
 
 void Checkerboard::EndTurn()
 {
-    if(Common::GetActivePlayer() == Player::Down)
+    if(Common::GetActivePlayer() == Player::DOWN)
     {
-        Common::SetActivePlayer(Player::Up);
+        Common::SetActivePlayer(Player::UP);
     }
-    else if(Common::GetActivePlayer() == Player::Up)
+    else if(Common::GetActivePlayer() == Player::UP)
     {
-        Common::SetActivePlayer(Player::Down);
+        Common::SetActivePlayer(Player::DOWN);
     }
     else
     {

@@ -1,9 +1,9 @@
 #pragma once
 
-enum Player
+enum class Player
 {
-    Up = 1,
-    Down = 2
+    UP = 1,
+    DOWN = 2
 };
 
 enum class TileColor

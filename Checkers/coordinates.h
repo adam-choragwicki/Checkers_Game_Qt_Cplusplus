@@ -10,6 +10,8 @@ public:
     int Row() const {return m_Row;}
     int Column() const {return m_Column;}
 
+    static bool ValidateCoordinates(int row, int column);
+
 private:
     int m_Row;
     int m_Column;

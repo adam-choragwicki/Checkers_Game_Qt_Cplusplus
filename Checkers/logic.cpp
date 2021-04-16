@@ -3,7 +3,7 @@
 
 std::vector<Coordinates> Logic::GeneratePlayableTilesCoordinates()
 {
-    std::vector<Coordinates> validGameTilesCoordinates;
+    std::vector<Coordinates> playableTilesCoordinates;
 
     for(int row = 1; row <= 8; row++)
     {
@@ -13,27 +13,27 @@ std::vector<Coordinates> Logic::GeneratePlayableTilesCoordinates()
             {
                 if(column % 2 != 0)
                 {
-                    validGameTilesCoordinates.push_back(Coordinates(row, column));
+                    playableTilesCoordinates.push_back(Coordinates(row, column));
                 }
             }
             else
             {
                 if(column % 2 == 0)
                 {
-                    validGameTilesCoordinates.push_back(Coordinates(row, column));
+                    playableTilesCoordinates.push_back(Coordinates(row, column));
                 }
             }
         }
     }
 
-    return validGameTilesCoordinates;
+    return playableTilesCoordinates;
 }
 
 std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
 {
     std::vector<Coordinates> startingPiecesCoordinates;
 
-    if(player == Player::Down)
+    if(player == Player::DOWN)
     {
         for(int row = 6; row <= 8; row++)
         {
@@ -56,7 +56,7 @@ std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
             }
         }
     }
-    else if(player == Player::Up)
+    else if(player == Player::UP)
     {
         for(int row = 1; row <= 3; row++)
         {
@@ -83,314 +83,63 @@ std::vector<Coordinates> Logic::GenerateStartingPiecesCoordinates(Player player)
     return startingPiecesCoordinates;
 }
 
-bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetCoordinates)
+bool Logic::CheckMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetTileCoordinates)
 {
     //qDebug("Piece is on tile=(%d,%d)", piece->Row(), piece->Column());
     //qDebug("Destination tile=(%d,%d)", targetRow, targetColumn);
 
-    const Player piecePlayer = piece->GetPlayer();
-    const Piece* pieceOnTargetTile = piecesPlacement.at(targetCoordinates);
-
-    //If target tile is empty
-    if(pieceOnTargetTile == nullptr)
+    if(IsTileEmpty(targetTileCoordinates, piecesPlacement))
     {
-        if(piecePlayer == Player::Down)
-        {
-            //Movement up is permitted
-            if((targetCoordinates.Row() == piece->Row() - 1) && ((targetCoordinates.Column() == piece->Column() - 1) || (targetCoordinates.Column() == piece->Column() + 1)))
-            {
-                return true;
-            }
-            //Movement down is permitted for promoted piece
-            else if(piece->IsPromoted() == true && (targetCoordinates.Row() == piece->Row() + 1) && ((targetCoordinates.Column() == piece->Column() - 1) || (targetCoordinates.Column() == piece->Column() + 1)))
-            {
-                qDebug("Movement down is permitted for promoted piece");
-                return true;
-            }
-            else
-            {
-                //qDebug("Movement not permitted");
-                return false;
-            }
-        }
-        else if(piecePlayer == Player::Up)
-        {
-            //Movement down is permitted
-            if(targetCoordinates.Row() == piece->Row() + 1 && ((targetCoordinates.Column() == piece->Column() - 1) || (targetCoordinates.Column() == piece->Column() + 1)))
-            {
-                return true;
-            }
-            //Movement up is permitted for promoted piece
-            else if(piece->IsPromoted() == true && (targetCoordinates.Row() == piece->Row() - 1) && ((targetCoordinates.Column() == piece->Column() - 1) || (targetCoordinates.Column() == piece->Column() + 1)))
-            {
-                qDebug("Movement up is permitted for promoted piece");
-                return true;
-            }
-            else
-            {
-                //qDebug("Move not permitted");
-                return false;
-            }
-        }
-        else
-        {
-            assert(false);
-        }
-
-        return true;
+        /*Check if this movement is one of possible movements*/
+        std::vector<Coordinates> moveOptions = GeneratePossiblePieceMovementOptionsCoordinates(piece);
+        return std::find(moveOptions.begin(), moveOptions.end(), targetTileCoordinates) != moveOptions.end();
     }
     else
     {
-        //qDebug("Destination tile is not empty!");
+        //qDebug("Cannot move, destination tile is not empty!");
         return false;
     }
 }
 
-bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetCoordinates)
+bool Logic::CheckCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetTileCoordinates)
 {
-    const Player piecePlayer = piece->GetPlayer();
-    const Piece* pieceOnTargetTile = piecesPlacement.at(Coordinates(targetCoordinates.Row(), targetCoordinates.Column()));
+    const Coordinates pieceCoordinates(piece->Row(), piece->Column());
 
-    //If target tile is empty
-    if(pieceOnTargetTile == nullptr)
+    if(IsTileEmpty(targetTileCoordinates, piecesPlacement))
     {
-        if(piecePlayer == Player::Down)
+        /*Check if this capture is one of possible captures*/
+        std::vector<Coordinates> captureOptions = GeneratePossiblePieceCaptureOptionsCoordinates(piece);
+
+        if(std::find(captureOptions.begin(), captureOptions.end(), targetTileCoordinates) != captureOptions.end())
         {
-            //Movement up is permitted
-            if(targetCoordinates.Row() == piece->Row() - 2)
+            std::pair<int, int> targetRowColumnCaptureOffset(targetTileCoordinates.Row() - pieceCoordinates.Row(),
+                                                             targetTileCoordinates.Column() - pieceCoordinates.Column());
+
+            Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(pieceCoordinates.Row() + targetRowColumnCaptureOffset.first / 2,
+                                                                                       pieceCoordinates.Column() + targetRowColumnCaptureOffset.second / 2));
+
+            if(pieceBetweenThisPieceAndTargetTile)
             {
-                if(targetCoordinates.Column() == piece->Column() - 2)
+                if(piece->GetPlayer() != pieceBetweenThisPieceAndTargetTile->GetPlayer())
                 {
-                    Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() - 1));
-
-                    if(pieceBetweenThisPieceAndTargetTile)
-                    {
-                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Up)
-                        {
-                            //qDebug("Capture is possible");
-                            return true;
-                        }
-                        else
-                        {
-                            //qDebug("Cannot capture over your own piece");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        //qDebug("Tile between is empty, capture impossible");
-                        return false;
-                    }
-                }
-                else if(targetCoordinates.Column() == piece->Column() + 2)
-                {
-                    Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() + 1));
-
-                    if(pieceBetweenThisPieceAndTargetTile)
-                    {
-                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Up)
-                        {
-                            //qDebug("Capture is possible");
-                            return true;
-                        }
-                        else
-                        {
-                            //qDebug("Cannot capture over your own piece");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        //qDebug("Tile between is empty, capture impossible");
-                        return false;
-                    }
+                    //qDebug("Capture is possible");
+                    return true;
                 }
                 else
                 {
-                    //qDebug("Capture target is not 2 columns away");
-                    return false;
-                }
-            }
-            else if(piece->IsPromoted() && (targetCoordinates.Row() == piece->Row() + 2))
-            {
-                if(targetCoordinates.Column() == piece->Column() - 2)
-                {
-                    Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() - 1));
-
-                    if(pieceBetweenThisPieceAndTargetTile)
-                    {
-                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Up)
-                        {
-                            //qDebug("Capture is possible");
-                            return true;
-                        }
-                        else
-                        {
-                            //qDebug("Cannot capture over your own piece");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        //qDebug("Tile between is empty, capture impossible");
-                        return false;
-                    }
-                }
-                else if(targetCoordinates.Column() == piece->Column() + 2)
-                {
-                    Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() + 1));
-
-                    if(pieceBetweenThisPieceAndTargetTile)
-                    {
-                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Up)
-                        {
-                            //qDebug("Capture is possible");
-                            return true;
-                        }
-                        else
-                        {
-                            //qDebug("Cannot capture over your own piece");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        //qDebug("Tile between is empty, capture impossible");
-                        return false;
-                    }
-                }
-                else
-                {
-                    //qDebug("Capture target is not 2 columns away");
+                    //qDebug("Cannot capture over friendly piece");
                     return false;
                 }
             }
             else
             {
-                //qDebug("Capture target is not 2 rows away");
-                return false;
-            }
-        }
-        else if(piecePlayer == Player::Up)
-        {
-            //Movement down is permitted
-            if(targetCoordinates.Row() == piece->Row() + 2)
-            {
-                if(targetCoordinates.Column() == piece->Column() - 2)
-                {
-                    Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() - 1));
-
-                    if(pieceBetweenThisPieceAndTargetTile)
-                    {
-                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Down)
-                        {
-                            //qDebug("Capture is possible");
-                            return true;
-                        }
-                        else
-                        {
-                            //qDebug("Cannot capture over your own piece");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        //qDebug("Tile between is empty, capture impossible");
-                        return false;
-                    }
-                }
-                else if(targetCoordinates.Column() == piece->Column() + 2)
-                {
-                    Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() + 1, piece->Column() + 1));
-
-                    if(pieceBetweenThisPieceAndTargetTile)
-                    {
-                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Down)
-                        {
-                            //qDebug("Capture is possible");
-                            return true;
-                        }
-                        else
-                        {
-                            //qDebug("Cannot capture over your own piece");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        //qDebug("Tile between is empty, capture impossible");
-                        return false;
-                    }
-                }
-                else
-                {
-                    //qDebug("Capture target is not 2 columns away");
-                    return false;
-                }
-            }
-            else if(piece->IsPromoted() && (targetCoordinates.Row() == piece->Row() - 2))
-            {
-                if(targetCoordinates.Column() == piece->Column() - 2)
-                {
-                    Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() - 1));
-
-                    if(pieceBetweenThisPieceAndTargetTile)
-                    {
-                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Down)
-                        {
-                            //qDebug("Capture is possible");
-                            return true;
-                        }
-                        else
-                        {
-                            //qDebug("Cannot capture over your own piece");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        //qDebug("Tile between is empty, capture impossible");
-                        return false;
-                    }
-                }
-                else if(targetCoordinates.Column() == piece->Column() + 2)
-                {
-                    Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(piece->Row() - 1, piece->Column() + 1));
-
-                    if(pieceBetweenThisPieceAndTargetTile)
-                    {
-                        if(pieceBetweenThisPieceAndTargetTile->GetPlayer() == Player::Down)
-                        {
-                            //qDebug("Capture is possible");
-                            return true;
-                        }
-                        else
-                        {
-                            //qDebug("Cannot capture over your own piece");
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        //qDebug("Tile between is empty, capture impossible");
-                        return false;
-                    }
-                }
-                else
-                {
-                    //qDebug("Capture target is not 2 columns away");
-                    return false;
-                }
-            }
-            else
-            {
-                //qDebug("Capture target is not 2 rows away");
+                //qDebug("No piece between, capture not possible");
                 return false;
             }
         }
         else
         {
-            assert(false);
+            //qDebug("Capture not permitted");
             return false;
         }
     }
@@ -407,15 +156,15 @@ std::vector<Piece*> Logic::WhichPiecesCanMove(Player activePlayer, const std::ma
 
     for(auto& piecePlacement: piecesPlacement)
     {
-        if(piecePlacement.second != nullptr)
-        {
-            const Player piecePlayer = piecePlacement.second->GetPlayer();
+        Piece* piece = piecePlacement.second;
 
-            if(piecePlayer == activePlayer)
+        if(piece)
+        {
+            if(piece->GetPlayer() == activePlayer)
             {
-                if(CheckIfPieceCanMove(piecePlacement.second, piecesPlacement))
+                if(CheckIfPieceCanMove(piece, piecesPlacement))
                 {
-                    piecesWhichCanMove.push_back(piecePlacement.second);
+                    piecesWhichCanMove.push_back(piece);
                 }
             }
         }
@@ -430,15 +179,15 @@ std::vector<Piece*> Logic::WhichPiecesCanCapture(Player activePlayer, const std:
 
     for(auto& piecePlacement : piecesPlacement)
     {
-        if(piecePlacement.second != nullptr)
-        {
-            const Player piecePlayer = piecePlacement.second->GetPlayer();
+        Piece* piece = piecePlacement.second;
 
-            if(piecePlayer == activePlayer)
+        if(piece)
+        {
+            if(piece->GetPlayer() == activePlayer)
             {
-                if(CheckIfPieceCanCapture(piecePlacement.second, piecesPlacement))
+                if(CheckIfPieceCanCapture(piece, piecesPlacement))
                 {
-                    piecesWhichCanCapture.push_back(piecePlacement.second);
+                    piecesWhichCanCapture.push_back(piece);
                 }
             }
         }
@@ -447,100 +196,107 @@ std::vector<Piece*> Logic::WhichPiecesCanCapture(Player activePlayer, const std:
     return piecesWhichCanCapture;
 }
 
-bool Logic::CheckIfPieceCanMove(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement)
+std::vector<Coordinates> Logic::GeneratePossiblePieceMovementOptionsCoordinates(const Piece* piece)
 {
+    const Coordinates pieceCoordinates(piece->Row(), piece->Column());
     const Player piecePlayer = piece->GetPlayer();
+    std::vector<std::pair<int, int>> validRowColumnMovementOffsets;
 
-    if(piecePlayer == Player::Down)
+    if(piecePlayer == Player::DOWN)
     {
         //Movement up is permitted
-        const Coordinates pieceCoordinates(piece->Row(), piece->Column());
-        std::array<std::unique_ptr<Coordinates>, 4> moveOptions;
-
-        try {
-            moveOptions[0] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() - 1);
-        }
-        catch(std::out_of_range& exception) {
-            moveOptions[0] = nullptr;
-        }
-
-        try {
-            moveOptions[1] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() + 1);
-        }
-        catch(std::out_of_range& exception) {
-            moveOptions[1] = nullptr;
-        }
+        validRowColumnMovementOffsets.push_back(std::make_pair(-1, -1));
+        validRowColumnMovementOffsets.push_back(std::make_pair(-1, +1));
 
         if(piece->IsPromoted())
         {
-            try {
-                moveOptions[2] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() - 1);
-            }
-            catch(std::out_of_range& exception) {
-                moveOptions[2] = nullptr;
-            }
-
-            try {
-                moveOptions[3] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() + 1);
-            }
-            catch(std::out_of_range& exception) {
-                moveOptions[3] = nullptr;
-            }
-        }
-
-        for(auto& moveOption : moveOptions)
-        {
-            //If move option is valid and the target tile is empty
-            if(moveOption && piecesPlacement.at(*moveOption) == nullptr)
-            {
-                return true;
-            }
+            validRowColumnMovementOffsets.push_back(std::make_pair(+1, -1));
+            validRowColumnMovementOffsets.push_back(std::make_pair(+1, +1));
         }
     }
-    else if(piecePlayer == Player::Up)
+    else if(piecePlayer == Player::UP)
     {
         //Movement down is permitted
-        const Coordinates pieceCoordinates(piece->Row(), piece->Column());
-        std::array<std::unique_ptr<Coordinates>, 4> moveOptions;
-
-        try {
-            moveOptions[0] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() - 1);
-        }
-        catch(std::out_of_range& exception) {
-            moveOptions[0] = nullptr;
-        }
-
-        try {
-            moveOptions[1] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 1, pieceCoordinates.Column() + 1);
-        }
-        catch(std::out_of_range& exception) {
-            moveOptions[1] = nullptr;
-        }
+        validRowColumnMovementOffsets.push_back(std::make_pair(+1, -1));
+        validRowColumnMovementOffsets.push_back(std::make_pair(+1, +1));
 
         if(piece->IsPromoted())
         {
-            try {
-                moveOptions[2] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() - 1);
-            }
-            catch(std::out_of_range& exception) {
-                moveOptions[2] = nullptr;
-            }
-
-            try {
-                moveOptions[3] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 1, pieceCoordinates.Column() + 1);
-            }
-            catch(std::out_of_range& exception) {
-                moveOptions[3] = nullptr;
-            }
+            validRowColumnMovementOffsets.push_back(std::make_pair(-1, -1));
+            validRowColumnMovementOffsets.push_back(std::make_pair(-1, +1));
         }
+    }
 
-        for(auto& moveOption : moveOptions)
+    std::vector<Coordinates> validMovementCoordinates;
+
+    for(unsigned i = 0; i < validRowColumnMovementOffsets.size(); i++)
+    {
+        if(Coordinates::ValidateCoordinates(pieceCoordinates.Row() + validRowColumnMovementOffsets.at(i).first,
+                                            pieceCoordinates.Column() + validRowColumnMovementOffsets.at(i).second))
         {
-            //If move option is valid and the target tile is empty
-            if(moveOption && piecesPlacement.at(*moveOption) == nullptr)
-            {
-                return true;
-            }
+            validMovementCoordinates.push_back(Coordinates(pieceCoordinates.Row() + validRowColumnMovementOffsets.at(i).first,
+                                                           pieceCoordinates.Column() + validRowColumnMovementOffsets.at(i).second));
+        }
+    }
+
+    return validMovementCoordinates;
+}
+
+std::vector<Coordinates> Logic::GeneratePossiblePieceCaptureOptionsCoordinates(const Piece* piece)
+{
+    const Coordinates pieceCoordinates(piece->Row(), piece->Column());
+    const Player piecePlayer = piece->GetPlayer();
+    std::vector<std::pair<int, int>> validRowColumnCaptureOffsets;
+
+    if(piecePlayer == Player::DOWN)
+    {
+        //Movement up is permitted
+        validRowColumnCaptureOffsets.push_back(std::make_pair(-2, -2));
+        validRowColumnCaptureOffsets.push_back(std::make_pair(-2, +2));
+
+        if(piece->IsPromoted())
+        {
+            validRowColumnCaptureOffsets.push_back(std::make_pair(+2, -2));
+            validRowColumnCaptureOffsets.push_back(std::make_pair(+2, +2));
+        }
+    }
+    else if(piecePlayer == Player::UP)
+    {
+        //Movement down is permitted
+        validRowColumnCaptureOffsets.push_back(std::make_pair(+2, -2));
+        validRowColumnCaptureOffsets.push_back(std::make_pair(+2, +2));
+
+        if(piece->IsPromoted())
+        {
+            validRowColumnCaptureOffsets.push_back(std::make_pair(-2, -2));
+            validRowColumnCaptureOffsets.push_back(std::make_pair(-2, +2));
+        }
+    }
+
+    std::vector<Coordinates> validCaptureCoordinates;
+
+    for(unsigned i = 0; i < validRowColumnCaptureOffsets.size(); i++)
+    {
+        if(Coordinates::ValidateCoordinates(pieceCoordinates.Row() + validRowColumnCaptureOffsets.at(i).first,
+                                            pieceCoordinates.Column() + validRowColumnCaptureOffsets.at(i).second))
+        {
+            validCaptureCoordinates.push_back(Coordinates(pieceCoordinates.Row() + validRowColumnCaptureOffsets.at(i).first,
+                                                          pieceCoordinates.Column() + validRowColumnCaptureOffsets.at(i).second));
+        }
+    }
+
+    return validCaptureCoordinates;
+}
+
+bool Logic::CheckIfPieceCanMove(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement)
+{
+    std::vector<Coordinates> moveOptions = GeneratePossiblePieceMovementOptionsCoordinates(piece);
+
+    for (unsigned i = 0; i < moveOptions.size(); i++)
+    {
+        if(CheckMovePossibility(piece, piecesPlacement, moveOptions.at(i)))
+        {
+            return true;
         }
     }
 
@@ -549,103 +305,20 @@ bool Logic::CheckIfPieceCanMove(const Piece* piece, const std::map<Coordinates, 
 
 bool Logic::CheckIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement)
 {
-    const Player piecePlayer = piece->GetPlayer();
+    std::vector<Coordinates> captureOptions = GeneratePossiblePieceCaptureOptionsCoordinates(piece);
 
-    if(piecePlayer == Player::Down)
+    for (unsigned i = 0; i < captureOptions.size(); i++)
     {
-        //Movement up is permitted
-        const Coordinates pieceCoordinates(piece->Row(), piece->Column());
-        std::array<std::unique_ptr<Coordinates>, 4> moveOptions;
-
-        try {
-            moveOptions[0] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
-        }
-        catch(std::out_of_range& exception) {
-            moveOptions[0] = nullptr;
-        }
-
-        try {
-            moveOptions[1] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
-        }
-        catch(std::out_of_range& exception) {
-            moveOptions[1] = nullptr;
-        }
-
-        if(piece->IsPromoted())
+        if(CheckCapturePossibility(piece, piecesPlacement, captureOptions.at(i)))
         {
-            try {
-                moveOptions[2] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
-            }
-            catch(std::out_of_range& exception) {
-                moveOptions[2] = nullptr;
-            }
-
-            try {
-                moveOptions[3] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
-            }
-            catch(std::out_of_range& exception) {
-                moveOptions[3] = nullptr;
-            }
-        }
-
-        for(auto& moveOption : moveOptions)
-        {
-            if(moveOption && CheckCapturePossibility(piece, piecesPlacement, Coordinates(moveOption->Row(), moveOption->Column())))
-            {
-                return true;
-            }
-        }
-    }
-    else if(piecePlayer == Player::Up)
-    {
-        //Movement down is permitted
-        const Coordinates pieceCoordinates(piece->Row(), piece->Column());
-        std::array<std::unique_ptr<Coordinates>, 4> moveOptions;
-
-        try {
-            moveOptions[0] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() - 2);
-        }
-        catch(std::out_of_range& exception) {
-            moveOptions[0] = nullptr;
-        }
-
-        try {
-            moveOptions[1] = std::make_unique<Coordinates>(pieceCoordinates.Row() + 2, pieceCoordinates.Column() + 2);
-        }
-        catch(std::out_of_range& exception) {
-            moveOptions[1] = nullptr;
-        }
-
-        if(piece->IsPromoted())
-        {
-            try {
-                moveOptions[2] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() - 2);
-            }
-            catch(std::out_of_range& exception) {
-                moveOptions[2] = nullptr;
-            }
-
-            try {
-                moveOptions[3] = std::make_unique<Coordinates>(pieceCoordinates.Row() - 2, pieceCoordinates.Column() + 2);
-            }
-            catch(std::out_of_range& exception) {
-                moveOptions[3] = nullptr;
-            }
-        }
-
-        for(auto& moveOption : moveOptions)
-        {
-            if(moveOption && CheckCapturePossibility(piece, piecesPlacement, Coordinates(moveOption->Row(), moveOption->Column())))
-            {
-                return true;
-            }
+            return true;
         }
     }
 
     return false;
 }
 
-bool Logic::CheckPromotion(const Piece* piece)
+bool Logic::CheckPromotionEligibility(const Piece* piece)
 {
     if(piece->IsPromoted())
     {
@@ -655,7 +328,7 @@ bool Logic::CheckPromotion(const Piece* piece)
     const Player piecePlayer = piece->GetPlayer();
     const Coordinates pieceCoordinates(piece->Row(), piece->Column());
 
-    if(piecePlayer == Player::Down)
+    if(piecePlayer == Player::DOWN)
     {
         //Movement up is permitted
         if(pieceCoordinates.Row() == 1)
@@ -664,7 +337,7 @@ bool Logic::CheckPromotion(const Piece* piece)
             return true;
         }
     }
-    else if(piecePlayer == Player::Up)
+    else if(piecePlayer == Player::UP)
     {
         //Movement down is permitted
         if(pieceCoordinates.Row() == 8)
@@ -679,4 +352,16 @@ bool Logic::CheckPromotion(const Piece* piece)
     }
 
     return false;
+}
+
+bool Logic::IsTileEmpty(const Coordinates& coordinates, const std::map<Coordinates, Piece*>& piecesPlacement)
+{
+    std::vector<Coordinates> playableTileCoordinates = GeneratePlayableTilesCoordinates();
+
+    if(std::find(playableTileCoordinates.begin(), playableTileCoordinates.end(), coordinates) == playableTileCoordinates.end())
+    {
+        throw std::logic_error("Error, trying to check if piece is on unplayable tile");
+    }
+
+    return piecesPlacement.at(coordinates) == nullptr;
 }

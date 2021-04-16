@@ -3,7 +3,7 @@
 
 Coordinates::Coordinates(int row, int column)
 {
-    if((row >= 1 && row <= 8) && (column >= 1 && column <= 8))
+    if(ValidateCoordinates(row, column))
     {
         m_Row = row;
         m_Column = column;
@@ -12,6 +12,11 @@ Coordinates::Coordinates(int row, int column)
     {
         throw std::out_of_range("Error! Coordinates out of range");
     }
+}
+
+bool Coordinates::ValidateCoordinates(int row, int column)
+{
+    return (row >= 1 && row <= 8) && (column >= 1 && column <= 8);
 }
 
 void Coordinates::Modify(int newRow, int newColumn)
