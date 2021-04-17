@@ -7,6 +7,7 @@
 class Checkerboard : public QObject, public QGraphicsRectItem
 {
     Q_OBJECT
+    friend class CheckerboardTest;
 
 public:
     Checkerboard(QGraphicsScene& scene);

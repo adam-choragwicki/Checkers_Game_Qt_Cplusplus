@@ -84,8 +84,6 @@ void Checkerboard::CreateTiles(QGraphicsScene& scene)
             scene.addItem(tile);
         }
     }
-
-    assert(m_PiecesPlacement.size() == 32);
 }
 
 void Checkerboard::CreatePieces(QGraphicsScene& scene)
