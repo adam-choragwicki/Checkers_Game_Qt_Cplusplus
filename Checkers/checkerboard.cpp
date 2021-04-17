@@ -11,11 +11,49 @@ Checkerboard::Checkerboard(QGraphicsScene& scene) : QGraphicsRectItem(nullptr)
     QGraphicsRectItem::setRect(BOARD_POSITION_X, BOARD_POSITION_Y, BOARD_SIZE, BOARD_SIZE);
     setPen(QPen(BOARD_OUTLINE_COLOR, BOARD_OUTLINE_WIDTH));
 
+    /*Checkerboard and tiles are only created once, pieces are recreated during every game restart*/
     CreateTiles(scene);
+    StartNewGame(scene);
+}
+
+void Checkerboard::StartNewGame(QGraphicsScene& scene)
+{
+    qDebug("%s", __FUNCTION__);
+
+    Common::ResetActivePlayer();
+
     CreatePieces(scene);
     //CreatePiecesCustomCoordinates(scene);
-
     CheckAndMarkPlayerMoveOptions(Common::GetActivePlayer());
+}
+
+void Checkerboard::ClearPreviousGame(QGraphicsScene& scene)
+{
+    qDebug("%s", __FUNCTION__);
+
+    for(auto& piecePlacement : m_PiecesPlacement)
+    {
+        if(piecePlacement.second)
+        {
+            scene.removeItem(piecePlacement.second);
+            piecePlacement.second = nullptr;
+        }
+    }
+
+    Piece* activePiece = Piece::GetActivePiece();
+
+    if(activePiece)
+    {
+        activePiece->SetUnactive();
+    }
+}
+
+void Checkerboard::RestartGame(QGraphicsScene& scene)
+{
+    qDebug("%s", __FUNCTION__);
+
+    ClearPreviousGame(scene);
+    StartNewGame(scene);
 }
 
 void Checkerboard::CreateTiles(QGraphicsScene& scene)

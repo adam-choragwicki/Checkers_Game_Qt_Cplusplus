@@ -15,7 +15,8 @@ GameWindow::GameWindow(QWidget *parent)
     const QColor BACKGROUND_COLOR(0, 160, 0);
     m_Scene.setBackgroundBrush(QBrush(BACKGROUND_COLOR));
 
-    CreateAndPopulateBoard(m_Scene);
+    CreateAndPopulateBoard();
+    QObject::connect(ui->pushButton_NewGame, &QPushButton::clicked, this, &GameWindow::StartNewGame);
 }
 
 GameWindow::~GameWindow()
@@ -23,8 +24,13 @@ GameWindow::~GameWindow()
     delete ui;
 }
 
-void GameWindow::CreateAndPopulateBoard(QGraphicsScene& scene)
+void GameWindow::CreateAndPopulateBoard()
 {
-    m_pCheckerboard = new Checkerboard(scene);
+    m_pCheckerboard = new Checkerboard(m_Scene);
     m_Scene.addItem(m_pCheckerboard);
+}
+
+void GameWindow::StartNewGame()
+{
+    m_pCheckerboard->RestartGame(m_Scene);
 }

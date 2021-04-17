@@ -24,5 +24,6 @@ private:
 
     Checkerboard* m_pCheckerboard = nullptr;
 
-    void CreateAndPopulateBoard(QGraphicsScene& scene);
+    void CreateAndPopulateBoard();
+    void StartNewGame();
 };

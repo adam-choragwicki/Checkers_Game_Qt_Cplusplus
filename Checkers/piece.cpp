@@ -241,7 +241,6 @@ void Piece::MarkPiecesWhichCanMove(std::vector<Piece*>& pieces)
     }
 }
 
-
 void Piece::Promote()
 {
     m_Promoted = true;

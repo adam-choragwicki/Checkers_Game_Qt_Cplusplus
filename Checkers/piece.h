@@ -49,7 +49,6 @@ private:
     bool m_Promoted = false;
 
     void Clicked();
-    void Unclicked();
     void AnimateFromCurrentToNewCoordinates(Coordinates& currentCoordinates, Coordinates& newCoordinates);
     void UpdateColoursAccordingToState();
     void SetActivePiecePointer();
