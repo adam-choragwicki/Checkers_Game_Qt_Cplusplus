@@ -4,11 +4,12 @@
 #include <map>
 #include "piece.h"
 
-class Checkerboard : public QGraphicsRectItem
+class Checkerboard : public QObject, public QGraphicsRectItem
 {
+    Q_OBJECT
+
 public:
     Checkerboard(QGraphicsScene& scene);
-    static void ProcessTileClicked(const int targetRow, const int targetColumn, bool tileIsPlayable);
 
 private:
     const int BOARD_POSITION_X = 0;
@@ -17,17 +18,25 @@ private:
     const int BOARD_OUTLINE_WIDTH = 10;
     const QColor BOARD_OUTLINE_COLOR{150, 100, 40};
 
-    static std::map<Coordinates, Piece*> m_PiecesPlacement;
-    static Piece* m_MultiCaptureInProgressPiece;
+    std::map<Coordinates, Piece*> m_PiecesPlacement;
+    Piece* m_MultiCaptureInProgressPiece = nullptr;
 
     void CreateTiles(QGraphicsScene& scene);
     void CreatePieces(QGraphicsScene& scene);
     void CreatePiecesCustomCoordinates(QGraphicsScene& scene);
-    static void MarkPieces(std::vector<Piece*>& pieces);
-    static void UnmarkAllPieces();
-    static void MovePiece(Piece* piece, const int targetRow, const int targetColumn);
-    static void CapturePiece(Piece* piece, const int targetRow, const int targetColumn);
-    static void EndTurn();
+    void MarkPieces(std::vector<Piece*>& pieces);
+    void UnmarkAllPieces();
+    void MovePiece(Piece* piece, const Coordinates& targetTileCoordinates);
+    void CapturePiece(Piece* piece, const Coordinates& targetTileCoordinates);
+    void EndTurn();
 
-    static bool IsMultiCaptureInProgress();
+    bool IsMultiCaptureInProgress();
+
+    void ProcessMove(const Coordinates& targetTileCoordinates);
+    void CheckAndMarkPlayerMoveOptions(Player player);
+
+    void CheckEligibilityAndPromotePiece(Piece* piece);
+    
+private slots:
+    void ProcessTileClicked(const Coordinates& targetTileCoordinates);
 };

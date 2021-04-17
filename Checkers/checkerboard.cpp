@@ -6,9 +6,6 @@
 #include <QDebug>
 #include <algorithm>
 
-std::map<Coordinates, Piece*> Checkerboard::m_PiecesPlacement;
-Piece* Checkerboard::m_MultiCaptureInProgressPiece = nullptr;
-
 Checkerboard::Checkerboard(QGraphicsScene& scene) : QGraphicsRectItem(nullptr)
 {
     QGraphicsRectItem::setRect(BOARD_POSITION_X, BOARD_POSITION_Y, BOARD_SIZE, BOARD_SIZE);
@@ -18,17 +15,7 @@ Checkerboard::Checkerboard(QGraphicsScene& scene) : QGraphicsRectItem(nullptr)
     CreatePieces(scene);
     //CreatePiecesCustomCoordinates(scene);
 
-    std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(Common::GetActivePlayer(), m_PiecesPlacement);
-
-    if(piecesWhichCanCapture.size() == 0)
-    {
-        std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(Common::GetActivePlayer(), m_PiecesPlacement);
-        MarkPieces(piecesWhichCanMove);
-    }
-    else
-    {
-        MarkPieces(piecesWhichCanCapture);
-    }
+    CheckAndMarkPlayerMoveOptions(Common::GetActivePlayer());
 }
 
 void Checkerboard::CreateTiles(QGraphicsScene& scene)
@@ -42,14 +29,21 @@ void Checkerboard::CreateTiles(QGraphicsScene& scene)
             const Coordinates coordinates(row, column);
             bool playable = false;
 
-            //Check if the tile is playable
+            /*Check if the tile is playable*/
             if(std::find(playableTilesCoordinates.cbegin(), playableTilesCoordinates.cend(), coordinates) != playableTilesCoordinates.cend())
             {
                 playable = true;
                 m_PiecesPlacement[Coordinates(row, column)] = nullptr;
             }
 
-            scene.addItem(new Tile(Coordinates(row, column), playable, this));
+            Tile* tile = new Tile(Coordinates(row, column), playable, this);
+
+            if(playable)
+            {
+                QObject::connect(tile, &Tile::ClickedSignal, this, &Checkerboard::ProcessTileClicked);
+            }
+
+            scene.addItem(tile);
         }
     }
 
@@ -83,8 +77,8 @@ void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
     //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(7, 6)};
 
     //    MULTICAPTURE TEST
-    //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(7, 6)};
-    //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(2, 5), Coordinates(4, 5), Coordinates(6, 5)};
+    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(4, 7), Coordinates(7, 6)};
+    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(2, 3), Coordinates(3, 6), Coordinates(4, 3), Coordinates(6, 5)};
 
     //    PROMOTION (crown generation) TEST
     //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(2, 3)};
@@ -95,8 +89,8 @@ void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
     //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(7, 6)};
 
     //BACKWARD CAPTURE TEST
-    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(4, 3)};
-    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(6, 5)};
+    //std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(4, 3)};
+    //std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(6, 5)};
 
     for(auto& pieceCoordinates : customCoordinatesPlayerDown)
     {
@@ -113,122 +107,145 @@ void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
     }
 }
 
-void Checkerboard::ProcessTileClicked(const int targetRow, const int targetColumn, bool tileIsPlayable)
+void Checkerboard::CheckAndMarkPlayerMoveOptions(Player player)
 {
-//    if(tileIsPlayable)
-//    {
-//        if(m_PiecesPlacement.at(Coordinates(targetRow, targetColumn)) == nullptr)
-//        {
-//            qDebug("Clicked tile (%d,%d) is PLAYABLE and EMPTY", targetRow, targetColumn);
-//        }
-//        else
-//        {
-//            qDebug("Clicked tile (%d,%d) is PLAYABLE and THERE IS PIECE ON IT", targetRow, targetColumn);
-//        }
-//    }
-//    else
-//    {
-//        qDebug("Clicked tile (%d,%d)", targetRow, targetColumn);
-//    }
+    if(IsMultiCaptureInProgress())
+    {
+        return;
+    }
 
+    std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(player, m_PiecesPlacement);
+
+    if(piecesWhichCanCapture.size() != 0)
+    {
+        Piece::MarkPiecesWhichCanMove(piecesWhichCanCapture);
+    }
+    else
+    {
+        std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(player, m_PiecesPlacement);
+        Piece::MarkPiecesWhichCanMove(piecesWhichCanMove);
+    }
+}
+
+void Checkerboard::ProcessTileClicked(const Coordinates& targetTileCoordinates)
+{
     Piece* activePiece = Piece::GetActivePiece();
 
-    if(activePiece && tileIsPlayable)
+    if(activePiece)
     {
-        if(Logic::CheckCapturePossibility(activePiece, m_PiecesPlacement, Coordinates(targetRow, targetColumn)))
+        ProcessMove(targetTileCoordinates);
+        activePiece->SetUnactive();
+    }
+
+    UnmarkAllPieces();
+
+    if(IsMultiCaptureInProgress())
+    {
+        m_MultiCaptureInProgressPiece->SetActive();
+    }
+    else
+    {
+        UnmarkAllPieces();
+        CheckAndMarkPlayerMoveOptions(Common::GetActivePlayer());
+    }
+
+    qDebug() << "=============================END OF TILE CLICK PROCESSING=============================";
+}
+
+void Checkerboard::ProcessMove(const Coordinates& targetTileCoordinates)
+{
+    Piece* activePiece = Piece::GetActivePiece();
+
+    /*If any capture is possible then any capture has to be the next move*/
+    if(Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement))
+    {
+        if(Logic::CheckCapturePossibility(activePiece, m_PiecesPlacement, targetTileCoordinates))
         {
-            CapturePiece(activePiece, targetRow, targetColumn);
+            CapturePiece(activePiece, targetTileCoordinates);
 
             if(Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement))
             {
-                qDebug("SetMultiCaptureInProgressPiece");
+                qDebug("MULTICAPTURE IN PROGRESS");
                 m_MultiCaptureInProgressPiece = activePiece;
-
-                activePiece->SetActivePiecePointer();
-                activePiece->MarkActive();
                 return;
             }
             else
             {
-                qDebug("ResetMultiCaptureInProgressPiece");
+                qDebug("END MULTICAPTURE");
                 m_MultiCaptureInProgressPiece = nullptr;
+                activePiece->SetUnactive();
             }
 
-            if(!activePiece->IsPromoted() && Logic::CheckPromotionEligibility(activePiece))
-            {
-                activePiece->Promote();
-            }
+            CheckEligibilityAndPromotePiece(activePiece);
 
+            activePiece->SetUnactive();
             EndTurn();
-        }
-        else if(!IsMultiCaptureInProgress() && !Logic::CheckIfPieceCanCapture(activePiece, m_PiecesPlacement) && Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, Coordinates(targetRow, targetColumn)))
-        {
-            MovePiece(activePiece, targetRow, targetColumn);
-
-            if(!activePiece->IsPromoted() && Logic::CheckPromotionEligibility(activePiece))
-            {
-                activePiece->Promote();
-            }
-
-            EndTurn();
-        }
-    }
-
-    if(!IsMultiCaptureInProgress())
-    {
-        UnmarkAllPieces();
-
-        std::vector<Piece*> piecesWhichCanCapture = Logic::WhichPiecesCanCapture(Common::GetActivePlayer(), m_PiecesPlacement);
-
-        if(piecesWhichCanCapture.size() == 0)
-        {
-            std::vector<Piece*> piecesWhichCanMove = Logic::WhichPiecesCanMove(Common::GetActivePlayer(), m_PiecesPlacement);
-            MarkPieces(piecesWhichCanMove);
         }
         else
         {
-            MarkPieces(piecesWhichCanCapture);
+            qDebug("Capture was possible but player chose other tile so no move was taken and active piece is reset!");
+            activePiece->SetUnactive();
+            return;
         }
     }
-}
-
-void Checkerboard::MarkPieces(std::vector<Piece*>& pieces)
-{
-    for(auto& piece : pieces)
+    else if(Logic::CheckIfPieceCanMove(activePiece, m_PiecesPlacement))
     {
-        piece->MarkValidMoveAvailable();
+        if(Logic::CheckMovePossibility(activePiece, m_PiecesPlacement, targetTileCoordinates))
+        {
+            MovePiece(activePiece, targetTileCoordinates);
+
+            CheckEligibilityAndPromotePiece(activePiece);
+
+            activePiece->SetUnactive();
+            EndTurn();
+        }
     }
+    else
+    {
+        qDebug() << "PIECE CANNOT CAPTURE AND CANNOT MOVE, THIS SHOULD NOT HAPPEN";
+        assert(false);
+    }
+
+    qDebug() << "=============================END OF MOVE PROCESSING=============================";
 }
 
 void Checkerboard::UnmarkAllPieces()
 {
+    qDebug("%s", __FUNCTION__);
+
     for(auto& piecePlacement : m_PiecesPlacement)
     {
-        if(piecePlacement.second != nullptr)
+        Piece* piece = piecePlacement.second;
+
+        if(piece && (piece->IsMarkedActive() || piece->IsMarkedMoveAvailable()))
         {
-            piecePlacement.second->Unmark();
+            piece->Unmark();
         }
     }
 }
 
-void Checkerboard::MovePiece(Piece* piece, const int targetRow, const int targetColumn)
+void Checkerboard::MovePiece(Piece* piece, const Coordinates& targetTileCoordinates)
 {
-    m_PiecesPlacement[Coordinates(piece->Row(), piece->Column())] = nullptr;
-    m_PiecesPlacement[Coordinates(targetRow, targetColumn)] = piece;
-    piece->MoveToTile(Coordinates(targetRow, targetColumn));
+    Coordinates pieceCoordinates(piece->Row(), piece->Column());
+
+    m_PiecesPlacement[pieceCoordinates] = nullptr;
+    m_PiecesPlacement[targetTileCoordinates] = piece;
+    piece->MoveToTile(targetTileCoordinates);
 }
 
-void Checkerboard::CapturePiece(Piece* piece, const int targetRow, const int targetColumn)
+void Checkerboard::CapturePiece(Piece* piece, const Coordinates& targetTileCoordinates)
 {
-    qDebug("Capture executed!");
-    Coordinates pieceBetween((targetRow + piece->Row()) / 2, (targetColumn + piece->Column()) / 2);
-    MovePiece(piece, targetRow, targetColumn);
+    //qDebug("Capture executed!");
+    Coordinates pieceBetween((targetTileCoordinates.Row() + piece->Row()) / 2, (targetTileCoordinates.Column() + piece->Column()) / 2);
+    MovePiece(piece, targetTileCoordinates);
     delete m_PiecesPlacement.at(pieceBetween);
     m_PiecesPlacement[pieceBetween] = nullptr;
 }
 
 void Checkerboard::EndTurn()
 {
+    qDebug("%s", __FUNCTION__);
+
     if(Common::GetActivePlayer() == Player::DOWN)
     {
         Common::SetActivePlayer(Player::UP);
@@ -237,9 +254,13 @@ void Checkerboard::EndTurn()
     {
         Common::SetActivePlayer(Player::DOWN);
     }
-    else
+}
+
+void Checkerboard::CheckEligibilityAndPromotePiece(Piece* piece)
+{
+    if(Logic::CheckPromotionEligibility(piece))
     {
-        assert(false);
+        piece->Promote();
     }
 }
 

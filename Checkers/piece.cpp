@@ -23,20 +23,7 @@ Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent, bool
         throw std::logic_error("Error, trying to put piece on non-playable tile");
     }
 
-    if(m_Player == Player::DOWN)
-    {
-        setBrush(BLACK_PIECE_COLOR);
-        setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-    }
-    else if(m_Player == Player::UP)
-    {
-        setBrush(RED_PIECE_COLOR);
-        setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-    }
-    else
-    {
-        assert(false);
-    }
+    UpdateColoursAccordingToState();
 
     if(promoted)
     {
@@ -46,44 +33,51 @@ Piece::Piece(Coordinates coordinates, Player player, QGraphicsItem* parent, bool
 
 void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
+    //qDebug("%s", __FUNCTION__);
+
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        //Allow selecting only marked pieces which have valid moves available
-        if(m_Marked)
-        {
-            if(this->GetPlayer() == Common::GetActivePlayer())
-            {
-                if(m_ActivePiece != nullptr)
-                {
-                    m_ActivePiece->Unclicked();
-                }
-                this->SetActivePiecePointer();
-                m_ActivePiece->Clicked();
-            }
-        }
+        this->Clicked();
     }
 }
 
 void Piece::Clicked()
 {
-    //qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
-    setPen(QPen(QBrush(ACTIVE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-}
-
-void Piece::Unclicked()
-{
     qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
 
-    if(m_Player == Player::DOWN)
+    /*Allow selecting only marked pieces which have valid moves available*/
+    if(m_MarkedMoveAvailable)
     {
-        setBrush(BLACK_PIECE_COLOR);
-        setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+        /*Activate piece only if no other piece was active before AND it is current player's piece*/
+        if(m_ActivePiece == nullptr && this->GetPlayer() == Common::GetActivePlayer())
+        {
+            SetActive();
+        }
+        /*Or active piece if some other piece was active before AND it is current player's piece AND it is not the same piece*/
+        else if(m_ActivePiece && this->GetPlayer() == Common::GetActivePlayer() && this != m_ActivePiece)
+        {
+            qDebug("Other piece was active!");
+            m_ActivePiece->MarkValidMoveAvailable();
+            m_ActivePiece->SetUnactive();
+            this->SetActive();
+        }
     }
-    else if(m_Player == Player::UP)
-    {
-        setBrush(RED_PIECE_COLOR);
-        setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-    }
+}
+
+void Piece::SetActive()
+{
+    qDebug("%s", __FUNCTION__);
+    m_MarkedActive = true;
+    SetActivePiecePointer();
+    UpdateColoursAccordingToState();
+}
+
+void Piece::SetUnactive()
+{
+    qDebug("%s", __FUNCTION__);
+    m_MarkedActive = false;
+    ClearActivePiecePointer();
+    UpdateColoursAccordingToState();
 }
 
 void Piece::SetActivePiecePointer()
@@ -92,88 +86,25 @@ void Piece::SetActivePiecePointer()
     m_ActivePiece = this;
 }
 
-void Piece::Promote()
-{
-    m_Promoted = true;
-
-    const QList<QPoint> crownPolygonShapeCoordinates = {QPoint(0 , 0),
-                                                        QPoint(6 , 8),
-                                                        QPoint(12, 0),
-                                                        QPoint(18, 8),
-                                                        QPoint(23, 0),
-                                                        QPoint(29, 8),
-                                                        QPoint(34, 0),
-                                                        QPoint(33, 20),
-                                                        QPoint(2 , 20)};
-
-
-    const int CROWN_OFFSET_X = 8;
-    const int CROWN_OFFSET_Y = 15;
-
-    QPolygon crown;
-
-    for(int i = 0; i <= 8; i++)
-    {
-        crown << QPoint((m_Coordinates.Column() - 1) * Common::TILE_SIZE + PIECE_OFFSET_X + crownPolygonShapeCoordinates.at(i).x() + CROWN_OFFSET_X,
-                        (m_Coordinates.Row() - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y + crownPolygonShapeCoordinates.at(i).y() + CROWN_OFFSET_Y);
-    }
-
-    const QColor CROWN_COLOR(150, 150, 150);
-    crownItem = new QGraphicsPolygonItem(crown, this);
-    crownItem->setBrush(CROWN_COLOR);
-
-    //qDebug("Drawing crown on (%d,%d)", m_Coordinates.Row(), m_Coordinates.Column());
-}
-
-void Piece::ResetActivePiecePointer()
+void Piece::ClearActivePiecePointer()
 {
     qDebug("%s", __FUNCTION__);
     m_ActivePiece = nullptr;
 }
 
-void Piece::MarkActive()
-{
-    Clicked();
-}
-
 void Piece::MarkValidMoveAvailable()
 {
-    m_Marked = true;
-
-    if(m_Player == Player::DOWN)
-    {
-        setBrush(BLACK_PIECE_COLOR);
-        setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-    }
-    else if(m_Player == Player::UP)
-    {
-        setBrush(RED_PIECE_COLOR);
-        setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-    }
-    else
-    {
-        assert(false);
-    }
+    qDebug("%s", __FUNCTION__);
+    m_MarkedMoveAvailable = true;
+    UpdateColoursAccordingToState();
 }
 
 void Piece::Unmark()
 {
-    m_Marked = false;
-
-    if(m_Player == Player::DOWN)
-    {
-        setBrush(BLACK_PIECE_COLOR);
-        setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-    }
-    else if(m_Player == Player::UP)
-    {
-        setBrush(RED_PIECE_COLOR);
-        setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
-    }
-    else
-    {
-        assert(false);
-    }
+    qDebug("%s piece on (%d,%d)", __FUNCTION__, m_Coordinates.Row(), m_Coordinates.Column());
+    m_MarkedActive = false;
+    m_MarkedMoveAvailable = false;
+    UpdateColoursAccordingToState();
 }
 
 void Piece::MoveToTile(Coordinates coordinates)
@@ -188,12 +119,58 @@ void Piece::MoveToTile(Coordinates coordinates)
 
     AnimateFromCurrentToNewCoordinates(currentCoordinates, newCoordinates);
 
-    Unclicked();
-    ResetActivePiecePointer();
-
     /*Reset Z value*/
     setZValue(0);
 }
+
+void Piece::UpdateColoursAccordingToState()
+{
+    //qDebug("%s", __FUNCTION__);
+
+    if(m_Player == Player::DOWN)
+    {
+        if(!m_MarkedActive && !m_MarkedMoveAvailable)
+        {
+            setBrush(BLACK_PIECE_COLOR);
+            setPen(QPen(QBrush(BLACK_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+        }
+        else if(m_MarkedActive)
+        {
+            setPen(QPen(QBrush(ACTIVE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+        }
+        else if(m_MarkedMoveAvailable)
+        {
+            setBrush(BLACK_PIECE_COLOR);
+            setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+        }
+        else
+        {
+            assert(false);
+        }
+    }
+    else if(m_Player == Player::UP)
+    {
+        if(!m_MarkedActive && !m_MarkedMoveAvailable)
+        {
+            setBrush(RED_PIECE_COLOR);
+            setPen(QPen(QBrush(RED_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+        }
+        else if(m_MarkedActive)
+        {
+            setPen(QPen(QBrush(ACTIVE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+        }
+        else if(m_MarkedMoveAvailable)
+        {
+            setBrush(RED_PIECE_COLOR);
+            setPen(QPen(QBrush(MOVE_POSSIBLE_PIECE_OUTLINE_COLOR), PIECE_OUTLINE_WIDTH));
+        }
+        else
+        {
+            assert(false);
+        }
+    }
+}
+
 
 void Piece::AnimateFromCurrentToNewCoordinates(Coordinates& currentCoordinates, Coordinates& newCoordinates)
 {
@@ -254,4 +231,46 @@ void Piece::AnimateFromCurrentToNewCoordinates(Coordinates& currentCoordinates, 
     m_Coordinates.Modify(newCoordinates.Row(), newCoordinates.Column());
 
     //qDebug("After=(%.0f,%.0f)", this->rect().x(), this->rect().y());
+}
+
+void Piece::MarkPiecesWhichCanMove(std::vector<Piece*>& pieces)
+{
+    for(auto& piece : pieces)
+    {
+        piece->MarkValidMoveAvailable();
+    }
+}
+
+
+void Piece::Promote()
+{
+    m_Promoted = true;
+
+    const QList<QPoint> crownPolygonShapeCoordinates = {QPoint(0 , 0),
+                                                        QPoint(6 , 8),
+                                                        QPoint(12, 0),
+                                                        QPoint(18, 8),
+                                                        QPoint(23, 0),
+                                                        QPoint(29, 8),
+                                                        QPoint(34, 0),
+                                                        QPoint(33, 20),
+                                                        QPoint(2 , 20)};
+
+
+    const int CROWN_OFFSET_X = 8;
+    const int CROWN_OFFSET_Y = 15;
+
+    QPolygon crown;
+
+    for(int i = 0; i <= 8; i++)
+    {
+        crown << QPoint((m_Coordinates.Column() - 1) * Common::TILE_SIZE + PIECE_OFFSET_X + crownPolygonShapeCoordinates.at(i).x() + CROWN_OFFSET_X,
+                        (m_Coordinates.Row() - 1) * Common::TILE_SIZE + PIECE_OFFSET_Y + crownPolygonShapeCoordinates.at(i).y() + CROWN_OFFSET_Y);
+    }
+
+    const QColor CROWN_COLOR(150, 150, 150);
+    crownItem = new QGraphicsPolygonItem(crown, this);
+    crownItem->setBrush(CROWN_COLOR);
+
+    //qDebug("Drawing crown on (%d,%d)", m_Coordinates.Row(), m_Coordinates.Column());
 }

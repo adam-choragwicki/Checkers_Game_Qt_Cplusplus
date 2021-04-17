@@ -1,4 +1,4 @@
 #include "common.h"
 
-//Player::DOWN starts
+/*Player::DOWN starts*/
 Player Common::m_ActivePlayer = Player::DOWN;

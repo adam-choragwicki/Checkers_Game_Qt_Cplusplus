@@ -204,7 +204,7 @@ std::vector<Coordinates> Logic::GeneratePossiblePieceMovementOptionsCoordinates(
 
     if(piecePlayer == Player::DOWN)
     {
-        //Movement up is permitted
+        /*Movement up is permitted*/
         validRowColumnMovementOffsets.push_back(std::make_pair(-1, -1));
         validRowColumnMovementOffsets.push_back(std::make_pair(-1, +1));
 
@@ -216,7 +216,7 @@ std::vector<Coordinates> Logic::GeneratePossiblePieceMovementOptionsCoordinates(
     }
     else if(piecePlayer == Player::UP)
     {
-        //Movement down is permitted
+        /*Movement down is permitted*/
         validRowColumnMovementOffsets.push_back(std::make_pair(+1, -1));
         validRowColumnMovementOffsets.push_back(std::make_pair(+1, +1));
 
@@ -250,7 +250,7 @@ std::vector<Coordinates> Logic::GeneratePossiblePieceCaptureOptionsCoordinates(c
 
     if(piecePlayer == Player::DOWN)
     {
-        //Movement up is permitted
+        /*Movement up is permitted*/
         validRowColumnCaptureOffsets.push_back(std::make_pair(-2, -2));
         validRowColumnCaptureOffsets.push_back(std::make_pair(-2, +2));
 
@@ -262,7 +262,7 @@ std::vector<Coordinates> Logic::GeneratePossiblePieceCaptureOptionsCoordinates(c
     }
     else if(piecePlayer == Player::UP)
     {
-        //Movement down is permitted
+        /*Movement down is permitted*/
         validRowColumnCaptureOffsets.push_back(std::make_pair(+2, -2));
         validRowColumnCaptureOffsets.push_back(std::make_pair(+2, +2));
 
@@ -330,7 +330,7 @@ bool Logic::CheckPromotionEligibility(const Piece* piece)
 
     if(piecePlayer == Player::DOWN)
     {
-        //Movement up is permitted
+        /*Movement up is permitted*/
         if(pieceCoordinates.Row() == 1)
         {
             //qDebug("Promotion");
@@ -339,7 +339,7 @@ bool Logic::CheckPromotionEligibility(const Piece* piece)
     }
     else if(piecePlayer == Player::UP)
     {
-        //Movement down is permitted
+        /*Movement down is permitted*/
         if(pieceCoordinates.Row() == 8)
         {
             //qDebug("Promotion");

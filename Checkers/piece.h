@@ -13,21 +13,23 @@ public:
     int Column() const {return m_Coordinates.Column();}
     Coordinates& GetCoordinates() {return m_Coordinates;}
     Player GetPlayer() const {return m_Player;}
-    void MarkActive();
+    bool IsMarkedActive() {return m_MarkedActive;}
+    bool IsMarkedMoveAvailable() {return m_MarkedMoveAvailable;}
     void MarkValidMoveAvailable();
     void Unmark();
-    void SetActivePiecePointer();
+    void SetActive();
+    void SetUnactive();
     void Promote();
     bool IsPromoted() const {return m_Promoted;}
 
     static Piece* GetActivePiece() {return m_ActivePiece;}
+    static void MarkPiecesWhichCanMove(std::vector<Piece *> &pieces);
 
 private:
-    static Piece* m_ActivePiece;
-
     Coordinates m_Coordinates;
-
     QGraphicsPolygonItem* crownItem = nullptr;
+
+    static Piece* m_ActivePiece;
 
     static const int PIECE_OFFSET_X = 15;
     static const int PIECE_OFFSET_Y = 15;
@@ -42,13 +44,16 @@ private:
     static constexpr QColor MOVE_POSSIBLE_PIECE_OUTLINE_COLOR{255, 255, 0};
 
     const Player m_Player;
-    bool m_Marked = false;
+    bool m_MarkedActive = false;
+    bool m_MarkedMoveAvailable = false;
     bool m_Promoted = false;
 
     void Clicked();
     void Unclicked();
-    void ResetActivePiecePointer();
     void AnimateFromCurrentToNewCoordinates(Coordinates& currentCoordinates, Coordinates& newCoordinates);
+    void UpdateColoursAccordingToState();
+    void SetActivePiecePointer();
+    void ClearActivePiecePointer();
 
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 };
