@@ -10,10 +10,10 @@ class Checkerboard : public QObject, public QGraphicsRectItem
     friend class CheckerboardTest;
 
 public:
-    Checkerboard(QGraphicsScene& scene);
+    Checkerboard();
 
 public slots:
-    void RestartGame(QGraphicsScene& scene);
+    void RestartGame();
 
 private:
     const int BOARD_POSITION_X = 0;
@@ -25,11 +25,10 @@ private:
     std::map<Coordinates, Piece*> m_PiecesPlacement;
     Piece* m_MultiCaptureInProgressPiece = nullptr;
 
-    void StartNewGame(QGraphicsScene& scene);
-    void ClearPreviousGame(QGraphicsScene& scene);
-    void CreateTiles(QGraphicsScene& scene);
-    void CreatePieces(QGraphicsScene& scene);
-    void CreatePiecesCustomCoordinates(QGraphicsScene& scene);
+    void StartNewGame();
+    void ClearPreviousGame();
+    void CreateTiles();
+    void CreatePieces();
     void MarkPieces(std::vector<Piece*>& pieces);
     void UnmarkAllPieces();
     void MovePiece(Piece* piece, const Coordinates& targetTileCoordinates);

@@ -6,28 +6,27 @@
 #include <QDebug>
 #include <algorithm>
 
-Checkerboard::Checkerboard(QGraphicsScene& scene) : QGraphicsRectItem(nullptr)
+Checkerboard::Checkerboard() : QGraphicsRectItem(nullptr)
 {
     QGraphicsRectItem::setRect(BOARD_POSITION_X, BOARD_POSITION_Y, BOARD_SIZE, BOARD_SIZE);
     setPen(QPen(BOARD_OUTLINE_COLOR, BOARD_OUTLINE_WIDTH));
 
     /*Checkerboard and tiles are only created once, pieces are recreated during every game restart*/
-    CreateTiles(scene);
-    StartNewGame(scene);
+    CreateTiles();
+    StartNewGame();
 }
 
-void Checkerboard::StartNewGame(QGraphicsScene& scene)
+void Checkerboard::StartNewGame()
 {
     qDebug("%s", __FUNCTION__);
 
     Common::ResetActivePlayer();
 
-    CreatePieces(scene);
-    //CreatePiecesCustomCoordinates(scene);
+    CreatePieces();
     CheckAndMarkPlayerMoveOptions(Common::GetActivePlayer());
 }
 
-void Checkerboard::ClearPreviousGame(QGraphicsScene& scene)
+void Checkerboard::ClearPreviousGame()
 {
     qDebug("%s", __FUNCTION__);
 
@@ -35,7 +34,7 @@ void Checkerboard::ClearPreviousGame(QGraphicsScene& scene)
     {
         if(piecePlacement.second)
         {
-            scene.removeItem(piecePlacement.second);
+            delete piecePlacement.second;
             piecePlacement.second = nullptr;
         }
     }
@@ -48,15 +47,15 @@ void Checkerboard::ClearPreviousGame(QGraphicsScene& scene)
     }
 }
 
-void Checkerboard::RestartGame(QGraphicsScene& scene)
+void Checkerboard::RestartGame()
 {
     qDebug("%s", __FUNCTION__);
 
-    ClearPreviousGame(scene);
-    StartNewGame(scene);
+    ClearPreviousGame();
+    StartNewGame();
 }
 
-void Checkerboard::CreateTiles(QGraphicsScene& scene)
+void Checkerboard::CreateTiles()
 {
     std::vector<Coordinates> playableTilesCoordinates = Logic::GeneratePlayableTilesCoordinates();
 
@@ -64,29 +63,27 @@ void Checkerboard::CreateTiles(QGraphicsScene& scene)
     {
         for(int column = 1; column <= 8; column++)
         {
-            const Coordinates coordinates(row, column);
+            const Coordinates tileCoordinates(row, column);
             bool playable = false;
 
             /*Check if the tile is playable*/
-            if(std::find(playableTilesCoordinates.cbegin(), playableTilesCoordinates.cend(), coordinates) != playableTilesCoordinates.cend())
+            if(std::find(playableTilesCoordinates.cbegin(), playableTilesCoordinates.cend(), tileCoordinates) != playableTilesCoordinates.cend())
             {
                 playable = true;
-                m_PiecesPlacement[Coordinates(row, column)] = nullptr;
+                m_PiecesPlacement[tileCoordinates] = nullptr;
             }
 
-            Tile* tile = new Tile(Coordinates(row, column), playable, this);
+            Tile* tile = new Tile(tileCoordinates, playable, this);
 
             if(playable)
             {
                 QObject::connect(tile, &Tile::ClickedSignal, this, &Checkerboard::ProcessTileClicked);
             }
-
-            scene.addItem(tile);
         }
     }
 }
 
-void Checkerboard::CreatePieces(QGraphicsScene& scene)
+void Checkerboard::CreatePieces()
 {
     std::vector<Coordinates> playerLowerStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::DOWN);
     std::vector<Coordinates> playerUpperStartingPiecesCoordinates = Logic::GenerateStartingPiecesCoordinates(Player::UP);
@@ -95,51 +92,12 @@ void Checkerboard::CreatePieces(QGraphicsScene& scene)
     {
         Piece* piece = new Piece(pieceCoordinates, Player::DOWN, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
-        scene.addItem(piece);
     }
 
     for(auto& pieceCoordinates : playerUpperStartingPiecesCoordinates)
     {
         Piece* piece = new Piece(pieceCoordinates, Player::UP, this);
         m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
-        scene.addItem(piece);
-    }
-}
-
-void Checkerboard::CreatePiecesCustomCoordinates(QGraphicsScene &scene)
-{
-    //    GENERAL TEST
-    //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(5, 4)};
-    //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(7, 6)};
-
-    //    MULTICAPTURE TEST
-    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(4, 7), Coordinates(7, 6)};
-    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(2, 3), Coordinates(3, 6), Coordinates(4, 3), Coordinates(6, 5)};
-
-    //    PROMOTION (crown generation) TEST
-    //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(2, 3)};
-    //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(7, 6)};
-
-    //    BACKWARD MOVEMENT TEST
-    //    std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(2, 3)};
-    //    std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(7, 6)};
-
-    //BACKWARD CAPTURE TEST
-    //std::vector<Coordinates> customCoordinatesPlayerDown = {Coordinates(4, 3)};
-    //std::vector<Coordinates> customCoordinatesPlayerUp = {Coordinates(6, 5)};
-
-    for(auto& pieceCoordinates : customCoordinatesPlayerDown)
-    {
-        Piece* piece = new Piece(pieceCoordinates, Player::DOWN, this);
-        m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
-        scene.addItem(piece);
-    }
-
-    for(auto& pieceCoordinates : customCoordinatesPlayerUp)
-    {
-        Piece* piece = new Piece(pieceCoordinates, Player::UP, this);
-        m_PiecesPlacement[Coordinates(pieceCoordinates.Row(), pieceCoordinates.Column())] = piece;
-        scene.addItem(piece);
     }
 }
 

@@ -26,11 +26,11 @@ GameWindow::~GameWindow()
 
 void GameWindow::CreateAndPopulateBoard()
 {
-    m_pCheckerboard = new Checkerboard(m_Scene);
-    m_Scene.addItem(m_pCheckerboard);
+    m_pCheckerboard = std::make_unique<Checkerboard>();
+    m_Scene.addItem(m_pCheckerboard.get());
 }
 
 void GameWindow::StartNewGame()
 {
-    m_pCheckerboard->RestartGame(m_Scene);
+    m_pCheckerboard->RestartGame();
 }

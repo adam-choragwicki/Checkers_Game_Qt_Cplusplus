@@ -22,7 +22,7 @@ private:
 
     QGraphicsScene m_Scene;
 
-    Checkerboard* m_pCheckerboard = nullptr;
+    std::unique_ptr<Checkerboard> m_pCheckerboard;
 
     void CreateAndPopulateBoard();
     void StartNewGame();
