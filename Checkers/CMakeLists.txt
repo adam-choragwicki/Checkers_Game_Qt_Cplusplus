@@ -33,6 +33,6 @@ set(PROJECT_SOURCES
         coordinates.h
 )
 
-qt_add_executable(Checkers ${PROJECT_SOURCES})
+qt_add_executable(Checkers WIN32 ${PROJECT_SOURCES})
 
 target_link_libraries(Checkers PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
