@@ -1,9 +1,10 @@
 #pragma once
 
+#include "game_engine.h"
+#include "common.h"
+
 #include <QMainWindow>
 #include <QGraphicsScene>
-#include "common.h"
-#include "checkerboard.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class GameWindow; }
@@ -18,12 +19,10 @@ public:
     ~GameWindow();
 
 private:
-    Ui::GameWindow* ui;
+    void initializeGameplayAreaScene();
+    void startNewGame();
 
-    QGraphicsScene m_Scene;
-
-    std::unique_ptr<Checkerboard> m_pCheckerboard;
-
-    void CreateAndPopulateBoard();
-    void StartNewGame();
+    Ui::GameWindow* ui_;
+    QGraphicsScene scene_;
+    std::unique_ptr<GameEngine> gameEngine_;
 };

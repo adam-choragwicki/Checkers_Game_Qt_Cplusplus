@@ -17,7 +17,6 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 set(PROJECT_SOURCES
         main.cpp
         common.h
-        common.cpp
         game_window.cpp
         game_window.h
         game_window.ui
@@ -31,8 +30,20 @@ set(PROJECT_SOURCES
         tile.h
         coordinates.cpp
         coordinates.h
+        game_engine.cpp
+        game_engine.h
+        drawer.cpp
+        drawer.h
+        player_manager.cpp
+        player_manager.h
+        active_piece_manager.cpp
+        active_piece_manager.h
+        log_manager.cpp
+        log_manager.h
 )
 
 qt_add_executable(Checkers WIN32 ${PROJECT_SOURCES})
 
 target_link_libraries(Checkers PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/executable)

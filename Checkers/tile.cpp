@@ -1,21 +1,23 @@
 #include "tile.h"
+#include "common.h"
+
 #include <QPen>
 #include <QGraphicsSceneMouseEvent>
 
-Tile::Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent) : QGraphicsRectItem(parent), m_Coordinates(coordinates.Row(), coordinates.Column()), m_Playable(playable)
+Tile::Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent) : QGraphicsRectItem(parent), coordinates_(coordinates.getRow(), coordinates.getColumn()), playable_(playable)
 {
-    QGraphicsRectItem::setRect((coordinates.Column() - 1) * Common::TILE_SIZE,
-                               (coordinates.Row() - 1) * Common::TILE_SIZE,
-                               Common::TILE_SIZE,
-                               Common::TILE_SIZE);
+    QGraphicsRectItem::setRect((coordinates.getColumn() - 1) * common::tileSize_,
+                               (coordinates.getRow() - 1) * common::tileSize_,
+                               common::tileSize_,
+                               common::tileSize_);
 
-    if(m_Playable)
+    if(playable_)
     {
-        setBrush(QBrush(BROWN_TILE_COLOR));
+        setBrush(QBrush(playableTileColor_));
     }
     else
     {
-        setBrush(QBrush(WHITE_TILE_COLOR));
+        setBrush(QBrush(nonPlayableTileColor_));
     }
 
     setPen(QPen(brush().color()));
@@ -26,11 +28,11 @@ void Tile::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        emit ClickedSignal(m_Coordinates, m_Playable);
+        emit clickedSignal(coordinates_, playable_);
     }
 }
 
 void Tile::hoverMoveEvent(QGraphicsSceneHoverEvent* event)
 {
-    setToolTip(QString::number(m_Coordinates.Row()) + "," + QString::number(m_Coordinates.Column()));
+    setToolTip(QString::number(coordinates_.getRow()) + "," + QString::number(coordinates_.getColumn()));
 }

@@ -1,36 +1,40 @@
 #include "game_window.h"
 #include "./ui_game_window.h"
+#include "drawer.h"
 
 GameWindow::GameWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::GameWindow)
+    , ui_(new Ui::GameWindow)
 {
-    ui->setupUi(this);
+    ui_->setupUi(this);
     setWindowTitle("Checkers");
     setWindowState(Qt::WindowMaximized);
+    setFocus(Qt::ActiveWindowFocusReason);
 
-    ui->graphicsView->setScene(&m_Scene);
-    ui->graphicsView->setRenderHint(QPainter::Antialiasing);
+    initializeGameplayAreaScene();
 
-    const QColor BACKGROUND_COLOR(0, 160, 0);
-    m_Scene.setBackgroundBrush(QBrush(BACKGROUND_COLOR));
+    const QColor backgroundColor(0, 160, 0);
+    scene_.setBackgroundBrush(QBrush(backgroundColor));
 
-    CreateAndPopulateBoard();
-    QObject::connect(ui->pushButton_NewGame, &QPushButton::clicked, this, &GameWindow::StartNewGame);
+    QObject::connect(ui_->pushButton_NewGame, &QPushButton::clicked, this, &GameWindow::startNewGame);
+
+    gameEngine_ = std::make_unique<GameEngine>();
+}
+
+void GameWindow::initializeGameplayAreaScene()
+{
+    ui_->graphicsView->setScene(&scene_);
+    ui_->graphicsView->setRenderHint(QPainter::Antialiasing);
+
+    Drawer::setScene(&scene_);
+}
+
+void GameWindow::startNewGame()
+{
+    gameEngine_->restartGame();
 }
 
 GameWindow::~GameWindow()
 {
-    delete ui;
-}
-
-void GameWindow::CreateAndPopulateBoard()
-{
-    m_pCheckerboard = std::make_unique<Checkerboard>();
-    m_Scene.addItem(m_pCheckerboard.get());
-}
-
-void GameWindow::StartNewGame()
-{
-    m_pCheckerboard->RestartGame();
+    delete ui_;
 }

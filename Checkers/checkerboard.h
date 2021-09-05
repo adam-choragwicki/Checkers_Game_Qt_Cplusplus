@@ -1,7 +1,5 @@
 #pragma once
 
-#include <QGraphicsRectItem>
-#include <map>
 #include "piece.h"
 
 class Checkerboard : public QObject, public QGraphicsRectItem
@@ -10,35 +8,24 @@ class Checkerboard : public QObject, public QGraphicsRectItem
     friend class CheckerboardTest;
 
 public:
-    Checkerboard();
+    static std::unique_ptr<Checkerboard> MakeCheckerboard();
+    void createPiece(Coordinates& coordinates, Player player);
+    void removeAllPieces();
+    void createAllPieces();
+    std::map<Coordinates, Piece*>& getPiecesPlacement() {return piecesPlacement_;}
+    void markPiecesWhichCanMove(std::vector<Piece*>& pieces);
 
-public slots:
-    void RestartGame();
+signals:
+    void tileClickedSignal(const Coordinates& coordinates, bool playable);
 
 private:
-    const int BOARD_POSITION_X = 0;
-    const int BOARD_POSITION_Y = 0;
-    const int BOARD_SIZE = 640;
-    const int BOARD_OUTLINE_WIDTH = 10;
-    const QColor BOARD_OUTLINE_COLOR{150, 100, 40};
+    Checkerboard();
+    void createTiles();
 
-    std::map<Coordinates, Piece*> m_PiecesPlacement;
-    Piece* m_MultiCaptureInProgressPiece = nullptr;
-
-    void StartNewGame();
-    void ClearPreviousGame();
-    void CreateTiles();
-    void CreatePieces();
-    void MarkPieces(std::vector<Piece*>& pieces);
-    void UnmarkAllPieces();
-    void MovePiece(Piece* piece, const Coordinates& targetTileCoordinates);
-    void CapturePiece(Piece* piece, const Coordinates& targetTileCoordinates);
-    void EndTurn();
-    bool IsMultiCaptureInProgress();
-    void ProcessMove(const Coordinates& targetTileCoordinates);
-    void CheckAndMarkPlayerMoveOptions(Player player);
-    void CheckEligibilityAndPromotePiece(Piece* piece);
-    
-private slots:
-    void ProcessTileClicked(const Coordinates& targetTileCoordinates);
+    const int boardPositionX_ = 0;
+    const int boardPositionY_ = 0;
+    const int boardSize_ = 640;
+    const int boardOutlineWidth_ = 10;
+    const QColor boardOutlineColor_ {150, 100, 40};
+    std::map<Coordinates, Piece*> piecesPlacement_;
 };

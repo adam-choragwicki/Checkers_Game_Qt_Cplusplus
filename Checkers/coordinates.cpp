@@ -1,12 +1,13 @@
 #include "coordinates.h"
+
 #include <stdexcept>
 
 Coordinates::Coordinates(int row, int column)
 {
-    if(ValidateCoordinates(row, column))
+    if(validateCoordinates(row, column))
     {
-        m_Row = row;
-        m_Column = column;
+        row_ = row;
+        column_ = column;
     }
     else
     {
@@ -14,34 +15,34 @@ Coordinates::Coordinates(int row, int column)
     }
 }
 
-bool Coordinates::ValidateCoordinates(int row, int column)
+bool Coordinates::validateCoordinates(int row, int column)
 {
     return (row >= 1 && row <= 8) && (column >= 1 && column <= 8);
 }
 
-void Coordinates::Modify(int newRow, int newColumn)
+void Coordinates::modify(int newRow, int newColumn)
 {
-    m_Row = newRow;
-    m_Column = newColumn;
+    row_ = newRow;
+    column_ = newColumn;
 }
 
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
 {
-    if(coordinates1.Row() < coordinates2.Row())
+    if(coordinates1.getRow() < coordinates2.getRow())
     {
         return true;
     }
-    else if(coordinates1.Row() > coordinates2.Row())
+    else if(coordinates1.getRow() > coordinates2.getRow())
     {
         return false;
     }
     else
     {
-        if(coordinates1.Column() < coordinates2.Column())
+        if(coordinates1.getColumn() < coordinates2.getColumn())
         {
             return true;
         }
-        else if(coordinates1.Column() > coordinates2.Column())
+        else if(coordinates1.getColumn() > coordinates2.getColumn())
         {
             return false;
         }
@@ -54,5 +55,12 @@ bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
 
 bool operator==(const Coordinates& coordinates1, const Coordinates& coordinates2)
 {
-    return (coordinates1.Row() == coordinates2.Row()) && (coordinates1.Column() == coordinates2.Column());
+    return (coordinates1.getRow() == coordinates2.getRow()) && (coordinates1.getColumn() == coordinates2.getColumn());
+}
+
+std::ostream& operator<<(std::ostream& os, const Coordinates& coordinates)
+{
+    os << "(" << coordinates.getRow() << "," << coordinates.getColumn() << ")";
+
+    return os;
 }

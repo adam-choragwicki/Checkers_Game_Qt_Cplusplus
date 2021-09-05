@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QGraphicsRectItem>
-#include "common.h"
 #include "coordinates.h"
+
+#include <QGraphicsRectItem>
 
 class Tile : public QObject, public QGraphicsRectItem
 {
@@ -10,17 +10,17 @@ class Tile : public QObject, public QGraphicsRectItem
 
 public:
     Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent);
-    bool IsPlayable() const {return m_Playable;}
+    bool isPlayable() const {return playable_;}
 
 signals:
-    void ClickedSignal(const Coordinates& coordinates, bool playable);
+    void clickedSignal(const Coordinates& coordinates, bool playable);
 
 private:
-    static constexpr QColor BROWN_TILE_COLOR{140, 90, 40};
-    static constexpr QColor WHITE_TILE_COLOR{230, 200, 160};
-    const Coordinates m_Coordinates;
-    const bool m_Playable;
-
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
     void hoverMoveEvent(QGraphicsSceneHoverEvent* event) override;
+
+    static constexpr QColor playableTileColor_{140, 90, 40};
+    static constexpr QColor nonPlayableTileColor_{230, 200, 160};
+    const Coordinates coordinates_;
+    const bool playable_;
 };
