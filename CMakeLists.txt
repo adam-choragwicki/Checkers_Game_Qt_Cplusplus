@@ -3,49 +3,49 @@ cmake_minimum_required(VERSION 3.10)
 project(Checkers LANGUAGES CXX)
 
 set(QT_VERSION_MAJOR 6)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(PROJECT_DIR ${CMAKE_SOURCE_DIR})
+set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
 
-set(MAIN_PROJECT_INCLUDES_PATH ${PROJECT_DIR}/inc)
-set(MAIN_PROJECT_SOURCES_PATH ${PROJECT_DIR}/src)
-set(MAIN_PROJECT_UI_FORMS_PATH ${PROJECT_DIR}/ui_forms)
-set(RESOURCE_FILES_PATH ${PROJECT_DIR}/resource_files)
+set(INCLUDES_DIR ${PROJECT_ROOT}/inc)
+set(SOURCES_DIR ${PROJECT_ROOT}/src)
+set(UI_FORMS_DIR ${PROJECT_ROOT}/ui_forms)
 
-set(CMAKE_AUTOUIC_SEARCH_PATHS ${MAIN_PROJECT_UI_FORMS_PATH})
+set(CMAKE_AUTOUIC_SEARCH_PATHS ${UI_FORMS_DIR})
 
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
 
-set(MAIN_PROJECT_SOURCES
-    ${MAIN_PROJECT_SOURCES_PATH}/main.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/common.h
-    ${MAIN_PROJECT_INCLUDES_PATH}/game_window.h ${MAIN_PROJECT_SOURCES_PATH}/game_window.cpp ${MAIN_PROJECT_UI_FORMS_PATH}/game_window.ui
-    ${MAIN_PROJECT_INCLUDES_PATH}/game_engine.h ${MAIN_PROJECT_SOURCES_PATH}/game_engine.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/active_piece_manager.h ${MAIN_PROJECT_SOURCES_PATH}/active_piece_manager.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/checkerboard.h ${MAIN_PROJECT_SOURCES_PATH}/checkerboard.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/coordinates.h ${MAIN_PROJECT_SOURCES_PATH}/coordinates.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/drawer.h ${MAIN_PROJECT_SOURCES_PATH}/drawer.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/logic.h ${MAIN_PROJECT_SOURCES_PATH}/logic.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/piece.h ${MAIN_PROJECT_SOURCES_PATH}/piece.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/tile.h ${MAIN_PROJECT_SOURCES_PATH}/tile.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/player_manager.h ${MAIN_PROJECT_SOURCES_PATH}/player_manager.cpp
-    ${MAIN_PROJECT_INCLUDES_PATH}/log_manager.h ${MAIN_PROJECT_SOURCES_PATH}/log_manager.cpp
+set(SOURCE_FILES
+    ${SOURCES_DIR}/main.cpp
+    ${INCLUDES_DIR}/common.h
+    ${INCLUDES_DIR}/game_window.h ${SOURCES_DIR}/game_window.cpp ${UI_FORMS_DIR}/game_window.ui
+    ${INCLUDES_DIR}/game_engine.h ${SOURCES_DIR}/game_engine.cpp
+    ${INCLUDES_DIR}/active_piece_manager.h ${SOURCES_DIR}/active_piece_manager.cpp
+    ${INCLUDES_DIR}/checkerboard.h ${SOURCES_DIR}/checkerboard.cpp
+    ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
+    ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp
+    ${INCLUDES_DIR}/logic.h ${SOURCES_DIR}/logic.cpp
+    ${INCLUDES_DIR}/piece.h ${SOURCES_DIR}/piece.cpp
+    ${INCLUDES_DIR}/tile.h ${SOURCES_DIR}/tile.cpp
+    ${INCLUDES_DIR}/player_manager.h ${SOURCES_DIR}/player_manager.cpp
+    ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp
 )
 
-add_executable(${PROJECT_NAME} WIN32 ${MAIN_PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${MAIN_PROJECT_INCLUDES_PATH})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+add_library(libCheckers ${SOURCE_FILES})
+target_include_directories(libCheckers PUBLIC ${INCLUDES_DIR})
+target_link_libraries(libCheckers Qt${QT_VERSION_MAJOR}::Widgets)
 
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/executable_windows)
+add_executable(Checkers WIN32 ${SOURCES_DIR}/main.cpp)
+target_link_libraries(Checkers libCheckers)
 
-# Build library for testing
-add_library(lib${PROJECT_NAME} ${MAIN_PROJECT_SOURCES})
-set_target_properties(lib${PROJECT_NAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_DIR}/lib)
-target_include_directories(lib${PROJECT_NAME} PRIVATE ${MAIN_PROJECT_INCLUDES_PATH})
-target_link_libraries(lib${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+if(WIN32)
+    set_target_properties(Checkers PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_windows)
+elseif(UNIX)
+    set_target_properties(Checkers PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/executable_linux)
+endif(WIN32)
 
-set_target_properties(lib${PROJECT_NAME} PROPERTIES PREFIX "" OUTPUT_NAME "${PROJECT_NAME}" SUFFIX ".lib")
+add_subdirectory(tests)
