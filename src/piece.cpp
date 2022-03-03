@@ -20,7 +20,7 @@ Piece::Piece(const Coordinates& coordinates, Player player, QGraphicsItem* paren
 
     if(std::find(playableTileCoordinates.begin(), playableTileCoordinates.end(), coordinates) == playableTileCoordinates.end())
     {
-        throw std::logic_error("Error, trying to put piece on non-playable tile");
+        throw std::runtime_error("Trying to put piece on non-playable tile");
     }
 
     updateColoursAccordingToState();

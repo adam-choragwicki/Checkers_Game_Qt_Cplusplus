@@ -349,7 +349,7 @@ bool isTileEmpty(const Coordinates& coordinates, const CoordinatesToPiecesMappin
 
     if(std::find(playableTileCoordinates.begin(), playableTileCoordinates.end(), coordinates) == playableTileCoordinates.end())
     {
-        throw std::logic_error("Error, trying to check if piece is on unplayable tile");
+        throw std::runtime_error("Trying to check if piece is on unplayable tile");
     }
 
     return coordinatesToPiecesMapping.at(coordinates) == nullptr;

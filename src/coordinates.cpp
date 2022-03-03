@@ -11,7 +11,7 @@ Coordinates::Coordinates(int row, int column)
     }
     else
     {
-        throw std::out_of_range("Error! Coordinates out of range");
+        throw std::runtime_error("Coordinates out of range");
     }
 }
 

@@ -131,7 +131,7 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
     }
     else
     {
-        throw std::logic_error("ERROR, PIECE CANNOT CAPTURE AND CANNOT MOVE");
+        throw std::runtime_error("Piece is in undefined state, cannot capture and cannot move");
     }
 
     emit sceneUpdateSignal();
