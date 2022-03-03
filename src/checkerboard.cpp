@@ -1,6 +1,6 @@
 #include "checkerboard.h"
-#include "logic.h"
 #include "tile.h"
+#include "starting_coordinates_generator.h"
 
 #include <QPen>
 
@@ -15,7 +15,7 @@ Checkerboard::Checkerboard() : QGraphicsRectItem(nullptr)
 
 void Checkerboard::createTiles()
 {
-    std::vector<Coordinates> playableTilesCoordinates = logic::generatePlayableTilesCoordinates();
+    std::vector<Coordinates> playableTilesCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
 
     for(int row = 1; row <= 8; row++)
     {
@@ -49,8 +49,8 @@ void Checkerboard::createPiece(Coordinates &coordinates, Player player)
 
 void Checkerboard::createAllPieces()
 {
-    std::vector<Coordinates> playerLowerStartingPiecesCoordinates = logic::generateStartingPiecesCoordinates(Player::down);
-    std::vector<Coordinates> playerUpperStartingPiecesCoordinates = logic::generateStartingPiecesCoordinates(Player::up);
+    std::vector<Coordinates> playerLowerStartingPiecesCoordinates = StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player::down);
+    std::vector<Coordinates> playerUpperStartingPiecesCoordinates = StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player::up);
 
     for(auto& pieceCoordinates : playerLowerStartingPiecesCoordinates)
     {

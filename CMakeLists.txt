@@ -27,12 +27,16 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/active_piece_manager.h
     ${INCLUDES_DIR}/checkerboard.h ${SOURCES_DIR}/checkerboard.cpp
     ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
-    ${INCLUDES_DIR}/logic.h ${SOURCES_DIR}/logic.cpp
     ${INCLUDES_DIR}/piece.h ${SOURCES_DIR}/piece.cpp
     ${INCLUDES_DIR}/tile.h ${SOURCES_DIR}/tile.cpp
     ${INCLUDES_DIR}/player_manager.h
     ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp
-)
+    ${INCLUDES_DIR}/piece_capture_manager.h ${SOURCES_DIR}/piece_capture_manager.cpp
+    ${INCLUDES_DIR}/piece_movement_manager.h ${SOURCES_DIR}/piece_movement_manager.cpp
+    ${INCLUDES_DIR}/piece_promotion_manager.h ${SOURCES_DIR}/piece_promotion_manager.cpp
+    ${INCLUDES_DIR}/starting_coordinates_generator.h ${SOURCES_DIR}/starting_coordinates_generator.cpp
+    ${INCLUDES_DIR}/tile_manager.h ${SOURCES_DIR}/tile_manager.cpp
+    )
 
 add_library(libCheckers ${SOURCE_FILES})
 target_include_directories(libCheckers PUBLIC ${INCLUDES_DIR})

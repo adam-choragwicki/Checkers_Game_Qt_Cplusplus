@@ -1,9 +1,11 @@
 #include "game_engine.h"
-#include "logic.h"
 #include "tile.h"
 #include "piece.h"
 #include "log_manager.h"
 #include "active_piece_manager.h"
+#include "piece_capture_manager.h"
+#include "piece_movement_manager.h"
+#include "piece_promotion_manager.h"
 
 GameEngine::GameEngine()
 {
@@ -47,11 +49,11 @@ void GameEngine::checkAndMarkPlayerMoveOptions(Player player)
         return;
     }
 
-    std::vector<Piece*> piecesWhichCanCapture = logic::whichPiecesCanCapture(player, checkerboard_.getCoordinatesToPiecesMapping());
+    std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, checkerboard_.getCoordinatesToPiecesMapping());
 
     if(piecesWhichCanCapture.empty())
     {
-        std::vector<Piece*> piecesWhichCanMove = logic::whichPiecesCanMove(player, checkerboard_.getCoordinatesToPiecesMapping());
+        std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, checkerboard_.getCoordinatesToPiecesMapping());
         checkerboard_.markPiecesWhichCanMove(piecesWhichCanMove);
     }
     else
@@ -88,13 +90,13 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
     Piece* activePiece = ActivePieceManager::getActivePiece();
 
     /*If any capture is possible then any capture has to be the next move*/
-    if(logic::checkIfPieceCanCapture(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
+    if(PieceCaptureManager::checkIfPieceCanCapture(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
     {
-        if(logic::checkCapturePossibility(activePiece, checkerboard_.getCoordinatesToPiecesMapping(), targetTileCoordinates))
+        if(PieceCaptureManager::checkCapturePossibility(activePiece, checkerboard_.getCoordinatesToPiecesMapping(), targetTileCoordinates))
         {
             capturePiece(activePiece, targetTileCoordinates);
 
-            if(logic::checkIfPieceCanCapture(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
+            if(PieceCaptureManager::checkIfPieceCanCapture(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
             {
                 multiCaptureInProgressPiece_ = activePiece;
                 return;
@@ -117,9 +119,9 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
             return;
         }
     }
-    else if(logic::checkIfPieceCanMove(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
+    else if(PieceMovementManager::checkIfPieceCanMove(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
     {
-        if(logic::checkMovePossibility(activePiece, checkerboard_.getCoordinatesToPiecesMapping(), targetTileCoordinates))
+        if(PieceMovementManager::checkMovePossibility(activePiece, checkerboard_.getCoordinatesToPiecesMapping(), targetTileCoordinates))
         {
             movePiece(activePiece, targetTileCoordinates);
 
@@ -186,7 +188,7 @@ void GameEngine::endTurn()
 
 void GameEngine::checkEligibilityAndPromotePiece(Piece* piece)
 {
-    if(logic::checkPromotionEligibility(piece))
+    if(PiecePromotionManager::checkPromotionEligibility(piece))
     {
         piece->promote();
     }

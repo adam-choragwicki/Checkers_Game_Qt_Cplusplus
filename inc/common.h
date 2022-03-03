@@ -2,8 +2,8 @@
 
 #include "piece.h"
 
-namespace common {
-const int tileSize_ = 80;
+namespace Common {
+const int tileSize = 80;
 }
 
 using CoordinatesToPiecesMapping = std::map<Coordinates, Piece*>;

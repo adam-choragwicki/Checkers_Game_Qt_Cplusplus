@@ -1,6 +1,7 @@
 #include "piece.h"
-#include "logic.h"
 #include "active_piece_manager.h"
+#include "common.h"
+#include "starting_coordinates_generator.h"
 
 #include <QPen>
 #include <QGraphicsSceneMouseEvent>
@@ -11,12 +12,12 @@
 
 Piece::Piece(const Coordinates& coordinates, Player player, QGraphicsItem* parent, bool promoted) : QGraphicsEllipseItem(parent), coordinates_(coordinates), player_(player)
 {
-    QGraphicsEllipseItem::setRect((coordinates.getColumn() - 1) * common::tileSize_ + pieceOffsetX_,
-                                  (coordinates.getRow() - 1) * common::tileSize_ + pieceOffsetY_,
+    QGraphicsEllipseItem::setRect((coordinates.getColumn() - 1) * Common::tileSize + pieceOffsetX_,
+                                  (coordinates.getRow() - 1) * Common::tileSize + pieceOffsetY_,
                                   pieceSize_,
                                   pieceSize_);
 
-    std::vector<Coordinates> playableTileCoordinates = logic::generatePlayableTilesCoordinates();
+    std::vector<Coordinates> playableTileCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
 
     if(std::find(playableTileCoordinates.begin(), playableTileCoordinates.end(), coordinates) == playableTileCoordinates.end())
     {
@@ -156,7 +157,7 @@ void Piece::animateFromCurrentToNewCoordinates(const Coordinates& currentCoordin
 
     const double factor = 5;
 
-    const int limit = static_cast<int>((abs(rowDifference) * common::tileSize_) / factor);
+    const int limit = static_cast<int>((abs(rowDifference) * Common::tileSize) / factor);
 
     for(int i = 0; i < limit; i++)
     {
@@ -197,8 +198,8 @@ void Piece::promote()
 
     for(int i = 0; i <= 8; i++)
     {
-        crown << QPoint((coordinates_.getColumn() - 1) * common::tileSize_ + pieceOffsetX_ + crownPolygonShapeCoordinates.at(i).x() + crownOffsetX,
-                        (coordinates_.getRow() - 1) * common::tileSize_ + pieceOffsetY_ + crownPolygonShapeCoordinates.at(i).y() + crownOffsetY);
+        crown << QPoint((coordinates_.getColumn() - 1) * Common::tileSize + pieceOffsetX_ + crownPolygonShapeCoordinates.at(i).x() + crownOffsetX,
+                        (coordinates_.getRow() - 1) * Common::tileSize + pieceOffsetY_ + crownPolygonShapeCoordinates.at(i).y() + crownOffsetY);
     }
 
     const QColor crownColor(150, 150, 150);
