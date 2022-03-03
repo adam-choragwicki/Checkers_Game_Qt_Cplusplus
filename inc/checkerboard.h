@@ -1,6 +1,7 @@
 #pragma once
 
 #include "piece.h"
+#include "common.h"
 
 class Checkerboard : public QObject, public QGraphicsRectItem
 {
@@ -17,7 +18,7 @@ public:
     void createPiece(Coordinates& coordinates, Player player);
     void removeAllPieces();
     void createAllPieces();
-    std::map<Coordinates, Piece*>& getPiecesPlacement() { return piecesPlacement_; }
+    CoordinatesToPiecesMapping& getCoordinatesToPiecesMapping() { return coordinatesToPiecesMapping_; }
     void markPiecesWhichCanMove(std::vector<Piece*>& pieces);
 
 private:
@@ -28,5 +29,5 @@ private:
     const int boardSize_ = 640;
     const int boardOutlineWidth_ = 10;
     const QColor boardOutlineColor_{150, 100, 40};
-    std::map<Coordinates, Piece*> piecesPlacement_;
+    CoordinatesToPiecesMapping coordinatesToPiecesMapping_;
 };

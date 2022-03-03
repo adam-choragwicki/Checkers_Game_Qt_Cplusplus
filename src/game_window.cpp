@@ -51,5 +51,5 @@ void GameWindow::sceneUpdateSlot()
 
 void GameWindow::processNewGameButtonClickedSlot()
 {
-    gameEngine_.restartGame();
+    gameEngine_.processNewGameButtonClicked();
 }

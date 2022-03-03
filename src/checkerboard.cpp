@@ -28,7 +28,7 @@ void Checkerboard::createTiles()
             if(std::find(playableTilesCoordinates.cbegin(), playableTilesCoordinates.cend(), tileCoordinates) != playableTilesCoordinates.cend())
             {
                 playable = true;
-                piecesPlacement_[tileCoordinates] = nullptr;
+                coordinatesToPiecesMapping_[tileCoordinates] = nullptr;
             }
 
             Tile* tile = new Tile(tileCoordinates, playable, this);
@@ -44,7 +44,7 @@ void Checkerboard::createTiles()
 void Checkerboard::createPiece(Coordinates &coordinates, Player player)
 {
     auto* piece = new Piece(coordinates, player, this);
-    piecesPlacement_[Coordinates(coordinates.getRow(), coordinates.getColumn())] = piece;
+    coordinatesToPiecesMapping_[Coordinates(coordinates.getRow(), coordinates.getColumn())] = piece;
 }
 
 void Checkerboard::createAllPieces()
@@ -65,12 +65,12 @@ void Checkerboard::createAllPieces()
 
 void Checkerboard::removeAllPieces()
 {
-    for(auto& piecePlacement : piecesPlacement_)
+    for(auto& coordinatesToPiecesPair : coordinatesToPiecesMapping_)
     {
-        if(piecePlacement.second)
+        if(coordinatesToPiecesPair.second)
         {
-            delete piecePlacement.second;
-            piecePlacement.second = nullptr;
+            delete coordinatesToPiecesPair.second;
+            coordinatesToPiecesPair.second = nullptr;
         }
     }
 }

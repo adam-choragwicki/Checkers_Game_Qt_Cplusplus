@@ -47,11 +47,11 @@ void GameEngine::checkAndMarkPlayerMoveOptions(Player player)
         return;
     }
 
-    std::vector<Piece*> piecesWhichCanCapture = logic::whichPiecesCanCapture(player, checkerboard_.getPiecesPlacement());
+    std::vector<Piece*> piecesWhichCanCapture = logic::whichPiecesCanCapture(player, checkerboard_.getCoordinatesToPiecesMapping());
 
     if(piecesWhichCanCapture.empty())
     {
-        std::vector<Piece*> piecesWhichCanMove = logic::whichPiecesCanMove(player, checkerboard_.getPiecesPlacement());
+        std::vector<Piece*> piecesWhichCanMove = logic::whichPiecesCanMove(player, checkerboard_.getCoordinatesToPiecesMapping());
         checkerboard_.markPiecesWhichCanMove(piecesWhichCanMove);
     }
     else
@@ -88,13 +88,13 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
     Piece* activePiece = ActivePieceManager::getActivePiece();
 
     /*If any capture is possible then any capture has to be the next move*/
-    if(logic::checkIfPieceCanCapture(activePiece, checkerboard_.getPiecesPlacement()))
+    if(logic::checkIfPieceCanCapture(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
     {
-        if(logic::checkCapturePossibility(activePiece, checkerboard_.getPiecesPlacement(), targetTileCoordinates))
+        if(logic::checkCapturePossibility(activePiece, checkerboard_.getCoordinatesToPiecesMapping(), targetTileCoordinates))
         {
             capturePiece(activePiece, targetTileCoordinates);
 
-            if(logic::checkIfPieceCanCapture(activePiece, checkerboard_.getPiecesPlacement()))
+            if(logic::checkIfPieceCanCapture(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
             {
                 multiCaptureInProgressPiece_ = activePiece;
                 return;
@@ -117,9 +117,9 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
             return;
         }
     }
-    else if(logic::checkIfPieceCanMove(activePiece, checkerboard_.getPiecesPlacement()))
+    else if(logic::checkIfPieceCanMove(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
     {
-        if(logic::checkMovePossibility(activePiece, checkerboard_.getPiecesPlacement(), targetTileCoordinates))
+        if(logic::checkMovePossibility(activePiece, checkerboard_.getCoordinatesToPiecesMapping(), targetTileCoordinates))
         {
             movePiece(activePiece, targetTileCoordinates);
 
@@ -139,9 +139,9 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
 
 void GameEngine::unmarkAllPieces()
 {
-    for(auto& piecePlacement : checkerboard_.getPiecesPlacement())
+    for(auto& coordinatesToPiecesPair : checkerboard_.getCoordinatesToPiecesMapping())
     {
-        Piece* piece = piecePlacement.second;
+        Piece* piece = coordinatesToPiecesPair.second;
 
         if(piece && (piece->isMarkedActive() || piece->isMarkedMoveAvailable()))
         {
@@ -156,8 +156,8 @@ void GameEngine::movePiece(Piece* piece, const Coordinates& targetTileCoordinate
 
     Coordinates pieceCoordinates(piece->getRow(), piece->getColumn());
 
-    checkerboard_.getPiecesPlacement()[pieceCoordinates] = nullptr;
-    checkerboard_.getPiecesPlacement()[targetTileCoordinates] = piece;
+    checkerboard_.getCoordinatesToPiecesMapping()[pieceCoordinates] = nullptr;
+    checkerboard_.getCoordinatesToPiecesMapping()[targetTileCoordinates] = piece;
     piece->moveToTile(targetTileCoordinates);
 }
 
@@ -168,8 +168,8 @@ void GameEngine::capturePiece(Piece* piece, const Coordinates& targetTileCoordin
     logFile << piece << " captures " << coordinatesOfPieceBetween << " and lands on " << targetTileCoordinates << std::endl;
 
     movePiece(piece, targetTileCoordinates);
-    delete checkerboard_.getPiecesPlacement().at(coordinatesOfPieceBetween);
-    checkerboard_.getPiecesPlacement()[coordinatesOfPieceBetween] = nullptr;
+    delete checkerboard_.getCoordinatesToPiecesMapping().at(coordinatesOfPieceBetween);
+    checkerboard_.getCoordinatesToPiecesMapping()[coordinatesOfPieceBetween] = nullptr;
 }
 
 void GameEngine::endTurn()
@@ -195,4 +195,9 @@ void GameEngine::checkEligibilityAndPromotePiece(Piece* piece)
 bool GameEngine::isMultiCaptureInProgress()
 {
     return multiCaptureInProgressPiece_ != nullptr;
+}
+
+void GameEngine::processNewGameButtonClicked()
+{
+    restartGame();
 }

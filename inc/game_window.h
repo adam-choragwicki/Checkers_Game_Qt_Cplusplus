@@ -26,12 +26,12 @@ private:
 
     void initializeGameplayAreaScene();
     void drawCheckerboard();
-    void sceneUpdateSlot();
 
     Ui::GameWindow* ui_;
     QGraphicsScene scene_;
     GameEngine& gameEngine_;
 
 private slots:
+    void sceneUpdateSlot();
     void processNewGameButtonClickedSlot();
 };

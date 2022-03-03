@@ -12,8 +12,8 @@ signals:
 public:
     GameEngine();
 
-    Checkerboard& getCheckerboard()
-    { return checkerboard_; }
+    Checkerboard& getCheckerboard() { return checkerboard_; }
+    void processNewGameButtonClicked();
 
 public slots:
     void restartGame();

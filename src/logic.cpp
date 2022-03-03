@@ -1,4 +1,5 @@
 #include "logic.h"
+#include "common.h"
 
 #include <memory>
 
@@ -86,9 +87,9 @@ std::vector<Coordinates> generateStartingPiecesCoordinates(Player player)
     return startingPiecesCoordinates;
 }
 
-bool checkMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetTileCoordinates)
+bool checkMovePossibility(const Piece* piece, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping, const Coordinates& targetTileCoordinates)
 {
-    if(isTileEmpty(targetTileCoordinates, piecesPlacement))
+    if(isTileEmpty(targetTileCoordinates, coordinatesToPiecesMapping))
     {
         /*Check if this movement is one of possible movements*/
         std::vector<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
@@ -100,11 +101,11 @@ bool checkMovePossibility(const Piece* piece, const std::map<Coordinates, Piece*
     }
 }
 
-bool checkCapturePossibility(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement, const Coordinates& targetTileCoordinates)
+bool checkCapturePossibility(const Piece* piece, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping, const Coordinates& targetTileCoordinates)
 {
     const Coordinates pieceCoordinates(piece->getRow(), piece->getColumn());
 
-    if(isTileEmpty(targetTileCoordinates, piecesPlacement))
+    if(isTileEmpty(targetTileCoordinates, coordinatesToPiecesMapping))
     {
         /*Check if this capture is one of possible captures*/
         std::vector<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
@@ -114,7 +115,7 @@ bool checkCapturePossibility(const Piece* piece, const std::map<Coordinates, Pie
             std::pair<int, int> targetRowColumnCaptureOffset(targetTileCoordinates.getRow() - pieceCoordinates.getRow(),
                                                              targetTileCoordinates.getColumn() - pieceCoordinates.getColumn());
 
-            Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.at(Coordinates(pieceCoordinates.getRow() + targetRowColumnCaptureOffset.first / 2,
+            Piece* pieceBetweenThisPieceAndTargetTile = coordinatesToPiecesMapping.at(Coordinates(pieceCoordinates.getRow() + targetRowColumnCaptureOffset.first / 2,
                                                                                        pieceCoordinates.getColumn() + targetRowColumnCaptureOffset.second / 2));
 
             if(pieceBetweenThisPieceAndTargetTile)
@@ -144,19 +145,19 @@ bool checkCapturePossibility(const Piece* piece, const std::map<Coordinates, Pie
     }
 }
 
-std::vector<Piece*> whichPiecesCanMove(Player activePlayer, const std::map<Coordinates, Piece*>& piecesPlacement)
+std::vector<Piece*> whichPiecesCanMove(Player activePlayer, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping)
 {
     std::vector<Piece*> piecesWhichCanMove;
 
-    for(auto& piecePlacement: piecesPlacement)
+    for(auto& coordinatesToPiecesPair: coordinatesToPiecesMapping)
     {
-        Piece* piece = piecePlacement.second;
+        Piece* piece = coordinatesToPiecesPair.second;
 
         if(piece)
         {
             if(piece->getPlayer() == activePlayer)
             {
-                if(checkIfPieceCanMove(piece, piecesPlacement))
+                if(checkIfPieceCanMove(piece, coordinatesToPiecesMapping))
                 {
                     piecesWhichCanMove.push_back(piece);
                 }
@@ -167,19 +168,19 @@ std::vector<Piece*> whichPiecesCanMove(Player activePlayer, const std::map<Coord
     return piecesWhichCanMove;
 }
 
-std::vector<Piece*> whichPiecesCanCapture(Player activePlayer, const std::map<Coordinates, Piece*>& piecesPlacement)
+std::vector<Piece*> whichPiecesCanCapture(Player activePlayer, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping)
 {
     std::vector<Piece*> piecesWhichCanCapture;
 
-    for(auto& piecePlacement : piecesPlacement)
+    for(auto& coordinatesToPiecesPair : coordinatesToPiecesMapping)
     {
-        Piece* piece = piecePlacement.second;
+        Piece* piece = coordinatesToPiecesPair.second;
 
         if(piece)
         {
             if(piece->getPlayer() == activePlayer)
             {
-                if(checkIfPieceCanCapture(piece, piecesPlacement))
+                if(checkIfPieceCanCapture(piece, coordinatesToPiecesMapping))
                 {
                     piecesWhichCanCapture.push_back(piece);
                 }
@@ -282,13 +283,13 @@ std::vector<Coordinates> generatePossiblePieceCaptureOptionsCoordinates(const Pi
     return validCaptureCoordinates;
 }
 
-bool checkIfPieceCanMove(const Piece* piece, const std::map<Coordinates, Piece*>& piecesPlacement)
+bool checkIfPieceCanMove(const Piece* piece, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping)
 {
     std::vector<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
 
     for(auto& moveOption: moveOptions)
     {
-        if(checkMovePossibility(piece, piecesPlacement, moveOption))
+        if(checkMovePossibility(piece, coordinatesToPiecesMapping, moveOption))
         {
             return true;
         }
@@ -297,13 +298,13 @@ bool checkIfPieceCanMove(const Piece* piece, const std::map<Coordinates, Piece*>
     return false;
 }
 
-bool checkIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece *>& piecesPlacement)
+bool checkIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece *>& coordinatesToPiecesMapping)
 {
     std::vector<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
 
     for(auto& captureOption : captureOptions)
     {
-        if(checkCapturePossibility(piece, piecesPlacement, captureOption))
+        if(checkCapturePossibility(piece, coordinatesToPiecesMapping, captureOption))
         {
             return true;
         }
@@ -342,7 +343,7 @@ bool checkPromotionEligibility(const Piece* piece)
     return false;
 }
 
-bool isTileEmpty(const Coordinates& coordinates, const std::map<Coordinates, Piece*>& piecesPlacement)
+bool isTileEmpty(const Coordinates& coordinates, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping)
 {
     std::vector<Coordinates> playableTileCoordinates = generatePlayableTilesCoordinates();
 
@@ -351,7 +352,6 @@ bool isTileEmpty(const Coordinates& coordinates, const std::map<Coordinates, Pie
         throw std::logic_error("Error, trying to check if piece is on unplayable tile");
     }
 
-    return piecesPlacement.at(coordinates) == nullptr;
+    return coordinatesToPiecesMapping.at(coordinates) == nullptr;
 }
-
 }
