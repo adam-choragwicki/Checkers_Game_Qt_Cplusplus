@@ -12,13 +12,13 @@ class Piece : public QGraphicsEllipseItem
 public:
     Piece(const Coordinates& coordinates, Player player, QGraphicsItem* parent=nullptr, bool promoted=false);
 
-    int getColumn() const {return coordinates_.getColumn();}
-    int getRow() const {return coordinates_.getRow();}
-    const Coordinates& getCoordinates() const {return coordinates_;}
-    Player getPlayer() const {return player_;}
-    bool isMarkedActive() const {return markedActive_;}
-    bool isMarkedMoveAvailable() const {return markedMoveAvailable_;}
-    bool isPromoted() const {return promoted_;}
+    [[nodiscard]] int getColumn() const {return coordinates_.getColumn();}
+    [[nodiscard]] int getRow() const {return coordinates_.getRow();}
+    [[nodiscard]] const Coordinates& getCoordinates() const {return coordinates_;}
+    [[nodiscard]] Player getPlayer() const {return player_;}
+    [[nodiscard]] bool isMarkedActive() const {return markedActive_;}
+    [[nodiscard]] bool isMarkedMoveAvailable() const {return markedMoveAvailable_;}
+    [[nodiscard]] bool isPromoted() const {return promoted_;}
 
     void setActiveState(bool isActive);
 

@@ -8,7 +8,8 @@ class Checkerboard : public QObject, public QGraphicsRectItem
     friend class CheckerboardTest;
 
 public:
-    static std::unique_ptr<Checkerboard> MakeCheckerboard();
+    Checkerboard();
+
     void createPiece(Coordinates& coordinates, Player player);
     void removeAllPieces();
     void createAllPieces();
@@ -19,7 +20,6 @@ signals:
     void tileClickedSignal(const Coordinates& coordinates, bool playable);
 
 private:
-    Checkerboard();
     void createTiles();
 
     const int boardPositionX_ = 0;

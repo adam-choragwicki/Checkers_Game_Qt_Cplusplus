@@ -118,7 +118,7 @@ void Piece::updateColoursAccordingToState()
         }
         else
         {
-            assert(false);
+            throw std::runtime_error("Piece is in undefined state");
         }
     }
     else if(player_ == Player::up)
@@ -139,7 +139,7 @@ void Piece::updateColoursAccordingToState()
         }
         else
         {
-            assert(false);
+            throw std::runtime_error("Piece is in undefined state");
         }
     }
 }
@@ -149,19 +149,14 @@ void Piece::animateFromCurrentToNewCoordinates(const Coordinates& currentCoordin
     int rowDifference = (newCoordinates.getRow() - currentCoordinates.getRow());
     int columnDifference = (newCoordinates.getColumn() - currentCoordinates.getColumn());
 
-    assert(abs(rowDifference) == abs(columnDifference));
-
-    double stepRow = 0;
-    double stepColumn = 0;
-
-    stepRow = rowDifference < 0 ? -1 : +1;
-    stepColumn = columnDifference < 0 ? -1 : +1;
+    double stepRow = rowDifference < 0 ? -1 : +1;
+    double stepColumn = columnDifference < 0 ? -1 : +1;
 
     using namespace std::chrono_literals;
 
     const double factor = 5;
 
-    const int limit = (abs(rowDifference) * common::tileSize_) / factor;
+    const int limit = static_cast<int>((abs(rowDifference) * common::tileSize_) / factor);
 
     for(int i = 0; i < limit; i++)
     {

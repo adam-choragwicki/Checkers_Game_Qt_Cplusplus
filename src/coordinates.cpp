@@ -20,12 +20,6 @@ bool Coordinates::validateCoordinates(int row, int column)
     return (row >= 1 && row <= 8) && (column >= 1 && column <= 8);
 }
 
-void Coordinates::modify(int newRow, int newColumn)
-{
-    row_ = newRow;
-    column_ = newColumn;
-}
-
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
 {
     if(coordinates1.getRow() < coordinates2.getRow())
@@ -41,10 +35,6 @@ bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
         if(coordinates1.getColumn() < coordinates2.getColumn())
         {
             return true;
-        }
-        else if(coordinates1.getColumn() > coordinates2.getColumn())
-        {
-            return false;
         }
         else
         {

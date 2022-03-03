@@ -20,4 +20,4 @@ namespace logic
     std::vector<Coordinates> generatePossiblePieceMovementOptionsCoordinates(const Piece* piece);
     std::vector<Coordinates> generatePossiblePieceCaptureOptionsCoordinates(const Piece* piece);
     bool isTileEmpty(const Coordinates &coordinates, const std::map<Coordinates, Piece*> &piecesPlacement);
-};
+}

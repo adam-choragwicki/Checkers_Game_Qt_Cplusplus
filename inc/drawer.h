@@ -18,5 +18,5 @@ public:
     static void sceneUpdate();
 
 private:
-    static QGraphicsScene* scene_;
+    inline static QGraphicsScene* scene_ = nullptr;
 };

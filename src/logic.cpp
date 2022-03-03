@@ -16,14 +16,14 @@ std::vector<Coordinates> generatePlayableTilesCoordinates()
             {
                 if(column % 2 != 0)
                 {
-                    playableTilesCoordinates.push_back(Coordinates(row, column));
+                    playableTilesCoordinates.emplace_back(row, column);
                 }
             }
             else
             {
                 if(column % 2 == 0)
                 {
-                    playableTilesCoordinates.push_back(Coordinates(row, column));
+                    playableTilesCoordinates.emplace_back(row, column);
                 }
             }
         }
@@ -46,14 +46,14 @@ std::vector<Coordinates> generateStartingPiecesCoordinates(Player player)
                 {
                     if(column % 2 == 0)
                     {
-                        startingPiecesCoordinates.push_back(Coordinates(row, column));
+                        startingPiecesCoordinates.emplace_back(row, column);
                     }
                 }
                 else
                 {
                     if(column % 2 != 0)
                     {
-                        startingPiecesCoordinates.push_back(Coordinates(row, column));
+                        startingPiecesCoordinates.emplace_back(row, column);
                     }
                 }
             }
@@ -69,14 +69,14 @@ std::vector<Coordinates> generateStartingPiecesCoordinates(Player player)
                 {
                     if(column % 2 == 0)
                     {
-                        startingPiecesCoordinates.push_back(Coordinates(row, column));
+                        startingPiecesCoordinates.emplace_back(row, column);
                     }
                 }
                 else
                 {
                     if(column % 2 != 0)
                     {
-                        startingPiecesCoordinates.push_back(Coordinates(row, column));
+                        startingPiecesCoordinates.emplace_back(row, column);
                     }
                 }
             }
@@ -199,37 +199,37 @@ std::vector<Coordinates> generatePossiblePieceMovementOptionsCoordinates(const P
     if(piecePlayer == Player::down)
     {
         /*Movement up is permitted*/
-        validRowColumnMovementOffsets.push_back(std::make_pair(-1, -1));
-        validRowColumnMovementOffsets.push_back(std::make_pair(-1, +1));
+        validRowColumnMovementOffsets.emplace_back(-1, -1);
+        validRowColumnMovementOffsets.emplace_back(-1, +1);
 
         if(piece->isPromoted())
         {
-            validRowColumnMovementOffsets.push_back(std::make_pair(+1, -1));
-            validRowColumnMovementOffsets.push_back(std::make_pair(+1, +1));
+            validRowColumnMovementOffsets.emplace_back(+1, -1);
+            validRowColumnMovementOffsets.emplace_back(+1, +1);
         }
     }
     else if(piecePlayer == Player::up)
     {
         /*Movement down is permitted*/
-        validRowColumnMovementOffsets.push_back(std::make_pair(+1, -1));
-        validRowColumnMovementOffsets.push_back(std::make_pair(+1, +1));
+        validRowColumnMovementOffsets.emplace_back(+1, -1);
+        validRowColumnMovementOffsets.emplace_back(+1, +1);
 
         if(piece->isPromoted())
         {
-            validRowColumnMovementOffsets.push_back(std::make_pair(-1, -1));
-            validRowColumnMovementOffsets.push_back(std::make_pair(-1, +1));
+            validRowColumnMovementOffsets.emplace_back(-1, -1);
+            validRowColumnMovementOffsets.emplace_back(-1, +1);
         }
     }
 
     std::vector<Coordinates> validMovementCoordinates;
 
-    for(unsigned i = 0; i < validRowColumnMovementOffsets.size(); i++)
+    for(auto& validRowColumnMovementOffset : validRowColumnMovementOffsets)
     {
-        if(Coordinates::validateCoordinates(pieceCoordinates.getRow() + validRowColumnMovementOffsets.at(i).first,
-                                            pieceCoordinates.getColumn() + validRowColumnMovementOffsets.at(i).second))
+        if(Coordinates::validateCoordinates(pieceCoordinates.getRow() + validRowColumnMovementOffset.first,
+                                            pieceCoordinates.getColumn() + validRowColumnMovementOffset.second))
         {
-            validMovementCoordinates.push_back(Coordinates(pieceCoordinates.getRow() + validRowColumnMovementOffsets.at(i).first,
-                                                           pieceCoordinates.getColumn() + validRowColumnMovementOffsets.at(i).second));
+            validMovementCoordinates.emplace_back(pieceCoordinates.getRow() + validRowColumnMovementOffset.first,
+                                                           pieceCoordinates.getColumn() + validRowColumnMovementOffset.second);
         }
     }
 
@@ -245,37 +245,37 @@ std::vector<Coordinates> generatePossiblePieceCaptureOptionsCoordinates(const Pi
     if(piecePlayer == Player::down)
     {
         /*Movement up is permitted*/
-        validRowColumnCaptureOffsets.push_back(std::make_pair(-2, -2));
-        validRowColumnCaptureOffsets.push_back(std::make_pair(-2, +2));
+        validRowColumnCaptureOffsets.emplace_back(-2, -2);
+        validRowColumnCaptureOffsets.emplace_back(-2, +2);
 
         if(piece->isPromoted())
         {
-            validRowColumnCaptureOffsets.push_back(std::make_pair(+2, -2));
-            validRowColumnCaptureOffsets.push_back(std::make_pair(+2, +2));
+            validRowColumnCaptureOffsets.emplace_back(+2, -2);
+            validRowColumnCaptureOffsets.emplace_back(+2, +2);
         }
     }
     else if(piecePlayer == Player::up)
     {
         /*Movement down is permitted*/
-        validRowColumnCaptureOffsets.push_back(std::make_pair(+2, -2));
-        validRowColumnCaptureOffsets.push_back(std::make_pair(+2, +2));
+        validRowColumnCaptureOffsets.emplace_back(+2, -2);
+        validRowColumnCaptureOffsets.emplace_back(+2, +2);
 
         if(piece->isPromoted())
         {
-            validRowColumnCaptureOffsets.push_back(std::make_pair(-2, -2));
-            validRowColumnCaptureOffsets.push_back(std::make_pair(-2, +2));
+            validRowColumnCaptureOffsets.emplace_back(-2, -2);
+            validRowColumnCaptureOffsets.emplace_back(-2, +2);
         }
     }
 
     std::vector<Coordinates> validCaptureCoordinates;
 
-    for(unsigned i = 0; i < validRowColumnCaptureOffsets.size(); i++)
+    for(auto& validRowColumnCaptureOffset : validRowColumnCaptureOffsets)
     {
-        if(Coordinates::validateCoordinates(pieceCoordinates.getRow() + validRowColumnCaptureOffsets.at(i).first,
-                                            pieceCoordinates.getColumn() + validRowColumnCaptureOffsets.at(i).second))
+        if(Coordinates::validateCoordinates(pieceCoordinates.getRow() + validRowColumnCaptureOffset.first,
+                                            pieceCoordinates.getColumn() + validRowColumnCaptureOffset.second))
         {
-            validCaptureCoordinates.push_back(Coordinates(pieceCoordinates.getRow() + validRowColumnCaptureOffsets.at(i).first,
-                                                          pieceCoordinates.getColumn() + validRowColumnCaptureOffsets.at(i).second));
+            validCaptureCoordinates.emplace_back(pieceCoordinates.getRow() + validRowColumnCaptureOffset.first,
+                                                          pieceCoordinates.getColumn() + validRowColumnCaptureOffset.second);
         }
     }
 
@@ -286,9 +286,9 @@ bool checkIfPieceCanMove(const Piece* piece, const std::map<Coordinates, Piece*>
 {
     std::vector<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
 
-    for (unsigned i = 0; i < moveOptions.size(); i++)
+    for(auto& moveOption: moveOptions)
     {
-        if(checkMovePossibility(piece, piecesPlacement, moveOptions.at(i)))
+        if(checkMovePossibility(piece, piecesPlacement, moveOption))
         {
             return true;
         }
@@ -301,9 +301,9 @@ bool checkIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piec
 {
     std::vector<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
 
-    for (unsigned i = 0; i < captureOptions.size(); i++)
+    for(auto& captureOption : captureOptions)
     {
-        if(checkCapturePossibility(piece, piecesPlacement, captureOptions.at(i)))
+        if(checkCapturePossibility(piece, piecesPlacement, captureOption))
         {
             return true;
         }
@@ -337,10 +337,6 @@ bool checkPromotionEligibility(const Piece* piece)
         {
             return true;
         }
-    }
-    else
-    {
-        assert(false);
     }
 
     return false;

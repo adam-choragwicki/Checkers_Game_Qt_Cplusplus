@@ -1,7 +1,6 @@
 #include "log_manager.h"
 
 #include <ctime>
-#include <exception>
 #include <iomanip>
 
 std::ofstream logFile;

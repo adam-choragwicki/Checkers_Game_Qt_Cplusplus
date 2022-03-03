@@ -12,11 +12,9 @@ public:
     ActivePieceManager& operator=(ActivePieceManager&&) = delete;
 
     static Piece* getActivePiece() {return activePiece_;}
-
     static void setActivePiece(Piece* piece) {activePiece_ = piece;}
-
     static void resetActivePiece() {activePiece_ = nullptr;}
 
 private:
-    static Piece* activePiece_;
+    inline static Piece* activePiece_ = nullptr;
 };

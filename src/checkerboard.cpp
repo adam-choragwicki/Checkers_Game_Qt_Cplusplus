@@ -1,16 +1,8 @@
 #include "checkerboard.h"
-#include "game_engine.h"
 #include "logic.h"
 #include "tile.h"
-#include "drawer.h"
 
-std::unique_ptr<Checkerboard> Checkerboard::MakeCheckerboard()
-{
-    std::unique_ptr<Checkerboard> checkerboard = std::unique_ptr<Checkerboard>(new Checkerboard);
-    Drawer::drawCheckerboard(*checkerboard);
-
-    return checkerboard;
-}
+#include <QPen>
 
 Checkerboard::Checkerboard() : QGraphicsRectItem(nullptr)
 {
@@ -51,7 +43,7 @@ void Checkerboard::createTiles()
 
 void Checkerboard::createPiece(Coordinates &coordinates, Player player)
 {
-    Piece* piece = new Piece(coordinates, player, this);
+    auto* piece = new Piece(coordinates, player, this);
     piecesPlacement_[Coordinates(coordinates.getRow(), coordinates.getColumn())] = piece;
 }
 

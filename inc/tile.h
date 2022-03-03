@@ -10,7 +10,6 @@ class Tile : public QObject, public QGraphicsRectItem
 
 public:
     Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent);
-    bool isPlayable() const {return playable_;}
 
 signals:
     void clickedSignal(const Coordinates& coordinates, bool playable);

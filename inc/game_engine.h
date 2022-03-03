@@ -9,6 +9,8 @@ class GameEngine : public QObject
 public:
     GameEngine();
 
+    Checkerboard& getCheckerboard() {return checkerboard_;}
+
 public slots:
     void restartGame();
 
@@ -24,9 +26,11 @@ private:
     void checkAndMarkPlayerMoveOptions(Player player);
     void checkEligibilityAndPromotePiece(Piece* piece);
 
-    std::unique_ptr<Checkerboard> checkerboard_;
+    Checkerboard checkerboard_;
+
+private:
     Piece* multiCaptureInProgressPiece_ = nullptr;
 
 private slots:
-    void processTileClicked(const Coordinates& targetTileCoordinates);
+    void processTileClickedSlot(const Coordinates& targetTileCoordinates);
 };

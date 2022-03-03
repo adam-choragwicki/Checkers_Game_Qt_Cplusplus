@@ -14,5 +14,6 @@ public:
     static void resetActivePlayer() {activePlayer_ = Player::down;}
 
 private:
-    static Player activePlayer_;
+    /*Player::down starts*/
+    inline static Player activePlayer_ = Player::down;
 };
