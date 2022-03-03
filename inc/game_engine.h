@@ -4,12 +4,16 @@
 
 class GameEngine : public QObject
 {
-    Q_OBJECT
+Q_OBJECT
+
+signals:
+    void sceneUpdateSignal();
 
 public:
     GameEngine();
 
-    Checkerboard& getCheckerboard() {return checkerboard_;}
+    Checkerboard& getCheckerboard()
+    { return checkerboard_; }
 
 public slots:
     void restartGame();

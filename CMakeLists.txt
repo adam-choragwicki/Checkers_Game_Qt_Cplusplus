@@ -27,7 +27,6 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/active_piece_manager.h
     ${INCLUDES_DIR}/checkerboard.h ${SOURCES_DIR}/checkerboard.cpp
     ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
-    ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp
     ${INCLUDES_DIR}/logic.h ${SOURCES_DIR}/logic.cpp
     ${INCLUDES_DIR}/piece.h ${SOURCES_DIR}/piece.cpp
     ${INCLUDES_DIR}/tile.h ${SOURCES_DIR}/tile.cpp

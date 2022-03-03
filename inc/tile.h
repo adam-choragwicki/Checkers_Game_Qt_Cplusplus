@@ -6,13 +6,13 @@
 
 class Tile : public QObject, public QGraphicsRectItem
 {
-    Q_OBJECT
-
-public:
-    Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent);
+Q_OBJECT
 
 signals:
     void clickedSignal(const Coordinates& coordinates, bool playable);
+
+public:
+    Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent);
 
 private:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;

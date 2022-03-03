@@ -1,5 +1,4 @@
 #include "game_engine.h"
-#include "drawer.h"
 #include "logic.h"
 #include "tile.h"
 #include "piece.h"
@@ -135,7 +134,7 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
         throw std::logic_error("ERROR, PIECE CANNOT CAPTURE AND CANNOT MOVE");
     }
 
-    Drawer::sceneUpdate();
+    emit sceneUpdateSignal();
 }
 
 void GameEngine::unmarkAllPieces()

@@ -25,6 +25,8 @@ private:
     void closeEvent(QCloseEvent*) override;
 
     void initializeGameplayAreaScene();
+    void drawCheckerboard();
+    void sceneUpdateSlot();
 
     Ui::GameWindow* ui_;
     QGraphicsScene scene_;

@@ -1,6 +1,5 @@
 #include "game_window.h"
 #include "ui_game_window.h"
-#include "drawer.h"
 
 GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent)
         : QMainWindow(parent),
@@ -15,12 +14,10 @@ GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent)
 
     initializeGameplayAreaScene();
 
-    const QColor backgroundColor(0, 160, 0);
-    scene_.setBackgroundBrush(QBrush(backgroundColor));
+    drawCheckerboard();
 
     QObject::connect(ui_->pushButton_NewGame, &QPushButton::clicked, this, &GameWindow::processNewGameButtonClickedSlot);
-
-    Drawer::drawCheckerboard(gameEngine.getCheckerboard());
+    QObject::connect(&gameEngine_, &GameEngine::sceneUpdateSignal, this, &GameWindow::sceneUpdateSlot);
 }
 
 GameWindow::~GameWindow()
@@ -38,7 +35,18 @@ void GameWindow::initializeGameplayAreaScene()
     ui_->graphicsView->setScene(&scene_);
     ui_->graphicsView->setRenderHint(QPainter::Antialiasing);
 
-    Drawer::setScene(&scene_);
+    const QColor backgroundColor(0, 160, 0);
+    scene_.setBackgroundBrush(QBrush(backgroundColor));
+}
+
+void GameWindow::drawCheckerboard()
+{
+    scene_.addItem(&gameEngine_.getCheckerboard());
+}
+
+void GameWindow::sceneUpdateSlot()
+{
+    scene_.update();
 }
 
 void GameWindow::processNewGameButtonClickedSlot()
