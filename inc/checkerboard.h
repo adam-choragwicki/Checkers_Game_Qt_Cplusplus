@@ -7,8 +7,6 @@ class Checkerboard : public QObject, public QGraphicsRectItem
 {
 Q_OBJECT
 
-    friend class CheckerboardTest;
-
 signals:
     void tileClickedSignal(const Coordinates& coordinates, bool playable);
 
