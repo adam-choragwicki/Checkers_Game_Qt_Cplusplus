@@ -18,18 +18,18 @@ class GameWindow : public QMainWindow
 Q_OBJECT
 
 public:
-    explicit GameWindow(GameEngine& gameEngine, QWidget* parent = nullptr);
+    explicit GameWindow(QWidget* parent = nullptr);
     ~GameWindow() override;
 
 private:
     void closeEvent(QCloseEvent*) override;
 
     void initializeGameplayAreaScene();
-    void drawCheckerboard();
 
     Ui::GameWindow* ui_;
     QGraphicsScene scene_;
-    GameEngine& gameEngine_;
+    std::unique_ptr<GameEngine> gameEngine_;
+    std::unique_ptr<Checkerboard> checkerboard_;
 
 private slots:
     void sceneUpdateSlot();

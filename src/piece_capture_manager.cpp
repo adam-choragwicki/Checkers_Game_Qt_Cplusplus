@@ -1,66 +1,50 @@
 #include "piece_capture_manager.h"
 #include "tile_manager.h"
 
-bool PieceCaptureManager::checkCapturePossibility(const Piece* piece, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping, const Coordinates& targetTileCoordinates)
+bool PieceCaptureManager::checkCapturePossibility(const Piece* piece,
+                                                  const PiecesPlacement& piecesPlacement,
+                                                  const Coordinates& targetTileCoordinates)
 {
-    const Coordinates pieceCoordinates(piece->getRow(), piece->getColumn());
+    const Coordinates pieceCoordinates = piece->getCoordinates();
 
-    if(TileManager::isTileEmpty(targetTileCoordinates, coordinatesToPiecesMapping))
+    if(TileManager::isTileEmpty(targetTileCoordinates, piecesPlacement))
     {
         /*Check if this capture is one of possible captures*/
-        std::vector<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
+        QVector<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
 
-        if(std::find(captureOptions.begin(), captureOptions.end(), targetTileCoordinates) != captureOptions.end())
+        if(captureOptions.contains(targetTileCoordinates))
         {
-            std::pair<int, int> targetRowColumnCaptureOffset(targetTileCoordinates.getRow() - pieceCoordinates.getRow(),
-                                                             targetTileCoordinates.getColumn() - pieceCoordinates.getColumn());
+            std::pair<int, int> targetRowColumnCaptureOffset(targetTileCoordinates - pieceCoordinates);
 
-            Piece* pieceBetweenThisPieceAndTargetTile = coordinatesToPiecesMapping.at(Coordinates(pieceCoordinates.getRow() + targetRowColumnCaptureOffset.first / 2,
-                                                                                                  pieceCoordinates.getColumn() + targetRowColumnCaptureOffset.second / 2));
+            const Coordinates& pieceBetweenThisPieceAndTargetTileCoordinates{pieceCoordinates.getRow() + targetRowColumnCaptureOffset.first / 2,
+                                                                             pieceCoordinates.getColumn() + targetRowColumnCaptureOffset.second / 2};
 
-            if(pieceBetweenThisPieceAndTargetTile)
+            if(piecesPlacement.isPieceAtCoordinates(pieceBetweenThisPieceAndTargetTileCoordinates))
             {
+                Piece* pieceBetweenThisPieceAndTargetTile = piecesPlacement.getPieceAtCoordinates(pieceBetweenThisPieceAndTargetTileCoordinates);
+
                 if(piece->getPlayer() != pieceBetweenThisPieceAndTargetTile->getPlayer())
                 {
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                return false;
             }
         }
-        else
-        {
-            return false;
-        }
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
-std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(Player activePlayer, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping)
+QVector<Piece*> PieceCaptureManager::whichPiecesCanCapture(Player activePlayer, const PiecesPlacement& piecesPlacement)
 {
-    std::vector<Piece*> piecesWhichCanCapture;
+    QVector<Piece*> piecesWhichCanCapture;
 
-    for(auto& coordinatesToPiecesPair : coordinatesToPiecesMapping)
+    for(const auto& piece : piecesPlacement.getPieces())
     {
-        Piece* piece = coordinatesToPiecesPair.second;
-
-        if(piece)
+        if(piece->getPlayer() == activePlayer)
         {
-            if(piece->getPlayer() == activePlayer)
+            if(checkIfPieceCanCapture(piece, piecesPlacement))
             {
-                if(checkIfPieceCanCapture(piece, coordinatesToPiecesMapping))
-                {
-                    piecesWhichCanCapture.push_back(piece);
-                }
+                piecesWhichCanCapture.push_back(piece);
             }
         }
     }
@@ -68,63 +52,49 @@ std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(Player activePlay
     return piecesWhichCanCapture;
 }
 
-std::vector<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCoordinates(const Piece* piece)
+QVector<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCoordinates(const Piece* piece)
 {
-    const Coordinates pieceCoordinates(piece->getRow(), piece->getColumn());
     const Player piecePlayer = piece->getPlayer();
-    std::vector<std::pair<int, int>> validRowColumnCaptureOffsets;
+    QVector<std::pair<int, int>> validRowColumnCaptureOffsets;
 
-    if(piecePlayer == Player::down)
+    if(piece->isPromoted())
     {
-        /*Movement up is permitted*/
-        validRowColumnCaptureOffsets.emplace_back(-2, -2);
-        validRowColumnCaptureOffsets.emplace_back(-2, +2);
-
-        if(piece->isPromoted())
-        {
-            validRowColumnCaptureOffsets.emplace_back(+2, -2);
-            validRowColumnCaptureOffsets.emplace_back(+2, +2);
-        }
+        validRowColumnCaptureOffsets = {{-2, -2}, {-2, +2}, {+2, -2}, {+2, +2}};
     }
-    else if(piecePlayer == Player::up)
+    else
+    {
+        if(piecePlayer == Player::down)
+        {
+            /*Movement up is permitted*/
+            validRowColumnCaptureOffsets = {{-2, -2}, {-2, +2}};
+        }
+        else if(piecePlayer == Player::up)
         {
             /*Movement down is permitted*/
-            validRowColumnCaptureOffsets.emplace_back(+2, -2);
-            validRowColumnCaptureOffsets.emplace_back(+2, +2);
-
-            if(piece->isPromoted())
-            {
-                validRowColumnCaptureOffsets.emplace_back(-2, -2);
-                validRowColumnCaptureOffsets.emplace_back(-2, +2);
-            }
+            validRowColumnCaptureOffsets = {{+2, -2}, {+2, +2}};
         }
+    }
 
-    std::vector<Coordinates> validCaptureCoordinates;
+    const Coordinates pieceCoordinates = piece->getCoordinates();
+    QVector<Coordinates> validCaptureCoordinates;
 
-    for(auto& validRowColumnCaptureOffset : validRowColumnCaptureOffsets)
+    for(const auto& validRowColumnCaptureOffset : validRowColumnCaptureOffsets)
     {
-        if(Coordinates::validateCoordinates(pieceCoordinates.getRow() + validRowColumnCaptureOffset.first,
-                                            pieceCoordinates.getColumn() + validRowColumnCaptureOffset.second))
+        if(Coordinates::validateCoordinates(pieceCoordinates + validRowColumnCaptureOffset))
         {
-            validCaptureCoordinates.emplace_back(pieceCoordinates.getRow() + validRowColumnCaptureOffset.first,
-                                                 pieceCoordinates.getColumn() + validRowColumnCaptureOffset.second);
+            validCaptureCoordinates.emplace_back(pieceCoordinates + validRowColumnCaptureOffset);
         }
     }
 
     return validCaptureCoordinates;
 }
 
-bool PieceCaptureManager::checkIfPieceCanCapture(const Piece* piece, const std::map<Coordinates, Piece *>& coordinatesToPiecesMapping)
+bool PieceCaptureManager::checkIfPieceCanCapture(const Piece* piece, const PiecesPlacement& piecesPlacement)
 {
-    std::vector<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
+    QVector<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
 
-    for(auto& captureOption : captureOptions)
+    return std::ranges::any_of(captureOptions, [&piece, &piecesPlacement](const Coordinates& captureOption)
     {
-        if(checkCapturePossibility(piece, coordinatesToPiecesMapping, captureOption))
-        {
-            return true;
-        }
-    }
-
-    return false;
+        return checkCapturePossibility(piece, piecesPlacement, captureOption);
+    });
 }

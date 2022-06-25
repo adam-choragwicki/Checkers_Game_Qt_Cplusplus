@@ -2,11 +2,12 @@
 
 #include "piece.h"
 #include "common.h"
+#include "pieces_placement.h"
 
 namespace PieceCaptureManager
 {
-    std::vector<Piece*> whichPiecesCanCapture(Player activePlayer, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping);
-    bool checkCapturePossibility(const Piece* piece, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping, const Coordinates& targetTileCoordinates);
-    bool checkIfPieceCanCapture(const Piece* piece, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping);
-    std::vector<Coordinates> generatePossiblePieceCaptureOptionsCoordinates(const Piece* piece);
+    QVector<Piece*> whichPiecesCanCapture(Player activePlayer, const PiecesPlacement& piecesPlacement);
+    bool checkCapturePossibility(const Piece* piece, const PiecesPlacement& piecesPlacement, const Coordinates& targetTileCoordinates);
+    bool checkIfPieceCanCapture(const Piece* piece, const PiecesPlacement& piecesPlacement);
+    QVector<Coordinates> generatePossiblePieceCaptureOptionsCoordinates(const Piece* piece);
 }

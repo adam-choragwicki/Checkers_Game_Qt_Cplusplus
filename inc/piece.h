@@ -10,7 +10,8 @@ class Piece : public QGraphicsEllipseItem
     friend std::ostream& operator<<(std::ostream& os, const Piece* piece);
 
 public:
-    Piece(const Coordinates& coordinates, Player player, QGraphicsItem* parent=nullptr, bool promoted=false);
+    Piece(const Coordinates& coordinates, Player player, bool promoted=false);
+    ~Piece() override;
 
     [[nodiscard]] int getColumn() const {return coordinates_.getColumn();}
     [[nodiscard]] int getRow() const {return coordinates_.getRow();}
@@ -34,15 +35,10 @@ private:
     void animateFromCurrentToNewCoordinates(const Coordinates& currentCoordinates, const Coordinates& newCoordinates);
     void updateColoursAccordingToState();
 
-    static constexpr QColor blackPieceColor_{50, 50, 50};
-    static constexpr QColor blackPieceOutlineColor_{0, 0, 0};
-    static constexpr QColor redPieceColor_{220, 0, 0};
-    static constexpr QColor redPieceOutlineColor_{170, 0, 0};
-    static constexpr QColor activePieceOutlineColor_{255, 255, 255};
-    static constexpr QColor movePossiblePieceOutlineColor_{255, 255, 0};
+
 
     Coordinates coordinates_;
-    QGraphicsPolygonItem* crownGraphicsItem_ = nullptr;
+    std::unique_ptr<QGraphicsPolygonItem> crownGraphicsItem_;
 
     const int pieceOffsetX_ = 15;
     const int pieceOffsetY_ = 15;

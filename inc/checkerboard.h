@@ -2,6 +2,7 @@
 
 #include "piece.h"
 #include "common.h"
+#include "tile.h"
 
 class Checkerboard : public QObject, public QGraphicsRectItem
 {
@@ -12,12 +13,8 @@ signals:
 
 public:
     Checkerboard();
-
-    void createPiece(Coordinates& coordinates, Player player);
-    void removeAllPieces();
-    void createAllPieces();
-    CoordinatesToPiecesMapping& getCoordinatesToPiecesMapping() { return coordinatesToPiecesMapping_; }
-    void markPiecesWhichCanMove(std::vector<Piece*>& pieces);
+    ~Checkerboard() override;
+    [[nodiscard]] const QVector<Tile*>& getPlayableTiles() const {return playableTiles_;}
 
 private:
     void createTiles();
@@ -27,5 +24,6 @@ private:
     const int boardSize_ = 640;
     const int boardOutlineWidth_ = 10;
     const QColor boardOutlineColor_{150, 100, 40};
-    CoordinatesToPiecesMapping coordinatesToPiecesMapping_;
+
+    QVector<Tile*> playableTiles_;
 };

@@ -7,39 +7,20 @@
 #include "piece_movement_manager.h"
 #include "piece_promotion_manager.h"
 
-GameEngine::GameEngine()
+GameEngine::GameEngine(const QVector<Tile*>& playableTiles)
 {
-    QObject::connect(&checkerboard_, &Checkerboard::tileClickedSignal, this, &GameEngine::processTileClickedSlot);
-    startGame();
-}
+    for(Tile* playableTile : playableTiles)
+    {
+        QObject::connect(playableTile, &Tile::clickedSignal, this, &GameEngine::processTileClickedSlot);
+    }
 
-void GameEngine::startGame()
-{
     logFile << "NEW GAME" << std::endl;
 
     PlayerManager::resetActivePlayer();
 
-    checkerboard_.createAllPieces();
+    piecesPlacement_.createAllPieces();
 
     checkAndMarkPlayerMoveOptions(PlayerManager::getActivePlayer());
-}
-
-void GameEngine::clearPreviousGame()
-{
-    checkerboard_.removeAllPieces();
-
-    Piece* activePiece = ActivePieceManager::getActivePiece();
-
-    if(activePiece)
-    {
-        activePiece->setActiveState(false);
-    }
-}
-
-void GameEngine::restartGame()
-{
-    clearPreviousGame();
-    startGame();
 }
 
 void GameEngine::checkAndMarkPlayerMoveOptions(Player player)
@@ -49,16 +30,16 @@ void GameEngine::checkAndMarkPlayerMoveOptions(Player player)
         return;
     }
 
-    std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, checkerboard_.getCoordinatesToPiecesMapping());
+    QVector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, piecesPlacement_);
 
     if(piecesWhichCanCapture.empty())
     {
-        std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, checkerboard_.getCoordinatesToPiecesMapping());
-        checkerboard_.markPiecesWhichCanMove(piecesWhichCanMove);
+        QVector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, piecesPlacement_);
+        piecesPlacement_.markPiecesWhichCanMove(piecesWhichCanMove);
     }
     else
     {
-        checkerboard_.markPiecesWhichCanMove(piecesWhichCanCapture);
+        piecesPlacement_.markPiecesWhichCanMove(piecesWhichCanCapture);
     }
 }
 
@@ -90,13 +71,13 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
     Piece* activePiece = ActivePieceManager::getActivePiece();
 
     /*If any capture is possible then any capture has to be the next move*/
-    if(PieceCaptureManager::checkIfPieceCanCapture(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
+    if(PieceCaptureManager::checkIfPieceCanCapture(activePiece, piecesPlacement_))
     {
-        if(PieceCaptureManager::checkCapturePossibility(activePiece, checkerboard_.getCoordinatesToPiecesMapping(), targetTileCoordinates))
+        if(PieceCaptureManager::checkCapturePossibility(activePiece, piecesPlacement_, targetTileCoordinates))
         {
             capturePiece(activePiece, targetTileCoordinates);
 
-            if(PieceCaptureManager::checkIfPieceCanCapture(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
+            if(PieceCaptureManager::checkIfPieceCanCapture(activePiece, piecesPlacement_))
             {
                 multiCaptureInProgressPiece_ = activePiece;
                 return;
@@ -119,9 +100,9 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
             return;
         }
     }
-    else if(PieceMovementManager::checkIfPieceCanMove(activePiece, checkerboard_.getCoordinatesToPiecesMapping()))
+    else if(PieceMovementManager::checkIfPieceCanMove(activePiece, piecesPlacement_))
     {
-        if(PieceMovementManager::checkMovePossibility(activePiece, checkerboard_.getCoordinatesToPiecesMapping(), targetTileCoordinates))
+        if(PieceMovementManager::checkMovePossibility(activePiece, piecesPlacement_, targetTileCoordinates))
         {
             movePiece(activePiece, targetTileCoordinates);
 
@@ -141,11 +122,9 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
 
 void GameEngine::unmarkAllPieces()
 {
-    for(auto& coordinatesToPiecesPair : checkerboard_.getCoordinatesToPiecesMapping())
+    for(const auto& piece : piecesPlacement_.getPieces())
     {
-        Piece* piece = coordinatesToPiecesPair.second;
-
-        if(piece && (piece->isMarkedActive() || piece->isMarkedMoveAvailable()))
+        if(piece->isMarkedActive() || piece->isMarkedMoveAvailable())
         {
             piece->unmark();
         }
@@ -155,11 +134,6 @@ void GameEngine::unmarkAllPieces()
 void GameEngine::movePiece(Piece* piece, const Coordinates& targetTileCoordinates)
 {
     logFile << piece << " moves to " << targetTileCoordinates << std::endl;
-
-    Coordinates pieceCoordinates(piece->getRow(), piece->getColumn());
-
-    checkerboard_.getCoordinatesToPiecesMapping()[pieceCoordinates] = nullptr;
-    checkerboard_.getCoordinatesToPiecesMapping()[targetTileCoordinates] = piece;
     piece->moveToTile(targetTileCoordinates);
 }
 
@@ -170,8 +144,8 @@ void GameEngine::capturePiece(Piece* piece, const Coordinates& targetTileCoordin
     logFile << piece << " captures " << coordinatesOfPieceBetween << " and lands on " << targetTileCoordinates << std::endl;
 
     movePiece(piece, targetTileCoordinates);
-    delete checkerboard_.getCoordinatesToPiecesMapping().at(coordinatesOfPieceBetween);
-    checkerboard_.getCoordinatesToPiecesMapping()[coordinatesOfPieceBetween] = nullptr;
+
+    piecesPlacement_.removePieceAtCoordinates(coordinatesOfPieceBetween);
 }
 
 void GameEngine::endTurn()
@@ -197,9 +171,4 @@ void GameEngine::checkEligibilityAndPromotePiece(Piece* piece)
 bool GameEngine::isMultiCaptureInProgress()
 {
     return multiCaptureInProgressPiece_ != nullptr;
-}
-
-void GameEngine::processNewGameButtonClicked()
-{
-    restartGame();
 }

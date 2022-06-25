@@ -9,6 +9,8 @@ enum class Player
 class PlayerManager
 {
 public:
+    PlayerManager() = delete;
+
     static Player& getActivePlayer() {return activePlayer_;}
     static void setActivePlayer(Player activePlayer) {activePlayer_ = activePlayer;}
     static void resetActivePlayer() {activePlayer_ = Player::down;}

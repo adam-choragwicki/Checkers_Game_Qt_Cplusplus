@@ -1,23 +1,23 @@
 #include "game_window.h"
 #include "ui_game_window.h"
+#include "drawer.h"
 
-GameWindow::GameWindow(GameEngine& gameEngine, QWidget* parent)
+GameWindow::GameWindow(QWidget* parent)
         : QMainWindow(parent),
-          ui_(new Ui::GameWindow),
-          gameEngine_(gameEngine)
+          ui_(new Ui::GameWindow)
 {
     ui_->setupUi(this);
-
     setWindowTitle("Checkers");
-    setWindowState(Qt::WindowMaximized);
     setFocus(Qt::ActiveWindowFocusReason);
+    setWindowState(Qt::WindowMaximized);
+
+    QObject::connect(ui_->pushButton_NewGame, &QPushButton::clicked, this, &GameWindow::processNewGameButtonClickedSlot);
 
     initializeGameplayAreaScene();
 
-    drawCheckerboard();
-
-    QObject::connect(ui_->pushButton_NewGame, &QPushButton::clicked, this, &GameWindow::processNewGameButtonClickedSlot);
-    QObject::connect(&gameEngine_, &GameEngine::sceneUpdateSignal, this, &GameWindow::sceneUpdateSlot);
+    checkerboard_ = std::make_unique<Checkerboard>();
+    gameEngine_ = std::make_unique<GameEngine>(checkerboard_->getPlayableTiles());
+    QObject::connect(gameEngine_.get(), &GameEngine::sceneUpdateSignal, this, &GameWindow::sceneUpdateSlot);
 }
 
 GameWindow::~GameWindow()
@@ -37,11 +37,8 @@ void GameWindow::initializeGameplayAreaScene()
 
     const QColor backgroundColor(0, 160, 0);
     scene_.setBackgroundBrush(QBrush(backgroundColor));
-}
 
-void GameWindow::drawCheckerboard()
-{
-    scene_.addItem(&gameEngine_.getCheckerboard());
+    Drawer::setScene(&scene_);
 }
 
 void GameWindow::sceneUpdateSlot()
@@ -51,5 +48,6 @@ void GameWindow::sceneUpdateSlot()
 
 void GameWindow::processNewGameButtonClickedSlot()
 {
-    gameEngine_.processNewGameButtonClicked();
+    gameEngine_ = std::make_unique<GameEngine>(checkerboard_->getPlayableTiles());
+    QObject::connect(gameEngine_.get(), &GameEngine::sceneUpdateSignal, this, &GameWindow::sceneUpdateSlot);
 }

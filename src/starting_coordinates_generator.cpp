@@ -1,8 +1,8 @@
 #include "starting_coordinates_generator.h"
 
-std::vector<Coordinates> StartingCoordinatesGenerator::generatePlayableTilesCoordinates()
+QVector<Coordinates> StartingCoordinatesGenerator::generatePlayableTilesCoordinates()
 {
-    static std::vector<Coordinates> playableTilesCoordinates;
+    static QVector<Coordinates> playableTilesCoordinates;
 
     /* Generate playable tiles coordinates only once */
     if(playableTilesCoordinates.empty())
@@ -32,9 +32,9 @@ std::vector<Coordinates> StartingCoordinatesGenerator::generatePlayableTilesCoor
     return playableTilesCoordinates;
 }
 
-std::vector<Coordinates> StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player player)
+QVector<Coordinates> StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player player)
 {
-    std::vector<Coordinates> startingPiecesCoordinates;
+    QVector<Coordinates> startingPiecesCoordinates;
 
     if(player == Player::down)
     {
@@ -60,28 +60,28 @@ std::vector<Coordinates> StartingCoordinatesGenerator::generateStartingPiecesCoo
         }
     }
     else if(player == Player::up)
+    {
+        for(int row = 1; row <= 3; row++)
         {
-            for(int row = 1; row <= 3; row++)
+            for(int column = 1; column <= 8; column++)
             {
-                for(int column = 1; column <= 8; column++)
+                if(row % 2 != 0)
                 {
-                    if(row % 2 != 0)
+                    if(column % 2 == 0)
                     {
-                        if(column % 2 == 0)
-                        {
-                            startingPiecesCoordinates.emplace_back(row, column);
-                        }
+                        startingPiecesCoordinates.emplace_back(row, column);
                     }
-                    else
+                }
+                else
+                {
+                    if(column % 2 != 0)
                     {
-                        if(column % 2 != 0)
-                        {
-                            startingPiecesCoordinates.emplace_back(row, column);
-                        }
+                        startingPiecesCoordinates.emplace_back(row, column);
                     }
                 }
             }
         }
+    }
 
     return startingPiecesCoordinates;
 }

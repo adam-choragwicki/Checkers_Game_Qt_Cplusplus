@@ -6,10 +6,10 @@
 
 Tile::Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent) : QGraphicsRectItem(parent), coordinates_(coordinates.getRow(), coordinates.getColumn()), playable_(playable)
 {
-    QGraphicsRectItem::setRect((coordinates.getColumn() - 1) * Common::tileSize,
-                               (coordinates.getRow() - 1) * Common::tileSize,
-                               Common::tileSize,
-                               Common::tileSize);
+    QGraphicsRectItem::setRect((coordinates.getColumn() - 1) * GameParameters::tileSize,
+                               (coordinates.getRow() - 1) * GameParameters::tileSize,
+                               GameParameters::tileSize,
+                               GameParameters::tileSize);
 
     if(playable_)
     {

@@ -1,20 +1,20 @@
 #include "tile_manager.h"
 #include "starting_coordinates_generator.h"
 
-bool TileManager::isTileEmpty(const Coordinates& coordinates, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping)
+bool TileManager::isTileEmpty(const Coordinates& coordinates, const PiecesPlacement& piecesPlacement)
 {
     /* Generate playable tiles coordinates only once */
-    static std::vector<Coordinates> playableTileCoordinates;
+    static QVector<Coordinates> playableTileCoordinates;
 
     if(playableTileCoordinates.empty())
     {
         playableTileCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
     }
 
-    if(std::find(playableTileCoordinates.begin(), playableTileCoordinates.end(), coordinates) == playableTileCoordinates.end())
+    if(!playableTileCoordinates.contains(coordinates))
     {
         throw std::runtime_error("Trying to check if piece is on unplayable tile");
     }
 
-    return coordinatesToPiecesMapping.at(coordinates) == nullptr;
+    return !piecesPlacement.isPieceAtCoordinates(coordinates);
 }

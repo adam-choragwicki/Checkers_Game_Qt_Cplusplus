@@ -36,7 +36,8 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/piece_promotion_manager.h ${SOURCES_DIR}/piece_promotion_manager.cpp
     ${INCLUDES_DIR}/starting_coordinates_generator.h ${SOURCES_DIR}/starting_coordinates_generator.cpp
     ${INCLUDES_DIR}/tile_manager.h ${SOURCES_DIR}/tile_manager.cpp
-    )
+    ${INCLUDES_DIR}/pieces_placement.h ${SOURCES_DIR}/pieces_placement.cpp
+    ${INCLUDES_DIR}/drawer.h ${SOURCES_DIR}/drawer.cpp)
 
 add_library(libCheckers ${SOURCE_FILES})
 target_include_directories(libCheckers PUBLIC ${INCLUDES_DIR})

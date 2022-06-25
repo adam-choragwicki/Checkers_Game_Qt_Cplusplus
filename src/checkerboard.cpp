@@ -1,84 +1,44 @@
 #include "checkerboard.h"
-#include "tile.h"
 #include "starting_coordinates_generator.h"
+#include "log_manager.h"
+#include "drawer.h"
 
 #include <QPen>
 
-Checkerboard::Checkerboard() : QGraphicsRectItem(nullptr)
+Checkerboard::Checkerboard()
 {
     QGraphicsRectItem::setRect(boardPositionX_, boardPositionY_, boardSize_, boardSize_);
     setPen(QPen(boardOutlineColor_, boardOutlineWidth_));
 
-    /*Checkerboard and tiles are only created once, pieces are recreated during every game restart*/
+    Drawer::drawItem(this);
+
+    /*Tiles are child items of Checkerboard item*/
+    /*PiecesPlacement and tiles are only created once, pieces are recreated during every game restart*/
     createTiles();
+}
+
+Checkerboard::~Checkerboard()
+{
+    Drawer::eraseItem(this);
 }
 
 void Checkerboard::createTiles()
 {
-    std::vector<Coordinates> playableTilesCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
+    QVector<Coordinates> playableTilesCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
 
     for(int row = 1; row <= 8; row++)
     {
         for(int column = 1; column <= 8; column++)
         {
             const Coordinates tileCoordinates(row, column);
-            bool playable = false;
-
-            /*Check if the tile is playable*/
-            if(std::find(playableTilesCoordinates.cbegin(), playableTilesCoordinates.cend(), tileCoordinates) != playableTilesCoordinates.cend())
-            {
-                playable = true;
-                coordinatesToPiecesMapping_[tileCoordinates] = nullptr;
-            }
+            bool playable = playableTilesCoordinates.contains(tileCoordinates);
 
             Tile* tile = new Tile(tileCoordinates, playable, this);
 
             if(playable)
             {
-                QObject::connect(tile, &Tile::clickedSignal, this, &Checkerboard::tileClickedSignal);
+                playableTiles_.append(tile);
             }
         }
-    }
-}
-
-void Checkerboard::createPiece(Coordinates &coordinates, Player player)
-{
-    auto* piece = new Piece(coordinates, player, this);
-    coordinatesToPiecesMapping_[Coordinates(coordinates.getRow(), coordinates.getColumn())] = piece;
-}
-
-void Checkerboard::createAllPieces()
-{
-    std::vector<Coordinates> playerLowerStartingPiecesCoordinates = StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player::down);
-    std::vector<Coordinates> playerUpperStartingPiecesCoordinates = StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player::up);
-
-    for(auto& pieceCoordinates : playerLowerStartingPiecesCoordinates)
-    {
-        createPiece(pieceCoordinates, Player::down);
-    }
-
-    for(auto& pieceCoordinates : playerUpperStartingPiecesCoordinates)
-    {
-        createPiece(pieceCoordinates, Player::up);
-    }
-}
-
-void Checkerboard::removeAllPieces()
-{
-    for(auto& coordinatesToPiecesPair : coordinatesToPiecesMapping_)
-    {
-        if(coordinatesToPiecesPair.second)
-        {
-            delete coordinatesToPiecesPair.second;
-            coordinatesToPiecesPair.second = nullptr;
-        }
-    }
-}
-
-void Checkerboard::markPiecesWhichCanMove(std::vector<Piece*>& pieces)
-{
-    for(auto& piece : pieces)
-    {
-        piece->markValidMoveAvailable();
     }
 }

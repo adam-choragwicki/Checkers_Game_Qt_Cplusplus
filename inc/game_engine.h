@@ -1,6 +1,7 @@
 #pragma once
 
 #include "checkerboard.h"
+#include "pieces_placement.h"
 
 class GameEngine : public QObject
 {
@@ -10,17 +11,12 @@ signals:
     void sceneUpdateSignal();
 
 public:
-    GameEngine();
-
-    Checkerboard& getCheckerboard() { return checkerboard_; }
-    void processNewGameButtonClicked();
+    explicit GameEngine(const QVector<Tile*>& playableTiles);
 
 public slots:
-    void restartGame();
+    void processTileClickedSlot(const Coordinates& targetTileCoordinates);
 
 private:
-    void startGame();
-    void clearPreviousGame();
     void unmarkAllPieces();
     void movePiece(Piece* piece, const Coordinates& targetTileCoordinates);
     void capturePiece(Piece* piece, const Coordinates& targetTileCoordinates);
@@ -30,11 +26,8 @@ private:
     void checkAndMarkPlayerMoveOptions(Player player);
     void checkEligibilityAndPromotePiece(Piece* piece);
 
-    Checkerboard checkerboard_;
+    PiecesPlacement piecesPlacement_;
 
 private:
     Piece* multiCaptureInProgressPiece_ = nullptr;
-
-private slots:
-    void processTileClickedSlot(const Coordinates& targetTileCoordinates);
 };

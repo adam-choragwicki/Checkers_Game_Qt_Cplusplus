@@ -2,24 +2,24 @@
 #include "active_piece_manager.h"
 #include "common.h"
 #include "starting_coordinates_generator.h"
+#include "drawer.h"
 
 #include <QPen>
 #include <QGraphicsSceneMouseEvent>
 #include <QApplication>
 #include <chrono>
 #include <thread>
-#include <exception>
 
-Piece::Piece(const Coordinates& coordinates, Player player, QGraphicsItem* parent, bool promoted) : QGraphicsEllipseItem(parent), coordinates_(coordinates), player_(player)
+Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coordinates_(coordinates), player_(player)
 {
-    QGraphicsEllipseItem::setRect((coordinates.getColumn() - 1) * Common::tileSize + pieceOffsetX_,
-                                  (coordinates.getRow() - 1) * Common::tileSize + pieceOffsetY_,
+    QGraphicsEllipseItem::setRect((coordinates.getColumn() - 1) * GameParameters::tileSize + pieceOffsetX_,
+                                  (coordinates.getRow() - 1) * GameParameters::tileSize + pieceOffsetY_,
                                   pieceSize_,
                                   pieceSize_);
 
-    std::vector<Coordinates> playableTileCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
+    QVector<Coordinates> playableTileCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
 
-    if(std::find(playableTileCoordinates.begin(), playableTileCoordinates.end(), coordinates) == playableTileCoordinates.end())
+    if(!playableTileCoordinates.contains(coordinates))
     {
         throw std::runtime_error("Trying to put piece on non-playable tile");
     }
@@ -30,6 +30,13 @@ Piece::Piece(const Coordinates& coordinates, Player player, QGraphicsItem* paren
     {
         promote();
     }
+
+    Drawer::drawItem(this);
+}
+
+Piece::~Piece()
+{
+    Drawer::eraseItem(this);
 }
 
 void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
@@ -74,14 +81,14 @@ void Piece::unmark()
 
 void Piece::setActiveState(bool isActive)
 {
+    markedActive_ = isActive;
+
     if(isActive)
     {
-        markedActive_ = true;
         ActivePieceManager::setActivePiece(this);
     }
     else
     {
-        markedActive_ = false;
         ActivePieceManager::resetActivePiece();
     }
 
@@ -105,17 +112,17 @@ void Piece::updateColoursAccordingToState()
     {
         if(!markedActive_ && !markedMoveAvailable_)
         {
-            setBrush(blackPieceColor_);
-            setPen(QPen(QBrush(blackPieceOutlineColor_), pieceOutlineWidth_));
+            setBrush(GameParameters::blackPieceColor_);
+            setPen(QPen(QBrush(GameParameters::blackPieceOutlineColor_), pieceOutlineWidth_));
         }
         else if(markedActive_)
         {
-            setPen(QPen(QBrush(activePieceOutlineColor_), pieceOutlineWidth_));
+            setPen(QPen(QBrush(GameParameters::activePieceOutlineColor_), pieceOutlineWidth_));
         }
         else if(markedMoveAvailable_)
         {
-            setBrush(blackPieceColor_);
-            setPen(QPen(QBrush(movePossiblePieceOutlineColor_), pieceOutlineWidth_));
+            setBrush(GameParameters::blackPieceColor_);
+            setPen(QPen(QBrush(GameParameters::movePossiblePieceOutlineColor_), pieceOutlineWidth_));
         }
         else
         {
@@ -126,17 +133,17 @@ void Piece::updateColoursAccordingToState()
     {
         if(!markedActive_ && !markedMoveAvailable_)
         {
-            setBrush(redPieceColor_);
-            setPen(QPen(QBrush(redPieceOutlineColor_), pieceOutlineWidth_));
+            setBrush(GameParameters::redPieceColor_);
+            setPen(QPen(QBrush(GameParameters::redPieceOutlineColor_), pieceOutlineWidth_));
         }
         else if(markedActive_)
         {
-            setPen(QPen(QBrush(activePieceOutlineColor_), pieceOutlineWidth_));
+            setPen(QPen(QBrush(GameParameters::activePieceOutlineColor_), pieceOutlineWidth_));
         }
         else if(markedMoveAvailable_)
         {
-            setBrush(redPieceColor_);
-            setPen(QPen(QBrush(movePossiblePieceOutlineColor_), pieceOutlineWidth_));
+            setBrush(GameParameters::redPieceColor_);
+            setPen(QPen(QBrush(GameParameters::movePossiblePieceOutlineColor_), pieceOutlineWidth_));
         }
         else
         {
@@ -157,7 +164,7 @@ void Piece::animateFromCurrentToNewCoordinates(const Coordinates& currentCoordin
 
     const double factor = 5;
 
-    const int limit = static_cast<int>((abs(rowDifference) * Common::tileSize) / factor);
+    const int limit = static_cast<int>((abs(rowDifference) * GameParameters::tileSize) / factor);
 
     for(int i = 0; i < limit; i++)
     {
@@ -180,31 +187,22 @@ void Piece::promote()
 {
     promoted_ = true;
 
-    const QList<QPoint> crownPolygonShapeCoordinates = {QPoint(0 , 0),
-                                                        QPoint(6 , 8),
-                                                        QPoint(12, 0),
-                                                        QPoint(18, 8),
-                                                        QPoint(23, 0),
-                                                        QPoint(29, 8),
-                                                        QPoint(34, 0),
-                                                        QPoint(33, 20),
-                                                        QPoint(2 , 20)};
-
+    const QList<QPoint> crownPolygonShapeVerticesCoordinates = {QPoint(0, 0), QPoint(6, 8), QPoint(12, 0), QPoint(18, 8), QPoint(23, 0),
+                                                                QPoint(29, 8), QPoint(34, 0), QPoint(33, 20), QPoint(2, 20)};
 
     const int crownOffsetX = 8;
     const int crownOffsetY = 15;
 
     QPolygon crown;
 
-    for(int i = 0; i <= 8; i++)
+    for(const auto& crownPolygonVertex : crownPolygonShapeVerticesCoordinates)
     {
-        crown << QPoint((coordinates_.getColumn() - 1) * Common::tileSize + pieceOffsetX_ + crownPolygonShapeCoordinates.at(i).x() + crownOffsetX,
-                        (coordinates_.getRow() - 1) * Common::tileSize + pieceOffsetY_ + crownPolygonShapeCoordinates.at(i).y() + crownOffsetY);
+        crown.push_back({(coordinates_.getColumn() - 1) * GameParameters::tileSize + pieceOffsetX_ + crownPolygonVertex.x() + crownOffsetX,
+                         (coordinates_.getRow() - 1) * GameParameters::tileSize + pieceOffsetY_ + crownPolygonVertex.y() + crownOffsetY});
     }
 
-    const QColor crownColor(150, 150, 150);
-    crownGraphicsItem_ = new QGraphicsPolygonItem(crown, this);
-    crownGraphicsItem_->setBrush(crownColor);
+    crownGraphicsItem_ = std::make_unique<QGraphicsPolygonItem>(crown, this);
+    crownGraphicsItem_->setBrush(GameParameters::crownColor);
 }
 
 std::ostream& operator<<(std::ostream& os, const Piece* piece)

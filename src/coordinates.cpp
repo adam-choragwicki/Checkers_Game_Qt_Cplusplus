@@ -2,22 +2,17 @@
 
 #include <stdexcept>
 
-Coordinates::Coordinates(int row, int column)
-{
-    if(validateCoordinates(row, column))
-    {
-        row_ = row;
-        column_ = column;
-    }
-    else
-    {
-        throw std::runtime_error("Coordinates out of range");
-    }
-}
+Coordinates::Coordinates(int row, int column) : row_(row), column_(column)
+{}
 
 bool Coordinates::validateCoordinates(int row, int column)
 {
     return (row >= 1 && row <= 8) && (column >= 1 && column <= 8);
+}
+
+bool Coordinates::validateCoordinates(const Coordinates& coordinates)
+{
+    return validateCoordinates(coordinates.row_, coordinates.column_);
 }
 
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
@@ -53,4 +48,25 @@ std::ostream& operator<<(std::ostream& os, const Coordinates& coordinates)
     os << "(" << coordinates.getRow() << "," << coordinates.getColumn() << ")";
 
     return os;
+}
+
+//Coordinates Coordinates::operator+(const Coordinates& coordinates) const
+//{
+//    return {row_ + coordinates.row_, column_ + coordinates.column_};
+//}
+
+//void Coordinates::operator+=(const Coordinates& coordinates)
+//{
+//    row_ += coordinates.row_;
+//    column_ += coordinates.column_;
+//}
+
+Coordinates Coordinates::operator+(const std::pair<int, int>& coefficientsPair) const
+{
+    return {row_ + coefficientsPair.first, column_ + coefficientsPair.second};
+}
+
+std::pair<int, int> Coordinates::operator-(const Coordinates& coordinates) const
+{
+    return {row_ - coordinates.row_, column_ - coordinates.column_};
 }

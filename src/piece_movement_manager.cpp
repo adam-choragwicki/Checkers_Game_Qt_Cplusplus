@@ -1,13 +1,13 @@
 #include "piece_movement_manager.h"
 #include "tile_manager.h"
 
-bool PieceMovementManager::checkMovePossibility(const Piece* piece, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping, const Coordinates& targetTileCoordinates)
+bool PieceMovementManager::checkMovePossibility(const Piece* piece, const PiecesPlacement& piecesPlacement, const Coordinates& targetTileCoordinates)
 {
-    if(TileManager::isTileEmpty(targetTileCoordinates, coordinatesToPiecesMapping))
+    if(TileManager::isTileEmpty(targetTileCoordinates, piecesPlacement))
     {
         /*Check if this movement is one of possible movements*/
-        std::vector<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
-        return std::find(moveOptions.begin(), moveOptions.end(), targetTileCoordinates) != moveOptions.end();
+        QVector<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
+        return moveOptions.contains(targetTileCoordinates);
     }
     else
     {
@@ -15,22 +15,17 @@ bool PieceMovementManager::checkMovePossibility(const Piece* piece, const Coordi
     }
 }
 
-std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(Player activePlayer, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping)
+QVector<Piece*> PieceMovementManager::whichPiecesCanMove(Player activePlayer, const PiecesPlacement& piecesPlacement)
 {
-    std::vector<Piece*> piecesWhichCanMove;
+    QVector<Piece*> piecesWhichCanMove;
 
-    for(auto& coordinatesToPiecesPair: coordinatesToPiecesMapping)
+    for(auto& piece: piecesPlacement.getPieces())
     {
-        Piece* piece = coordinatesToPiecesPair.second;
-
-        if(piece)
+        if(piece->getPlayer() == activePlayer)
         {
-            if(piece->getPlayer() == activePlayer)
+            if(checkIfPieceCanMove(piece, piecesPlacement))
             {
-                if(checkIfPieceCanMove(piece, coordinatesToPiecesMapping))
-                {
-                    piecesWhichCanMove.push_back(piece);
-                }
+                piecesWhichCanMove.push_back(piece);
             }
         }
     }
@@ -38,63 +33,49 @@ std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(Player activePlayer
     return piecesWhichCanMove;
 }
 
-std::vector<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptionsCoordinates(const Piece* piece)
+QVector<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptionsCoordinates(const Piece* piece)
 {
-    const Coordinates pieceCoordinates(piece->getRow(), piece->getColumn());
     const Player piecePlayer = piece->getPlayer();
-    std::vector<std::pair<int, int>> validRowColumnMovementOffsets;
+    QVector<std::pair<int, int>> validRowColumnMovementOffsets;
 
-    if(piecePlayer == Player::down)
+    if(piece->isPromoted())
     {
-        /*Movement up is permitted*/
-        validRowColumnMovementOffsets.emplace_back(-1, -1);
-        validRowColumnMovementOffsets.emplace_back(-1, +1);
-
-        if(piece->isPromoted())
-        {
-            validRowColumnMovementOffsets.emplace_back(+1, -1);
-            validRowColumnMovementOffsets.emplace_back(+1, +1);
-        }
+        validRowColumnMovementOffsets = {{-1, -1}, {-1, +1}, {+1, -1}, {+1, +1}};
     }
-    else if(piecePlayer == Player::up)
+    else
+    {
+        if(piecePlayer == Player::down)
+        {
+            /*Movement up is permitted*/
+            validRowColumnMovementOffsets = {{-1, -1}, {-1, +1}};
+        }
+        else if(piecePlayer == Player::up)
         {
             /*Movement down is permitted*/
-            validRowColumnMovementOffsets.emplace_back(+1, -1);
-            validRowColumnMovementOffsets.emplace_back(+1, +1);
-
-            if(piece->isPromoted())
-            {
-                validRowColumnMovementOffsets.emplace_back(-1, -1);
-                validRowColumnMovementOffsets.emplace_back(-1, +1);
-            }
+            validRowColumnMovementOffsets = {{+1, -1}, {+1, +1}};
         }
+    }
 
-    std::vector<Coordinates> validMovementCoordinates;
+    const Coordinates pieceCoordinates = piece->getCoordinates();
+    QVector<Coordinates> validMovementCoordinates;
 
-    for(auto& validRowColumnMovementOffset : validRowColumnMovementOffsets)
+    for(auto& validRowColumnMovementOffset: validRowColumnMovementOffsets)
     {
-        if(Coordinates::validateCoordinates(pieceCoordinates.getRow() + validRowColumnMovementOffset.first,
-                                            pieceCoordinates.getColumn() + validRowColumnMovementOffset.second))
+        if(Coordinates::validateCoordinates(pieceCoordinates + validRowColumnMovementOffset))
         {
-            validMovementCoordinates.emplace_back(pieceCoordinates.getRow() + validRowColumnMovementOffset.first,
-                                                  pieceCoordinates.getColumn() + validRowColumnMovementOffset.second);
+            validMovementCoordinates.emplace_back(pieceCoordinates + validRowColumnMovementOffset);
         }
     }
 
     return validMovementCoordinates;
 }
 
-bool PieceMovementManager::checkIfPieceCanMove(const Piece* piece, const CoordinatesToPiecesMapping& coordinatesToPiecesMapping)
+bool PieceMovementManager::checkIfPieceCanMove(const Piece* piece, const PiecesPlacement& piecesPlacement)
 {
-    std::vector<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
+    QVector<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
 
-    for(auto& moveOption: moveOptions)
+    return std::ranges::any_of(moveOptions, [&piece, &piecesPlacement](const Coordinates& moveOption)
     {
-        if(checkMovePossibility(piece, coordinatesToPiecesMapping, moveOption))
-        {
-            return true;
-        }
-    }
-
-    return false;
+        return checkMovePossibility(piece, piecesPlacement, moveOption);
+    });
 }

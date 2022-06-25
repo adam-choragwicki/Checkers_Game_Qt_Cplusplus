@@ -3,10 +3,10 @@
 #include "common.h"
 #include "coordinates.h"
 
-#include <vector>
+#include <QVector>
 
 namespace StartingCoordinatesGenerator
 {
-    std::vector<Coordinates> generatePlayableTilesCoordinates();
-    std::vector<Coordinates> generateStartingPiecesCoordinates(Player player);
+    QVector<Coordinates> generatePlayableTilesCoordinates();
+    QVector<Coordinates> generateStartingPiecesCoordinates(Player player);
 }
