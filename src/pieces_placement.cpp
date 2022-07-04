@@ -26,12 +26,12 @@ void PiecesPlacement::createAllPieces()
     QVector<Coordinates> playerLowerStartingPiecesCoordinates = StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player::down);
     QVector<Coordinates> playerUpperStartingPiecesCoordinates = StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player::up);
 
-    for(auto& pieceCoordinates: playerLowerStartingPiecesCoordinates)
+    for(auto& pieceCoordinates : playerLowerStartingPiecesCoordinates)
     {
         createPiece(pieceCoordinates, Player::down);
     }
 
-    for(auto& pieceCoordinates: playerUpperStartingPiecesCoordinates)
+    for(auto& pieceCoordinates : playerUpperStartingPiecesCoordinates)
     {
         createPiece(pieceCoordinates, Player::up);
     }
@@ -87,4 +87,33 @@ void PiecesPlacement::removePieceAtCoordinates(const Coordinates& coordinates)
 {
     Piece* piece = getPieceAtCoordinates(coordinates);
     removePiece(piece);
+}
+
+int PiecesPlacement::countPlayerPieces(Player player)
+{
+    return std::ranges::count_if(pieces_, [&player](Piece* piece)
+    {
+        return piece->getPlayer() == player;
+    });
+}
+
+bool PiecesPlacement::didPlayerRunOutOfPieces()
+{
+    return (countPlayerPieces(Player::down) == 0) || (countPlayerPieces(Player::up) == 0);
+}
+
+Player PiecesPlacement::getPlayerWithNoPiecesLeft()
+{
+    if(countPlayerPieces(Player::down) == 0)
+    {
+        return Player::down;
+    }
+    else if(countPlayerPieces(Player::up) == 0)
+    {
+        return Player::up;
+    }
+    else
+    {
+        throw std::runtime_error("Both players have pieces left");
+    }
 }

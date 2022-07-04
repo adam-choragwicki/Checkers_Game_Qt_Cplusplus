@@ -158,6 +158,11 @@ void GameEngine::endTurn()
     {
         PlayerManager::setActivePlayer(Player::down);
     }
+
+    if(piecesPlacement_.didPlayerRunOutOfPieces())
+    {
+        endGame();
+    }
 }
 
 void GameEngine::checkEligibilityAndPromotePiece(Piece* piece)
@@ -171,4 +176,18 @@ void GameEngine::checkEligibilityAndPromotePiece(Piece* piece)
 bool GameEngine::isMultiCaptureInProgress()
 {
     return multiCaptureInProgressPiece_ != nullptr;
+}
+
+void GameEngine::endGame()
+{
+    Player losingPlayer = piecesPlacement_.getPlayerWithNoPiecesLeft();
+
+    if(losingPlayer == Player::down)
+    {
+        emit dialogRestartGameSignal(Player::up);
+    }
+    else
+    {
+        emit dialogRestartGameSignal(Player::down);
+    }
 }

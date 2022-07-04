@@ -17,7 +17,9 @@ public:
     void markPiecesWhichCanMove(QVector<Piece*>& pieces);
     void removePiece(Piece* piece);
     void removePieceAtCoordinates(const Coordinates& coordinates);
+    int countPlayerPieces(Player player);
+    bool didPlayerRunOutOfPieces();
+    Player getPlayerWithNoPiecesLeft();
 
-private:
     QVector<Piece*> pieces_;
 };

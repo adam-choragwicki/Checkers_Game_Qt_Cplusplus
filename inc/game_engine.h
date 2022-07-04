@@ -9,6 +9,7 @@ Q_OBJECT
 
 signals:
     void sceneUpdateSignal();
+    void dialogRestartGameSignal(Player player);
 
 public:
     explicit GameEngine(const QVector<Tile*>& playableTiles);
@@ -30,4 +31,6 @@ private:
 
 private:
     Piece* multiCaptureInProgressPiece_ = nullptr;
+
+    void endGame();
 };

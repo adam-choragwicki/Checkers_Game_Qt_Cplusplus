@@ -2,6 +2,8 @@
 #include "ui_game_window.h"
 #include "drawer.h"
 
+#include <QMessageBox>
+
 GameWindow::GameWindow(QWidget* parent)
         : QMainWindow(parent),
           ui_(new Ui::GameWindow)
@@ -18,6 +20,7 @@ GameWindow::GameWindow(QWidget* parent)
     checkerboard_ = std::make_unique<Checkerboard>();
     gameEngine_ = std::make_unique<GameEngine>(checkerboard_->getPlayableTiles());
     QObject::connect(gameEngine_.get(), &GameEngine::sceneUpdateSignal, this, &GameWindow::sceneUpdateSlot);
+    QObject::connect(gameEngine_.get(), &GameEngine::dialogRestartGameSignal, this, &GameWindow::dialogRestartGameSlot);
 }
 
 GameWindow::~GameWindow()
@@ -27,7 +30,7 @@ GameWindow::~GameWindow()
 
 void GameWindow::closeEvent(QCloseEvent*)
 {
-    exit(0);
+    QApplication::exit(static_cast<int>(Status::exit));
 }
 
 void GameWindow::initializeGameplayAreaScene()
@@ -48,6 +51,22 @@ void GameWindow::sceneUpdateSlot()
 
 void GameWindow::processNewGameButtonClickedSlot()
 {
-    gameEngine_ = std::make_unique<GameEngine>(checkerboard_->getPlayableTiles());
-    QObject::connect(gameEngine_.get(), &GameEngine::sceneUpdateSignal, this, &GameWindow::sceneUpdateSlot);
+    QApplication::exit(static_cast<int>(Status::restart));
+}
+
+void GameWindow::dialogRestartGameSlot(Player winner)
+{
+    QString winningPlayer = (winner == Player::down) ? "down" : "up";
+    QString message = "Player " + winningPlayer + " wins, restart?";
+
+    int response = QMessageBox::question(this, "Game over", message, QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::Cancel);
+
+    if(response == QMessageBox::Ok)
+    {
+        QApplication::exit(static_cast<int>(Status::restart));
+    }
+    else
+    {
+        QApplication::exit(static_cast<int>(Status::exit));
+    }
 }

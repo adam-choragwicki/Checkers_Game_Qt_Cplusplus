@@ -34,4 +34,5 @@ private:
 private slots:
     void sceneUpdateSlot();
     void processNewGameButtonClickedSlot();
+    void dialogRestartGameSlot(Player winner);
 };

@@ -27,14 +27,7 @@ bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
     }
     else
     {
-        if(coordinates1.getColumn() < coordinates2.getColumn())
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return coordinates1.getColumn() < coordinates2.getColumn();
     }
 }
 
@@ -46,20 +39,8 @@ bool operator==(const Coordinates& coordinates1, const Coordinates& coordinates2
 std::ostream& operator<<(std::ostream& os, const Coordinates& coordinates)
 {
     os << "(" << coordinates.getRow() << "," << coordinates.getColumn() << ")";
-
     return os;
 }
-
-//Coordinates Coordinates::operator+(const Coordinates& coordinates) const
-//{
-//    return {row_ + coordinates.row_, column_ + coordinates.column_};
-//}
-
-//void Coordinates::operator+=(const Coordinates& coordinates)
-//{
-//    row_ += coordinates.row_;
-//    column_ += coordinates.column_;
-//}
 
 Coordinates Coordinates::operator+(const std::pair<int, int>& coefficientsPair) const
 {

@@ -17,3 +17,9 @@ namespace GameParameters
 
     constexpr QColor crownColor(150, 150, 150);
 }
+
+enum class Status
+{
+    exit = 0,
+    restart = 1
+};

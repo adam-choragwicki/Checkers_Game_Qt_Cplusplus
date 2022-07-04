@@ -197,8 +197,8 @@ void Piece::promote()
 
     for(const auto& crownPolygonVertex : crownPolygonShapeVerticesCoordinates)
     {
-        crown.push_back({(coordinates_.getColumn() - 1) * GameParameters::tileSize + pieceOffsetX_ + crownPolygonVertex.x() + crownOffsetX,
-                         (coordinates_.getRow() - 1) * GameParameters::tileSize + pieceOffsetY_ + crownPolygonVertex.y() + crownOffsetY});
+        crown.push_back({coordinates_.getColumn() * GameParameters::tileSize + pieceOffsetX_ + crownPolygonVertex.x() + crownOffsetX,
+                         coordinates_.getRow() * GameParameters::tileSize + pieceOffsetY_ + crownPolygonVertex.y() + crownOffsetY});
     }
 
     crownGraphicsItem_ = std::make_unique<QGraphicsPolygonItem>(crown, this);
@@ -208,6 +208,5 @@ void Piece::promote()
 std::ostream& operator<<(std::ostream& os, const Piece* piece)
 {
     os << "(" << piece->getRow() << "," << piece->getColumn() << ")";
-
     return os;
 }

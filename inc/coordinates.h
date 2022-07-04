@@ -12,8 +12,6 @@ public:
     static bool validateCoordinates(int row, int column);
     static bool validateCoordinates(const Coordinates& coordinates);
 
-    //void operator+=(const Coordinates& coordinates);
-    //Coordinates operator+(const Coordinates& coordinates) const;
     Coordinates operator+(const std::pair<int, int>& coefficientsPair) const;
     std::pair<int, int> operator-(const Coordinates& coordinates) const;
 

@@ -2,11 +2,19 @@
 
 #include <QApplication>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
-    QApplication application(argc, argv);
-    GameWindow gameWindow;
-    gameWindow.show();
+    while(true)
+    {
+        QApplication application(argc, argv);
+        GameWindow gameWindow;
+        gameWindow.show();
 
-    return QApplication::exec();
+        if(QApplication::exec() == static_cast<int>(Status::exit))
+        {
+            break;
+        }
+    }
+
+    return 0;
 }
