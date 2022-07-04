@@ -12,7 +12,10 @@ signals:
     void clickedSignal(const Coordinates& coordinates, bool playable);
 
 public:
-    Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent);
+    Tile(Coordinates coordinates, bool playable);
+    ~Tile() override;
+
+    [[nodiscard]] bool isPlayable() const {return isPlayable_;}
 
 private:
     void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
@@ -21,5 +24,5 @@ private:
     static constexpr QColor playableTileColor_{140, 90, 40};
     static constexpr QColor nonPlayableTileColor_{230, 200, 160};
     const Coordinates coordinates_;
-    const bool playable_;
+    const bool isPlayable_;
 };

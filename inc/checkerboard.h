@@ -4,7 +4,7 @@
 #include "common.h"
 #include "tile.h"
 
-class Checkerboard : public QObject, public QGraphicsRectItem
+class Checkerboard : public QObject
 {
 Q_OBJECT
 
@@ -14,16 +14,10 @@ signals:
 public:
     Checkerboard();
     ~Checkerboard() override;
-    [[nodiscard]] const QVector<Tile*>& getPlayableTiles() const {return playableTiles_;}
+    [[nodiscard]] QVector<Tile*> getPlayableTiles() const;
 
 private:
     void createTiles();
 
-    const int boardPositionX_ = 0;
-    const int boardPositionY_ = 0;
-    const int boardSize_ = 640;
-    const int boardOutlineWidth_ = 10;
-    const QColor boardOutlineColor_{150, 100, 40};
-
-    QVector<Tile*> playableTiles_;
+    QVector<Tile*> tiles_;
 };

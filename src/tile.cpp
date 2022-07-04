@@ -1,17 +1,18 @@
 #include "tile.h"
 #include "common.h"
+#include "drawer.h"
 
 #include <QPen>
 #include <QGraphicsSceneMouseEvent>
 
-Tile::Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent) : QGraphicsRectItem(parent), coordinates_(coordinates.getRow(), coordinates.getColumn()), playable_(playable)
+Tile::Tile(Coordinates coordinates, bool playable) : coordinates_(coordinates.getRow(), coordinates.getColumn()), isPlayable_(playable)
 {
-    QGraphicsRectItem::setRect((coordinates.getColumn() - 1) * GameParameters::tileSize,
-                               (coordinates.getRow() - 1) * GameParameters::tileSize,
+    QGraphicsRectItem::setRect(coordinates.getColumn() * GameParameters::tileSize,
+                               coordinates.getRow() * GameParameters::tileSize,
                                GameParameters::tileSize,
                                GameParameters::tileSize);
 
-    if(playable_)
+    if(isPlayable_)
     {
         setBrush(QBrush(playableTileColor_));
     }
@@ -22,13 +23,20 @@ Tile::Tile(Coordinates coordinates, bool playable, QGraphicsItem* parent) : QGra
 
     setPen(QPen(brush().color()));
     setAcceptHoverEvents(true);
+
+    Drawer::drawItem(this);
+}
+
+Tile::~Tile()
+{
+    Drawer::eraseItem(this);
 }
 
 void Tile::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        emit clickedSignal(coordinates_, playable_);
+        emit clickedSignal(coordinates_, isPlayable_);
     }
 }
 

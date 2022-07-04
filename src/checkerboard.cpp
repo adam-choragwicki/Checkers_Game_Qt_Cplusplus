@@ -1,25 +1,17 @@
 #include "checkerboard.h"
 #include "starting_coordinates_generator.h"
-#include "log_manager.h"
-#include "drawer.h"
-
-#include <QPen>
 
 Checkerboard::Checkerboard()
 {
-    QGraphicsRectItem::setRect(boardPositionX_, boardPositionY_, boardSize_, boardSize_);
-    setPen(QPen(boardOutlineColor_, boardOutlineWidth_));
-
-    Drawer::drawItem(this);
-
-    /*Tiles are child items of Checkerboard item*/
-    /*PiecesPlacement and tiles are only created once, pieces are recreated during every game restart*/
     createTiles();
 }
 
 Checkerboard::~Checkerboard()
 {
-    Drawer::eraseItem(this);
+    for(Tile* tile : tiles_)
+    {
+        delete tile;
+    }
 }
 
 void Checkerboard::createTiles()
@@ -33,12 +25,23 @@ void Checkerboard::createTiles()
             const Coordinates tileCoordinates(row, column);
             bool playable = playableTilesCoordinates.contains(tileCoordinates);
 
-            Tile* tile = new Tile(tileCoordinates, playable, this);
-
-            if(playable)
-            {
-                playableTiles_.append(tile);
-            }
+            Tile* tile = new Tile(tileCoordinates, playable);
+            tiles_.push_back(tile);
         }
     }
+}
+
+QVector<Tile*> Checkerboard::getPlayableTiles() const
+{
+    QVector<Tile*> playableTiles;
+
+    for(Tile* tile : tiles_)
+    {
+        if(tile->isPlayable())
+        {
+            playableTiles.push_back(tile);
+        }
+    }
+
+    return playableTiles;
 }

@@ -1,12 +1,9 @@
 #include "pieces_placement.h"
 #include "starting_coordinates_generator.h"
 
-PiecesPlacement::PiecesPlacement()
-{}
-
 PiecesPlacement::~PiecesPlacement()
 {
-    for(auto piece: pieces_)
+    for(Piece* piece: pieces_)
     {
         delete piece;
     }

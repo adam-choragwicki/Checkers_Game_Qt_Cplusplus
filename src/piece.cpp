@@ -12,8 +12,8 @@
 
 Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coordinates_(coordinates), player_(player)
 {
-    QGraphicsEllipseItem::setRect((coordinates.getColumn() - 1) * GameParameters::tileSize + pieceOffsetX_,
-                                  (coordinates.getRow() - 1) * GameParameters::tileSize + pieceOffsetY_,
+    QGraphicsEllipseItem::setRect(coordinates.getColumn() * GameParameters::tileSize + pieceOffsetX_,
+                                  coordinates.getRow() * GameParameters::tileSize + pieceOffsetY_,
                                   pieceSize_,
                                   pieceSize_);
 

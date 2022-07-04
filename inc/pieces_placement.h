@@ -6,7 +6,7 @@
 class PiecesPlacement
 {
 public:
-    PiecesPlacement();
+    PiecesPlacement() = default;
     ~PiecesPlacement();
 
     void createPiece(const Coordinates& coordinates, Player player);
