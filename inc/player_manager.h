@@ -9,13 +9,11 @@ enum class Player
 class PlayerManager
 {
 public:
-    PlayerManager() = delete;
-
-    static Player& getActivePlayer() {return activePlayer_;}
-    static void setActivePlayer(Player activePlayer) {activePlayer_ = activePlayer;}
-    static void resetActivePlayer() {activePlayer_ = startingPlayer_;}
+    PlayerManager() {activePlayer_ = startingPlayer_;}
+    Player& getActivePlayer() {return activePlayer_;}
+    void switchPlayer() { activePlayer_ = (activePlayer_ == Player::up) ? Player::down : Player::up;}
 
 private:
-    inline static Player activePlayer_;
+    Player activePlayer_;
     inline static Player startingPlayer_ = Player::down;
 };

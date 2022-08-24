@@ -1,7 +1,6 @@
 #include "piece.h"
-#include "active_piece_manager.h"
+#include "selected_piece_manager.h"
 #include "common.h"
-#include "starting_coordinates_generator.h"
 #include "drawer.h"
 
 #include <QPen>
@@ -12,19 +11,9 @@
 
 Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coordinates_(coordinates), player_(player)
 {
-    QGraphicsEllipseItem::setRect(coordinates.getColumn() * GameParameters::tileSize + pieceOffsetX_,
-                                  coordinates.getRow() * GameParameters::tileSize + pieceOffsetY_,
-                                  pieceSize_,
-                                  pieceSize_);
+    QGraphicsEllipseItem::setRect(coordinates.getColumn() * GameParameters::tileSize + pieceOffsetX_, coordinates.getRow() * GameParameters::tileSize + pieceOffsetY_, pieceSize_, pieceSize_);
 
-    QVector<Coordinates> playableTileCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
-
-    if(!playableTileCoordinates.contains(coordinates))
-    {
-        throw std::runtime_error("Trying to put piece on non-playable tile");
-    }
-
-    updateColoursAccordingToState();
+    setState(State::Disabled);
 
     if(promoted)
     {
@@ -43,56 +32,93 @@ void Piece::mousePressEvent(QGraphicsSceneMouseEvent* event)
 {
     if(event->button() == Qt::MouseButton::LeftButton)
     {
-        this->clicked();
-    }
-}
-
-void Piece::clicked()
-{
-    if(markedMoveAvailable_)
-    {
-        /*Activate piece only if no other piece was active before AND it is current player's piece*/
-        if(ActivePieceManager::getActivePiece() == nullptr && getPlayer() == PlayerManager::getActivePlayer())
+        if(state_ == State::Active)
         {
-            setActiveState(true);
-        }
-        /*Activate piece if some other piece was active before AND it is current player's piece AND it is not the same piece*/
-        else if(ActivePieceManager::getActivePiece() && getPlayer() == PlayerManager::getActivePlayer() && this != ActivePieceManager::getActivePiece())
-        {
-            ActivePieceManager::getActivePiece()->markValidMoveAvailable();
-            ActivePieceManager::getActivePiece()->setActiveState(false);
-            setActiveState(true);
+            select();
         }
     }
 }
 
-void Piece::markValidMoveAvailable()
+void Piece::markValidMovePossible()
 {
-    markedMoveAvailable_ = true;
-    updateColoursAccordingToState();
+    setState(State::Active);
 }
 
-void Piece::unmark()
+void Piece::disable()
 {
-    markedActive_ = false;
-    markedMoveAvailable_ = false;
-    updateColoursAccordingToState();
+    setState(State::Disabled);
 }
 
-void Piece::setActiveState(bool isActive)
+void Piece::setState(State newState)
 {
-    markedActive_ = isActive;
-
-    if(isActive)
+    if(state_ == State::Uninitialized)
     {
-        ActivePieceManager::setActivePiece(this);
+        if(newState == State::Disabled)
+        {
+            /* Piece initialization */
+        }
+        else
+        {
+            throw std::runtime_error("Unsupported piece state transition");
+        }
+    }
+    else if(state_ == State::Disabled)
+    {
+        if(newState == State::Active)
+        {
+            /* New turn */
+        }
+        else if(newState == State::Disabled)
+        {
+            /* Do nothing */
+        }
+        else
+        {
+            throw std::runtime_error("Unsupported piece state transition");
+        }
+    }
+    else if(state_ == State::Active)
+    {
+        if(newState == State::Selected)
+        {
+            SelectedPieceManager::switchSelectedPiece(this);
+        }
+        else if(newState == State::Disabled)
+        {
+            /* End turn */
+        }
+        else if(state_ == State::Active)
+        {
+            /* Do nothing */
+        }
+        else
+        {
+            throw std::runtime_error("Unsupported piece state transition");
+        }
+    }
+    else if(state_ == State::Selected)
+    {
+        if(newState == State::Active)
+        {
+            /* Active piece clicked */
+        }
+        else if(newState == State::Disabled)
+        {
+            /* End turn */
+            SelectedPieceManager::resetSelectedPiece();
+        }
+        else
+        {
+            throw std::runtime_error("Unsupported piece state transition");
+        }
     }
     else
     {
-        ActivePieceManager::resetActivePiece();
+        throw std::runtime_error("Piece is in unsupported state");
     }
 
-    updateColoursAccordingToState();
+    state_ = newState;
+    updateColours();
 }
 
 void Piece::moveToTile(const Coordinates& newCoordinates)
@@ -106,50 +132,45 @@ void Piece::moveToTile(const Coordinates& newCoordinates)
     setZValue(0);
 }
 
-void Piece::updateColoursAccordingToState()
+void Piece::updateColours()
 {
+    QPen pen;
+    pen.setWidth(pieceOutlineWidth_);
+
+    if(state_ == State::Disabled)
+    {
+        if(player_ == Player::down)
+        {
+            pen.setBrush(GameParameters::disabledBlackPieceOutlineColor_);
+        }
+        else
+        {
+            pen.setBrush(GameParameters::disabledRedPieceOutlineColor_);
+        }
+    }
+    else if(state_ == State::Active)
+    {
+        pen.setBrush(GameParameters::activePieceOutlineColor_);
+    }
+    else if(state_ == State::Selected)
+    {
+        pen.setBrush(GameParameters::selectedPieceOutlineColor_);
+    }
+    else
+    {
+        throw std::runtime_error("Piece is in unsupported state");
+    }
+
     if(player_ == Player::down)
     {
-        if(!markedActive_ && !markedMoveAvailable_)
-        {
-            setBrush(GameParameters::blackPieceColor_);
-            setPen(QPen(QBrush(GameParameters::blackPieceOutlineColor_), pieceOutlineWidth_));
-        }
-        else if(markedActive_)
-        {
-            setPen(QPen(QBrush(GameParameters::activePieceOutlineColor_), pieceOutlineWidth_));
-        }
-        else if(markedMoveAvailable_)
-        {
-            setBrush(GameParameters::blackPieceColor_);
-            setPen(QPen(QBrush(GameParameters::movePossiblePieceOutlineColor_), pieceOutlineWidth_));
-        }
-        else
-        {
-            throw std::runtime_error("Piece is in undefined state");
-        }
+        setBrush(GameParameters::blackPieceColor_);
     }
-    else if(player_ == Player::up)
+    else
     {
-        if(!markedActive_ && !markedMoveAvailable_)
-        {
-            setBrush(GameParameters::redPieceColor_);
-            setPen(QPen(QBrush(GameParameters::redPieceOutlineColor_), pieceOutlineWidth_));
-        }
-        else if(markedActive_)
-        {
-            setPen(QPen(QBrush(GameParameters::activePieceOutlineColor_), pieceOutlineWidth_));
-        }
-        else if(markedMoveAvailable_)
-        {
-            setBrush(GameParameters::redPieceColor_);
-            setPen(QPen(QBrush(GameParameters::movePossiblePieceOutlineColor_), pieceOutlineWidth_));
-        }
-        else
-        {
-            throw std::runtime_error("Piece is in undefined state");
-        }
+        setBrush(GameParameters::redPieceColor_);
     }
+
+    setPen(pen);
 }
 
 void Piece::animateFromCurrentToNewCoordinates(const Coordinates& currentCoordinates, const Coordinates& newCoordinates)
@@ -187,8 +208,7 @@ void Piece::promote()
 {
     promoted_ = true;
 
-    const QList<QPoint> crownPolygonShapeVerticesCoordinates = {QPoint(0, 0), QPoint(6, 8), QPoint(12, 0), QPoint(18, 8), QPoint(23, 0),
-                                                                QPoint(29, 8), QPoint(34, 0), QPoint(33, 20), QPoint(2, 20)};
+    const QList<QPoint> crownPolygonShapeVerticesCoordinates = {QPoint(0, 0), QPoint(6, 8), QPoint(12, 0), QPoint(18, 8), QPoint(23, 0), QPoint(29, 8), QPoint(34, 0), QPoint(33, 20), QPoint(2, 20)};
 
     const int crownOffsetX = 8;
     const int crownOffsetY = 15;
@@ -209,4 +229,14 @@ std::ostream& operator<<(std::ostream& os, const Piece* piece)
 {
     os << "(" << piece->getRow() << "," << piece->getColumn() << ")";
     return os;
+}
+
+void Piece::select()
+{
+    setState(State::Selected);
+}
+
+void Piece::deselect()
+{
+    setState(State::Active);
 }

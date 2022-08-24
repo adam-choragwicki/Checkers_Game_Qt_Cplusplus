@@ -24,13 +24,14 @@ set(SOURCE_FILES
     ${INCLUDES_DIR}/common.h
     ${INCLUDES_DIR}/game_window.h ${SOURCES_DIR}/game_window.cpp ${UI_FORMS_DIR}/game_window.ui
     ${INCLUDES_DIR}/game_engine.h ${SOURCES_DIR}/game_engine.cpp
-    ${INCLUDES_DIR}/active_piece_manager.h
+    ${INCLUDES_DIR}/selected_piece_manager.h
+    ${INCLUDES_DIR}/multi_capture_manager.h
     ${INCLUDES_DIR}/checkerboard.h ${SOURCES_DIR}/checkerboard.cpp
     ${INCLUDES_DIR}/coordinates.h ${SOURCES_DIR}/coordinates.cpp
     ${INCLUDES_DIR}/piece.h ${SOURCES_DIR}/piece.cpp
     ${INCLUDES_DIR}/tile.h ${SOURCES_DIR}/tile.cpp
     ${INCLUDES_DIR}/player_manager.h
-    ${INCLUDES_DIR}/log_manager.h ${SOURCES_DIR}/log_manager.cpp
+    ${INCLUDES_DIR}/log_manager.h
     ${INCLUDES_DIR}/piece_capture_manager.h ${SOURCES_DIR}/piece_capture_manager.cpp
     ${INCLUDES_DIR}/piece_movement_manager.h ${SOURCES_DIR}/piece_movement_manager.cpp
     ${INCLUDES_DIR}/piece_promotion_manager.h ${SOURCES_DIR}/piece_promotion_manager.cpp

@@ -3,7 +3,7 @@
 
 PiecesPlacement::~PiecesPlacement()
 {
-    for(Piece* piece: pieces_)
+    for(Piece* piece : pieces_)
     {
         delete piece;
     }
@@ -26,22 +26,32 @@ void PiecesPlacement::createAllPieces()
     QVector<Coordinates> playerLowerStartingPiecesCoordinates = StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player::down);
     QVector<Coordinates> playerUpperStartingPiecesCoordinates = StartingCoordinatesGenerator::generateStartingPiecesCoordinates(Player::up);
 
-    for(auto& pieceCoordinates : playerLowerStartingPiecesCoordinates)
-    {
-        createPiece(pieceCoordinates, Player::down);
-    }
+    QVector<Coordinates> playableTilesCoordinates = StartingCoordinatesGenerator::generatePlayableTilesCoordinates();
 
-    for(auto& pieceCoordinates : playerUpperStartingPiecesCoordinates)
+    auto placePieces = [this, &playableTilesCoordinates](const QVector<Coordinates>& piecesCoordinates, const Player& player)
     {
-        createPiece(pieceCoordinates, Player::up);
-    }
+        for(auto& pieceCoordinates : piecesCoordinates)
+        {
+            if(playableTilesCoordinates.contains(pieceCoordinates))
+            {
+                createPiece(pieceCoordinates, player);
+            }
+            else
+            {
+                throw std::runtime_error("Cannot place piece on non-playable tile");
+            }
+        }
+    };
+
+    placePieces(playerLowerStartingPiecesCoordinates, Player::down);
+    placePieces(playerUpperStartingPiecesCoordinates, Player::up);
 }
 
 void PiecesPlacement::markPiecesWhichCanMove(QVector<Piece*>& pieces)
 {
-    for(auto& piece: pieces)
+    for(auto& piece : pieces)
     {
-        piece->markValidMoveAvailable();
+        piece->markValidMovePossible();
     }
 }
 
@@ -89,7 +99,7 @@ void PiecesPlacement::removePieceAtCoordinates(const Coordinates& coordinates)
     removePiece(piece);
 }
 
-int PiecesPlacement::countPlayerPieces(Player player)
+int PiecesPlacement::countPlayerPieces(Player player) const
 {
     return std::ranges::count_if(pieces_, [&player](Piece* piece)
     {
@@ -97,12 +107,12 @@ int PiecesPlacement::countPlayerPieces(Player player)
     });
 }
 
-bool PiecesPlacement::didPlayerRunOutOfPieces()
+bool PiecesPlacement::didAnyPlayerRunOutOfPieces() const
 {
     return (countPlayerPieces(Player::down) == 0) || (countPlayerPieces(Player::up) == 0);
 }
 
-Player PiecesPlacement::getPlayerWithNoPiecesLeft()
+Player PiecesPlacement::getPlayerWithNoPiecesLeft() const
 {
     if(countPlayerPieces(Player::down) == 0)
     {

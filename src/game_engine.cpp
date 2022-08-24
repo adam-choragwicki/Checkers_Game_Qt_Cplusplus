@@ -2,7 +2,7 @@
 #include "tile.h"
 #include "piece.h"
 #include "log_manager.h"
-#include "active_piece_manager.h"
+#include "selected_piece_manager.h"
 #include "piece_capture_manager.h"
 #include "piece_movement_manager.h"
 #include "piece_promotion_manager.h"
@@ -14,20 +14,27 @@ GameEngine::GameEngine(const QVector<Tile*>& playableTiles)
         QObject::connect(playableTile, &Tile::clickedSignal, this, &GameEngine::processTileClickedSlot);
     }
 
-    logFile << "NEW GAME" << std::endl;
-
-    PlayerManager::resetActivePlayer();
+    LOG(INFO) << "NEW GAME";
 
     piecesPlacement_.createAllPieces();
 
-    checkAndMarkPlayerMoveOptions(PlayerManager::getActivePlayer());
+    checkAndMarkPlayerMoveOptions(playerManager_.getActivePlayer());
 }
 
 void GameEngine::checkAndMarkPlayerMoveOptions(Player player)
 {
-    if(isMultiCaptureInProgress())
+    if(multiCaptureManager_.isMultiCaptureInProgress())
     {
-        return;
+        if(PieceCaptureManager::checkIfPieceCanCapture(multiCaptureManager_.getMulticapturingPiece(), piecesPlacement_))
+        {
+            QVector<Piece*> piecesWhichCanCapture{multiCaptureManager_.getMulticapturingPiece()};
+            piecesPlacement_.markPiecesWhichCanMove(piecesWhichCanCapture);
+            return;
+        }
+        else
+        {
+            multiCaptureManager_.endMultiCapture();
+        }
     }
 
     QVector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, piecesPlacement_);
@@ -35,7 +42,15 @@ void GameEngine::checkAndMarkPlayerMoveOptions(Player player)
     if(piecesWhichCanCapture.empty())
     {
         QVector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, piecesPlacement_);
-        piecesPlacement_.markPiecesWhichCanMove(piecesWhichCanMove);
+
+        if(piecesWhichCanMove.empty())
+        {
+            endGame(playerManager_.getActivePlayer(), GameEndReason::NoMovesLeft);
+        }
+        else
+        {
+            piecesPlacement_.markPiecesWhichCanMove(piecesWhichCanMove);
+        }
     }
     else
     {
@@ -45,70 +60,62 @@ void GameEngine::checkAndMarkPlayerMoveOptions(Player player)
 
 void GameEngine::processTileClickedSlot(const Coordinates& targetTileCoordinates)
 {
-    Piece* activePiece = ActivePieceManager::getActivePiece();
-
-    if(activePiece)
+    if(!moveInProgress_)
     {
-        processMove(targetTileCoordinates);
-        activePiece->setActiveState(false);
-    }
+        moveInProgress_ = true;
 
-    unmarkAllPieces();
+        /*Ignore clicking on tile unless any piece is selected*/
+        if(SelectedPieceManager::isAnyPieceSelected())
+        {
+            Piece* selectedPiece = SelectedPieceManager::getSelectedPiece();
+            processPieceMove(selectedPiece, targetTileCoordinates);
+        }
 
-    if(isMultiCaptureInProgress())
-    {
-        multiCaptureInProgressPiece_->setActiveState(true);
-    }
-    else
-    {
-        unmarkAllPieces();
-        checkAndMarkPlayerMoveOptions(PlayerManager::getActivePlayer());
+        emit sceneUpdateSignal();
+
+        moveInProgress_ = false;
     }
 }
 
-void GameEngine::processMove(const Coordinates& targetTileCoordinates)
+void GameEngine::processPieceMove(Piece* piece, const Coordinates& targetTileCoordinates)
 {
-    Piece* activePiece = ActivePieceManager::getActivePiece();
-
     /*If any capture is possible then any capture has to be the next move*/
-    if(PieceCaptureManager::checkIfPieceCanCapture(activePiece, piecesPlacement_))
+    if(PieceCaptureManager::checkIfPieceCanCapture(piece, piecesPlacement_))
     {
-        if(PieceCaptureManager::checkCapturePossibility(activePiece, piecesPlacement_, targetTileCoordinates))
+        if(PieceCaptureManager::checkCapturePossibility(piece, piecesPlacement_, targetTileCoordinates))
         {
-            capturePiece(activePiece, targetTileCoordinates);
+            capturePiece(piece, targetTileCoordinates);
 
-            if(PieceCaptureManager::checkIfPieceCanCapture(activePiece, piecesPlacement_))
+            if(checkEligibilityAndPromotePiece(piece))
             {
-                multiCaptureInProgressPiece_ = activePiece;
-                return;
+                multiCaptureManager_.endMultiCapture();
+
+                /*Turn ends immediately after promotion, no immediate backward capture is possible*/
+                endTurn();
+            }
+            else if(PieceCaptureManager::checkIfPieceCanCapture(piece, piecesPlacement_))
+            {
+                multiCaptureManager_.startMultiCapture(piece);
+                disableAllPieces();
+                checkAndMarkPlayerMoveOptions(playerManager_.getActivePlayer());
             }
             else
             {
-                multiCaptureInProgressPiece_ = nullptr;
-                activePiece->setActiveState(false);
+                endTurn();
             }
-
-            checkEligibilityAndPromotePiece(activePiece);
-
-            activePiece->setActiveState(false);
-            endTurn();
         }
         else
         {
-            /*Capture was possible but player chose other tile so no move was taken and active piece is reset*/
-            activePiece->setActiveState(false);
-            return;
+            /*Capture was possible but player chose other tile so no move was taken and selected piece is reset*/
+            piece->deselect();
         }
     }
-    else if(PieceMovementManager::checkIfPieceCanMove(activePiece, piecesPlacement_))
+    else if(PieceMovementManager::checkIfPieceCanMove(piece, piecesPlacement_))
     {
-        if(PieceMovementManager::checkMovePossibility(activePiece, piecesPlacement_, targetTileCoordinates))
+        if(PieceMovementManager::checkMovePossibility(piece, piecesPlacement_, targetTileCoordinates))
         {
-            movePiece(activePiece, targetTileCoordinates);
-
-            checkEligibilityAndPromotePiece(activePiece);
-
-            activePiece->setActiveState(false);
+            movePiece(piece, targetTileCoordinates);
+            checkEligibilityAndPromotePiece(piece);
             endTurn();
         }
     }
@@ -116,24 +123,19 @@ void GameEngine::processMove(const Coordinates& targetTileCoordinates)
     {
         throw std::runtime_error("Piece is in undefined state, cannot capture and cannot move");
     }
-
-    emit sceneUpdateSignal();
 }
 
-void GameEngine::unmarkAllPieces()
+void GameEngine::disableAllPieces()
 {
     for(const auto& piece : piecesPlacement_.getPieces())
     {
-        if(piece->isMarkedActive() || piece->isMarkedMoveAvailable())
-        {
-            piece->unmark();
-        }
+        piece->disable();
     }
 }
 
 void GameEngine::movePiece(Piece* piece, const Coordinates& targetTileCoordinates)
 {
-    logFile << piece << " moves to " << targetTileCoordinates << std::endl;
+    LOG(INFO) << piece << " moves to " << targetTileCoordinates;
     piece->moveToTile(targetTileCoordinates);
 }
 
@@ -141,7 +143,7 @@ void GameEngine::capturePiece(Piece* piece, const Coordinates& targetTileCoordin
 {
     Coordinates coordinatesOfPieceBetween((targetTileCoordinates.getRow() + piece->getRow()) / 2, (targetTileCoordinates.getColumn() + piece->getColumn()) / 2);
 
-    logFile << piece << " captures " << coordinatesOfPieceBetween << " and lands on " << targetTileCoordinates << std::endl;
+    LOG(INFO) << piece << " captures " << coordinatesOfPieceBetween << " and lands on " << targetTileCoordinates;
 
     movePiece(piece, targetTileCoordinates);
 
@@ -150,44 +152,28 @@ void GameEngine::capturePiece(Piece* piece, const Coordinates& targetTileCoordin
 
 void GameEngine::endTurn()
 {
-    if(PlayerManager::getActivePlayer() == Player::down)
+    if(piecesPlacement_.didAnyPlayerRunOutOfPieces())
     {
-        PlayerManager::setActivePlayer(Player::up);
-    }
-    else if(PlayerManager::getActivePlayer() == Player::up)
-    {
-        PlayerManager::setActivePlayer(Player::down);
+        endGame(piecesPlacement_.getPlayerWithNoPiecesLeft(), GameEndReason::NoPiecesLeft);
     }
 
-    if(piecesPlacement_.didPlayerRunOutOfPieces())
-    {
-        endGame();
-    }
+    disableAllPieces();
+    playerManager_.switchPlayer();
+    checkAndMarkPlayerMoveOptions(playerManager_.getActivePlayer());
 }
 
-void GameEngine::checkEligibilityAndPromotePiece(Piece* piece)
+bool GameEngine::checkEligibilityAndPromotePiece(Piece* piece)
 {
     if(PiecePromotionManager::checkPromotionEligibility(piece))
     {
         piece->promote();
+        return true;
     }
+
+    return false;
 }
 
-bool GameEngine::isMultiCaptureInProgress()
+void GameEngine::endGame(Player losingPlayer, GameEndReason gameEndReason)
 {
-    return multiCaptureInProgressPiece_ != nullptr;
-}
-
-void GameEngine::endGame()
-{
-    Player losingPlayer = piecesPlacement_.getPlayerWithNoPiecesLeft();
-
-    if(losingPlayer == Player::down)
-    {
-        emit dialogRestartGameSignal(Player::up);
-    }
-    else
-    {
-        emit dialogRestartGameSignal(Player::down);
-    }
+    emit dialogRestartGameSignal(losingPlayer, gameEndReason);
 }

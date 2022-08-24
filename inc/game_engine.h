@@ -2,6 +2,7 @@
 
 #include "checkerboard.h"
 #include "pieces_placement.h"
+#include "multi_capture_manager.h"
 
 class GameEngine : public QObject
 {
@@ -9,7 +10,7 @@ Q_OBJECT
 
 signals:
     void sceneUpdateSignal();
-    void dialogRestartGameSignal(Player player);
+    void dialogRestartGameSignal(Player player, GameEndReason gameEndReason);
 
 public:
     explicit GameEngine(const QVector<Tile*>& playableTiles);
@@ -18,19 +19,20 @@ public slots:
     void processTileClickedSlot(const Coordinates& targetTileCoordinates);
 
 private:
-    void unmarkAllPieces();
+    void disableAllPieces();
     void movePiece(Piece* piece, const Coordinates& targetTileCoordinates);
     void capturePiece(Piece* piece, const Coordinates& targetTileCoordinates);
     void endTurn();
-    bool isMultiCaptureInProgress();
-    void processMove(const Coordinates& targetTileCoordinates);
+
+    void processPieceMove(Piece* piece, const Coordinates& targetTileCoordinates);
     void checkAndMarkPlayerMoveOptions(Player player);
-    void checkEligibilityAndPromotePiece(Piece* piece);
+    bool checkEligibilityAndPromotePiece(Piece* piece);
 
     PiecesPlacement piecesPlacement_;
+    MultiCaptureManager multiCaptureManager_;
+    PlayerManager playerManager_;
+    bool moveInProgress_ = false;
 
 private:
-    Piece* multiCaptureInProgressPiece_ = nullptr;
-
-    void endGame();
+    void endGame(Player losingPlayer, GameEndReason gameEndReason);
 };
