@@ -1,20 +1,19 @@
-#include "game_window.h"
-
+#include "game.h"
 #include <QApplication>
 
 int main(int argc, char* argv[])
 {
-    while(true)
-    {
-        QApplication application(argc, argv);
-        GameWindow gameWindow;
-        gameWindow.show();
+    QApplication application(argc, argv);
+    Game game;
 
-        if(QApplication::exec() == static_cast<int>(Status::exit))
-        {
-            break;
-        }
-    }
-
-    return 0;
+    return QApplication::exec();
 }
+
+//TODO add shadows showing possible movements
+//TODO get rid of Drawer class
+//TODO implement state pattern for Piece state
+//TODO optimize multi-capture manager
+//TODO optimize player manager
+//TODO encapsulate Model's move in progress boolean
+
+//TODO add complete logging and fix subtle movement bugs
