@@ -1,7 +1,8 @@
 set(SOURCE_FILES
         main.cpp
         game.cpp game.h
-        controller.cpp controller.h)
+        controller.cpp controller.h
+        log_manager.cpp log_manager.h)
 
 add_subdirectory(backend)
 add_subdirectory(frontend)

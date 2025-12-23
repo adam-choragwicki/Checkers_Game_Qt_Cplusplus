@@ -1,12 +1,33 @@
 #include "game.h"
-#include <QApplication>
+#include "log_manager.h"
+#include <QApplication> // TODO remove eventually
 
 int main(int argc, char* argv[])
 {
-    QApplication application(argc, argv);
-    Game game;
+    try
+    {
+#if defined(QT_DEBUG)
+        LogManager::initialize(LogManager::Mode::LogToFileAndConsole, LogManager::Verbosity::Debug);
+#else
+        LogManager::initialize(LogManager::Mode::LogToFileOnly, LogManager::Verbosity::Info);
+#endif
 
-    return QApplication::exec();
+        QApplication app(argc, argv); // TODO change to QGuiApplication
+
+        Game game;
+
+        return QApplication::exec(); // TODO change to QGuiApplication
+    }
+    catch (const std::exception& e)
+    {
+        qCritical() << "Unhandled exception:" << e.what();
+        return 1;
+    }
+    catch (...)
+    {
+        qCritical() << "Unhandled unknown exception";
+        return 1;
+    }
 }
 
 //TODO add shadows showing possible movements
