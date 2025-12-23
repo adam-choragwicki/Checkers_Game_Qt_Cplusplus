@@ -1,6 +1,6 @@
 #pragma once
 
-#include "coordinates.h"
+#include "../coordinates.h"
 #include <QGraphicsRectItem>
 
 class Tile : public QGraphicsRectItem

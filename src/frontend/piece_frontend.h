@@ -1,6 +1,6 @@
 #pragma once
 
-#include "piece.h"
+#include "../piece.h"
 #include "gui_config.h"
 #include "crown.h"
 #include <QGraphicsEllipseItem>

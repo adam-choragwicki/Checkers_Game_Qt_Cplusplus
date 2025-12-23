@@ -1,5 +1,5 @@
 #include "checkerboard.h"
-#include "coordinates_database.h"
+#include "../coordinates_database.h"
 
 Checkerboard::Checkerboard()
 {

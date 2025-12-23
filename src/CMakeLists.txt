@@ -4,7 +4,31 @@ set(SOURCE_FILES
         controller.cpp controller.h
         log_manager.cpp log_manager.h)
 
-add_subdirectory(backend)
+set(BACKEND_SOURCE_FILES
+        model/model.cpp model/model.h
+        common.h
+        piece.h piece.cpp
+        selected_piece_manager.h
+        multi_capture_manager.h
+        coordinates.h coordinates.cpp
+        player_manager.h
+        piece_capture_manager.h piece_capture_manager.cpp
+        piece_movement_manager.h piece_movement_manager.cpp
+        piece_promotion_manager.h piece_promotion_manager.cpp
+        coordinates_database.h coordinates_database.cpp
+        pieces_placement.h pieces_placement.cpp
+        piece_state_manager.h piece_state_manager.cpp)
+
+add_library(lib${PROJECT_NAME}Backend ${BACKEND_SOURCE_FILES})
+target_include_directories(lib${PROJECT_NAME}Backend PUBLIC .)
+target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt${QT_VERSION_MAJOR}::Core)
+
+
+
+
+
+
+
 add_subdirectory(frontend)
 
 # Create the main executable
