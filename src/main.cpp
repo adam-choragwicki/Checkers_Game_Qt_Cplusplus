@@ -1,6 +1,6 @@
 #include "game.h"
 #include "log_manager.h"
-#include <QApplication> // TODO remove eventually
+#include <QGuiApplication> // TODO remove, should not be needed
 
 int main(int argc, char* argv[])
 {
@@ -12,11 +12,11 @@ int main(int argc, char* argv[])
         LogManager::initialize(LogManager::Mode::LogToFileOnly, LogManager::Verbosity::Info);
 #endif
 
-        QApplication app(argc, argv); // TODO change to QGuiApplication
+        QGuiApplication app(argc, argv);
 
         Game game;
 
-        return QApplication::exec(); // TODO change to QGuiApplication
+        return QGuiApplication::exec();
     }
     catch (const std::exception& e)
     {

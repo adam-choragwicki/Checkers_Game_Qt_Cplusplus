@@ -4,10 +4,12 @@
 #include "multi_capture_manager.h"
 #include <memory>
 
+#include "game_config.h"
+
 class Model
 {
 public:
-    Model();
+    Model(const GameConfig& gameConfig);
     void reset();
 
     [[nodiscard]] const PiecesPlacement& getPiecesPlacement() const

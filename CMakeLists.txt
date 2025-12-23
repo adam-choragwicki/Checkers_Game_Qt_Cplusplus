@@ -8,7 +8,7 @@ add_definitions(-DBUILD_TYPE="${CMAKE_BUILD_TYPE}")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
+find_package(Qt6 COMPONENTS Core Quick Widgets REQUIRED) # TODO remove widgets
 
 qt_standard_project_setup(REQUIRES 6.9)
 
@@ -23,4 +23,5 @@ if (CCACHE_PROGRAM)
 endif ()
 
 add_subdirectory(src)
+add_subdirectory(qml)
 add_subdirectory(tests)

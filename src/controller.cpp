@@ -5,46 +5,60 @@
 #include "piece_movement_manager.h"
 #include "piece_promotion_manager.h"
 #include "piece_state_manager.h"
-#include <QCoreApplication>
+// #include <QCoreApplication>
 
-Controller::Controller(Model& model, MainWindow& view) : model_(model), view_(view)
+Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : model_(model), view_(view)
 {
-    connect(this, &Controller::sceneUpdateSignal, &view_, &MainWindow::sceneUpdateSlot);
-    connect(&view_, &MainWindow::newGameRequest, this, &Controller::processNewGameRequest);
-    connect(&view_, &MainWindow::applicationTerminationRequest, this, &Controller::processApplicationTerminationRequest);
+    // connect(this, &Controller::sceneUpdateSignal, &view_, &MainWindow::sceneUpdateSlot);
+    // connect(&view_, &MainWindow::newGameRequest, this, &Controller::processNewGameRequest);
+    // connect(&view_, &MainWindow::applicationTerminationRequest, this, &Controller::processApplicationTerminationRequest);
 
     processNewGameRequest();
 }
 
+void Controller::onQmlEngineFullyInitialized()
+{
+    qDebug() << "QML engine fully initialized";
+
+    // windowManager_.setWindow(qmlHelper_.getMainWindow());
+    // overlayManager_ = std::make_unique<OverlayManager>(qmlHelper_);
+
+    // Now that QML is loaded, provide QmlHelper to GameCoordinator
+    // gameCoordinator_->setQmlHelper(&qmlHelper_);
+
+    qInfo() << "Game started";
+    // setGameState(GameStateType::ReadyToStart);
+}
+
 void Controller::processNewGameRequest()
 {
-    if(!model_.isGameBeforeFirstRun())
-    {
-        model_.reset();
-        view_.reset();
-    }
-
-    model_.setGameBeforeFirstRun(false);
-
-    for(PlayableTile* playableTile : view_.getPlayableTiles())
-    {
-        connect(playableTile, &PlayableTile::clickedSignal, this, &Controller::processTileClicked);
-    }
-
-    for(PieceFrontend* pieceFrontend : view_.getPiecesFrontends())
-    {
-        connect(&pieceFrontend->getPiece(), &Piece::stateChanged, &view_, &MainWindow::sceneUpdateSlot);
-        connect(&pieceFrontend->getPiece(), &Piece::startAnimatedMovement, pieceFrontend, &PieceFrontend::animateMovementToNewCoordinates);
-        connect(&pieceFrontend->getPiece(), &Piece::promoted, pieceFrontend, &PieceFrontend::addCrown);
-        connect(pieceFrontend, &PieceFrontend::endMovement, &pieceFrontend->getPiece(), &Piece::processEndMovement);
-    }
-
-    checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+    // if(!model_.isGameBeforeFirstRun())
+    // {
+    //     model_.reset();
+    //     // view_.reset();
+    // }
+    //
+    // model_.setGameBeforeFirstRun(false);
+    //
+    // for(PlayableTile* playableTile : view_.getPlayableTiles())
+    // {
+    //     connect(playableTile, &PlayableTile::clickedSignal, this, &Controller::processTileClicked);
+    // }
+    //
+    // for(PieceFrontend* pieceFrontend : view_.getPiecesFrontends())
+    // {
+    //     connect(&pieceFrontend->getPiece(), &Piece::stateChanged, &view_, &MainWindow::sceneUpdateSlot);
+    //     connect(&pieceFrontend->getPiece(), &Piece::startAnimatedMovement, pieceFrontend, &PieceFrontend::animateMovementToNewCoordinates);
+    //     connect(&pieceFrontend->getPiece(), &Piece::promoted, pieceFrontend, &PieceFrontend::addCrown);
+    //     connect(pieceFrontend, &PieceFrontend::endMovement, &pieceFrontend->getPiece(), &Piece::processEndMovement);
+    // }
+    //
+    // checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
 }
 
 void Controller::processApplicationTerminationRequest()
 {
-    QCoreApplication::exit(0);
+    // QCoreApplication::exit(0);
 }
 
 void Controller::checkAndMarkPlayerMoveOptions(Player player)
@@ -174,7 +188,7 @@ void Controller::capturePiece(Piece& piece, const Coordinates& targetTileCoordin
     movePiece(piece, targetTileCoordinates);
 
     model_.getPiecesPlacement().removePieceAtCoordinates(coordinatesOfPieceBetween);
-    view_.removePieceFrontendAtCoordinates(coordinatesOfPieceBetween);
+    // view_.removePieceFrontendAtCoordinates(coordinatesOfPieceBetween);
 }
 
 void Controller::endTurn()
@@ -202,5 +216,5 @@ bool Controller::checkEligibilityAndPromotePiece(Piece& piece)
 
 void Controller::endGame(Player losingPlayer, GameEndReason gameEndReason)
 {
-    view_.showEndGameDialog(losingPlayer, gameEndReason);
+    // view_.showEndGameDialog(losingPlayer, gameEndReason);
 }

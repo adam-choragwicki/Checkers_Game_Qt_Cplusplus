@@ -1,6 +1,6 @@
 #include "model.h"
 
-Model::Model()
+Model::Model(const GameConfig& gameConfig)
 {
     reset();
 }

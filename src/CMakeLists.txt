@@ -17,14 +17,12 @@ set(BACKEND_SOURCE_FILES
         piece_promotion_manager.h piece_promotion_manager.cpp
         coordinates_database.h coordinates_database.cpp
         pieces_placement.h pieces_placement.cpp
-        piece_state_manager.h piece_state_manager.cpp)
+        piece_state_manager.h piece_state_manager.cpp
+        game_config.cpp game_config.h)
 
 add_library(lib${PROJECT_NAME}Backend ${BACKEND_SOURCE_FILES})
 target_include_directories(lib${PROJECT_NAME}Backend PUBLIC .)
-target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt${QT_VERSION_MAJOR}::Core)
-
-
-
+target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt6::Core Qt6::Quick)
 
 
 set(UI_FORMS_DIR ../ui_forms)
@@ -41,14 +39,7 @@ set(FRONTEND_SOURCE_FILES
 
 add_library(lib${PROJECT_NAME}Frontend ${FRONTEND_SOURCE_FILES})
 target_include_directories(lib${PROJECT_NAME}Frontend PUBLIC ${BACKEND_DIR})
-target_link_libraries(lib${PROJECT_NAME}Frontend PUBLIC Qt${QT_VERSION_MAJOR}::Widgets)
-
-
-
-
-
-
-
+target_link_libraries(lib${PROJECT_NAME}Frontend PUBLIC Qt6::Widgets Qt6::Quick)
 
 
 # Create the main executable
@@ -59,4 +50,4 @@ if (WIN32)
 endif ()
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${BACKEND_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME}Backend lib${PROJECT_NAME}Frontend)
+target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME}Backend lib${PROJECT_NAME}Frontend CheckersQmlLibplugin)
