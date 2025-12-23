@@ -6,7 +6,6 @@ set(SOURCE_FILES
         multi_capture_manager.h
         coordinates.h coordinates.cpp
         player_manager.h
-        log_manager.h
         piece_capture_manager.h piece_capture_manager.cpp
         piece_movement_manager.h piece_movement_manager.cpp
         piece_promotion_manager.h piece_promotion_manager.cpp
