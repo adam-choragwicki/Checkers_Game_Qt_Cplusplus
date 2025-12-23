@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../model/model.h"
-#include "../common.h"
+#include "model/model.h"
+#include "common.h"
 #include "tile.h"
 #include "checkerboard.h"
 #include "piece_frontend.h"

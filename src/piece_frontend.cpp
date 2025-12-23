@@ -1,7 +1,7 @@
 #include "piece_frontend.h"
 #include "gui_config.h"
 #include "drawer.h"
-#include "../piece_state_manager.h"
+#include "piece_state_manager.h"
 #include <QEventLoop>
 
 PieceFrontend::PieceFrontend(Piece& piece) : piece_(piece)

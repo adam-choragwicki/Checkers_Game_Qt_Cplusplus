@@ -1,7 +1,7 @@
 #pragma once
 
 #include "model/model.h"
-#include "frontend/main_window.h"
+#include "main_window.h"
 #include "controller.h"
 
 class Game
