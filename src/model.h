@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../pieces_placement.h"
-#include "../multi_capture_manager.h"
+#include "pieces_placement.h"
+#include "multi_capture_manager.h"
 #include <memory>
 
 class Model

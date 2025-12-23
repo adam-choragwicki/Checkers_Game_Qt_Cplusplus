@@ -5,7 +5,7 @@ set(SOURCE_FILES
         log_manager.cpp log_manager.h)
 
 set(BACKEND_SOURCE_FILES
-        model/model.cpp model/model.h
+        model.cpp model.h
         common.h
         piece.h piece.cpp
         selected_piece_manager.h
@@ -27,7 +27,7 @@ target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt${QT_VERSION_MAJOR}::Co
 
 
 
-set(UI_FORMS_DIR ui_forms)
+set(UI_FORMS_DIR ../ui_forms)
 set(CMAKE_AUTOUIC_SEARCH_PATHS ${UI_FORMS_DIR})
 
 set(FRONTEND_SOURCE_FILES

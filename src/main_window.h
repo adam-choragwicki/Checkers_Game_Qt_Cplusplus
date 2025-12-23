@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/model.h"
+#include "model.h"
 #include "common.h"
 #include "tile.h"
 #include "checkerboard.h"
