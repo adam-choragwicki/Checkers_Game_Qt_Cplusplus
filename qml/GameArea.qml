@@ -19,29 +19,20 @@ Item {
     /* Pieces */
     Repeater {
         model: piecesModel
-        delegate: Rectangle {
-
-            Component.onCompleted: {
-                console.log(
-                    "Delegate created:",
-                    "index =", index,
-                    "xRole =", model.xRole,
-                    "yRole =", model.yRole,
-                    "alive =", model.aliveRole
-                )
-            }
+        delegate: BlackPiece {  // or RedPiece
+            // Component.onCompleted: {
+            //     console.log(
+            //         "Delegate created:",
+            //         "index =", index,
+            //         "xRole =", model.xRole,
+            //         "yRole =", model.yRole,
+            //         "alive =", model.aliveRole
+            //     )
+            // }
 
             x: (model.xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
             y: (model.yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
-            width: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
-            height: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
             visible: model.aliveRole
-            color: Qt.rgba(50 / 255, 50 / 255, 50 / 255, 1)
-
-            radius: 50 // TODO any number which makes it circle
-
-            border.width: uiScaler.px(5) // outline width
-            border.color: "black" // outline color
         }
 
         // delegate: Rectangle {

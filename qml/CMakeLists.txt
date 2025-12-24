@@ -16,6 +16,9 @@ qt_add_qml_module(${LIB_NAME}
 #        GameInput.qml
         UiScaler.qml
 
+        BlackPiece.qml
+        RedPiece.qml
+
 #        Arena.qml
 
 #        entities/Pacman.qml
