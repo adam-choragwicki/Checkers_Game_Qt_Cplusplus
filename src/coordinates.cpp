@@ -17,11 +17,11 @@ bool Coordinates::validateCoordinates(const Coordinates& coordinates)
 
 bool operator<(const Coordinates& coordinates1, const Coordinates& coordinates2)
 {
-    if(coordinates1.getRow() < coordinates2.getRow())
+    if (coordinates1.getRow() < coordinates2.getRow())
     {
         return true;
     }
-    else if(coordinates1.getRow() > coordinates2.getRow())
+    else if (coordinates1.getRow() > coordinates2.getRow())
     {
         return false;
     }
@@ -50,4 +50,9 @@ Coordinates Coordinates::operator+(const std::pair<int, int>& coefficientsPair) 
 std::pair<int, int> Coordinates::operator-(const Coordinates& coordinates) const
 {
     return {row_ - coordinates.row_, column_ - coordinates.column_};
+}
+
+Coordinates::operator QString() const
+{
+    return "[row:" % QString::number(row_) % ", column:" % QString::number(column_) % "]";
 }

@@ -5,6 +5,7 @@
 #include <algorithm>
 #include "piece.h"
 #include <vector>
+#include <QDebug>
 
 class PiecesManager : public QObject //, public AbstractPelletsManager<StandardPellet>
 {
@@ -16,10 +17,13 @@ signals:
 public:
     explicit PiecesManager() //const std::set<Coordinates>& standardPelletPositions) : AbstractPelletsManager(standardPelletPositions)
     {
-        // pieces_.reserve(50); // TODO how many pieces?
+        createPieces();
+
+        qDebug() << "Created" << pieces_.size() << "pieces";
+
 
         // const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
-        pieces_.emplace_back(std::make_unique<Piece>(Coordinates{0, 0}, Player::LOWER));
+        //pieces_.emplace_back(std::make_unique<Piece>(Coordinates{0, 0}, Player::LOWER));
 
         // pieces_.emplace_back(Coordinates{0, 0}, Player::LOWER);
 
@@ -46,12 +50,12 @@ public:
     //     return pieces_;
     // }
 
-    const std::vector<std::unique_ptr<Piece> >& getPieces() const
+    const std::vector<std::unique_ptr<Piece>>& getPieces() const
     {
         return pieces_;
     }
 
-    std::vector<std::unique_ptr<Piece> >& getPieces()
+    std::vector<std::unique_ptr<Piece>>& getPieces()
     {
         return pieces_;
     }
@@ -74,8 +78,21 @@ public:
                                                       }));
     }
 
+
+    void createPieces();
+    void createPiece(const Coordinates& coordinates, Player player);
+
+    [[nodiscard]] bool isPieceAtCoordinates(const Coordinates& coordinates) const;
+    [[nodiscard]] Piece& getPieceAtCoordinates(const Coordinates& coordinates) const;
+    void markPiecesWhichCanMove(std::vector<Piece*>& pieces);
+    void removePieceAtCoordinates(const Coordinates& coordinates);
+    [[nodiscard]] size_t countPlayerPieces(Player player) const;
+    [[nodiscard]] bool didAnyPlayerRunOutOfPieces() const;
+    [[nodiscard]] Player getPlayerWithNoPiecesLeft() const;
+
 private:
-    std::vector<std::unique_ptr<Piece> > pieces_;
+    std::vector<std::unique_ptr<Piece>> pieces_;
+    // std::vector<std::unique_ptr<PieceModel>> piecesModels_;
 
     // std::vector<Piece> pieces_;
 };

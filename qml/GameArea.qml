@@ -20,11 +20,28 @@ Item {
     Repeater {
         model: piecesModel
         delegate: Rectangle {
-            x: 150
-            y: 150
-            width: 150
-            height: 150
-            color: "red"
+
+            Component.onCompleted: {
+                console.log(
+                    "Delegate created:",
+                    "index =", index,
+                    "xRole =", model.xRole,
+                    "yRole =", model.yRole,
+                    "alive =", model.aliveRole
+                )
+            }
+
+            x: (model.xRole * 80) + 15 // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
+            y: (model.yRole * 80) + 15 // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
+            width: 50 // TODO Taken from GuiConfig::Piece::SIZE
+            height: 50 // TODO Taken from GuiConfig::Piece::SIZE
+            visible: model.aliveRole
+            color: Qt.rgba(50 / 255, 50 / 255, 50 / 255, 1)
+
+            radius: 50 // TODO any number which makes it circle
+
+            border.width: 5 // outline width
+            border.color: "black" // outline color
         }
 
         // delegate: Rectangle {

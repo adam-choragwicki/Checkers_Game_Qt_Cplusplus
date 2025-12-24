@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <QString>
 
 class Coordinates
 {
@@ -17,6 +18,8 @@ public:
 
     [[nodiscard]] int getRow() const {return row_;}
     [[nodiscard]] int getColumn() const {return column_;}
+
+    operator QString() const;
 
 private:
     int row_;
