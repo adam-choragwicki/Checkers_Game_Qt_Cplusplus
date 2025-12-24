@@ -33,6 +33,9 @@ public:
     [[nodiscard]] Player getPlayer() const
     { return player_; }
 
+    [[nodiscard]] int getPlayerAsInt() const // TODO fix
+    { return static_cast<int>(player_); }
+
     [[nodiscard]] bool isPromoted() const
     { return promoted_; }
 

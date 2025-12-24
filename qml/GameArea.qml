@@ -19,31 +19,25 @@ Item {
     /* Pieces */
     Repeater {
         model: piecesModel
-        delegate: BlackPiece {  // or RedPiece
-            // Component.onCompleted: {
-            //     console.log(
-            //         "Delegate created:",
-            //         "index =", index,
-            //         "xRole =", model.xRole,
-            //         "yRole =", model.yRole,
-            //         "alive =", model.aliveRole
-            //     )
-            // }
 
-            x: (model.xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
-            y: (model.yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
-            visible: model.aliveRole
+        delegate: Loader {
+            x: (xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
+            y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
+            visible: aliveRole
+            sourceComponent: playerRole === 1 ? redPieceComponent : blackPieceComponent
         }
+    }
 
-        // delegate: Rectangle {
-        //     x: ScalingUtilities.scaleX(model.x, Controller.gameArenaSize.width, gameArea.width)
-        //     y: ScalingUtilities.scaleY(model.y, Controller.gameArenaSize.height, gameArea.height)
-        //     width: ScalingUtilities.scaleX(model.width, Controller.gameArenaSize.width, gameArea.width)
-        //     height: ScalingUtilities.scaleY(model.height, Controller.gameArenaSize.height, gameArea.height)
-        //     radius: model.radius
-        //     color: model.color
-        //     visible: model.alive
-        // }
+    Component {
+        id: redPieceComponent
+        RedPiece {
+        }
+    }
+
+    Component {
+        id: blackPieceComponent
+        BlackPiece {
+        }
     }
 
     // //

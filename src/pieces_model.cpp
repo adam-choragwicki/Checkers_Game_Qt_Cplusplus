@@ -21,6 +21,7 @@ QVariant PiecesModel::data(const QModelIndex& index, int role) const
     {
         case XRole: return piece->x();
         case YRole: return piece->getRow();
+        case PlayerRole: return piece->getPlayerAsInt();
         case AliveRole: return piece->isAlive();
     }
 
@@ -30,7 +31,7 @@ QVariant PiecesModel::data(const QModelIndex& index, int role) const
 QHash<int, QByteArray> PiecesModel::roleNames() const
 {
     return {
-        {XRole, "xRole"}, {YRole, "yRole"}, {AliveRole, "aliveRole"}
+        {XRole, "xRole"}, {YRole, "yRole"}, {PlayerRole, "playerRole"}, {AliveRole, "aliveRole"}
     };
 }
 
