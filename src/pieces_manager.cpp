@@ -1,0 +1,1 @@
+#include "pieces_manager.h"

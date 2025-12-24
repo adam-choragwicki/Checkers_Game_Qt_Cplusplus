@@ -1,6 +1,6 @@
 #pragma once
 
-// #include "bricks_manager.h"
+#include "pieces_manager.h"
 #include <QAbstractListModel>
 
 class PiecesModel : public QAbstractListModel
@@ -10,10 +10,8 @@ class PiecesModel : public QAbstractListModel
 public:
     enum Roles { XRole = Qt::UserRole + 1, YRole, AliveRole };
 
-    explicit PiecesModel(QObject* parent = nullptr);
+    explicit PiecesModel(const PiecesManager& piecesManager);
     void refresh();
-
-    // void setBricksManager(BricksManager* manager);
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -21,5 +19,5 @@ public:
     virtual void brickChanged(int index); // virtual for testing purposes
 
 private:
-    // BricksManager* bricksManager_{};
+    const PiecesManager& piecesManager_;
 };

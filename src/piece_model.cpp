@@ -71,7 +71,7 @@ void PieceModel::animateMovementToNewCoordinates(const Coordinates& currentCoord
 
     //setZValue(0);
 
-    emit endMovement(newCoordinates);
+    // emit endMovement(newCoordinates);
 }
 
 // void PieceModel::updateColours()

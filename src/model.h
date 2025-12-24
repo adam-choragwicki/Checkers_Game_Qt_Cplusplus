@@ -5,6 +5,8 @@
 #include <memory>
 
 #include "game_config.h"
+#include "pieces_manager.h"
+#include "pieces_model.h"
 
 class Model
 {
@@ -52,10 +54,17 @@ public:
         gameBeforeFirstRun_ = beforeFirstRun;
     }
 
+    Q_PROPERTY(QObject* piecesModel READ getPiecesModel CONSTANT)
+    [[nodiscard]] PiecesModel& getPiecesModel() const { return *piecesModel_; }
+    // [[nodiscard]] StandardPelletsManager& getStandardPelletsManager() const { return *standardPelletsManager_; }
+
 private:
     std::unique_ptr<PiecesPlacement> piecesPlacement_;
     std::unique_ptr<MultiCaptureManager> multiCaptureManager_;
     std::unique_ptr<PlayerManager> playerManager_;
     bool moveInProgress_{};
     bool gameBeforeFirstRun_ = true;
+
+    std::unique_ptr<PiecesManager> piecesManager_;
+    std::unique_ptr<PiecesModel> piecesModel_;
 };

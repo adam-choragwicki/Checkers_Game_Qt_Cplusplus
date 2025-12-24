@@ -33,9 +33,9 @@ public:
     void reset();
 
     [[nodiscard]] std::vector<PlayableTile*> getPlayableTiles() const;
-    [[nodiscard]] std::vector<PieceFrontend*> getPiecesFrontends() const;
+    // [[nodiscard]] std::vector<PieceFrontend*> getPiecesFrontends() const;
 
-    void updatePiecesFrontends();
+    // void updatePiecesFrontends();
     void removePieceFrontendAtCoordinates(const Coordinates& coordinates);
 
     void showEndGameDialog(Player losingPlayer, GameEndReason gameEndReason);
@@ -51,7 +51,7 @@ private:
     QGraphicsScene scene_;
     std::unique_ptr<Checkerboard> checkerboard_;
 
-    std::vector<std::unique_ptr<PieceFrontend>> piecesFrontends_;
+    // std::vector<std::unique_ptr<PieceFrontend>> piecesFrontends_;
 
     const Model& model_;
 };

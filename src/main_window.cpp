@@ -44,12 +44,12 @@ void MainWindow::centerOnScreen(QScreen* screen)
 
 void MainWindow::reset()
 {
-    piecesFrontends_.clear();
-
-    for(const auto& piece : model_.getPiecesPlacement().getPieces())
-    {
-        piecesFrontends_.push_back(std::make_unique<PieceFrontend>(*piece));
-    }
+    // piecesFrontends_.clear();
+    //
+    // for(const auto& piece : model_.getPiecesPlacement().getPieces())
+    // {
+    //     piecesFrontends_.push_back(std::make_unique<PieceFrontend>(*piece));
+    // }
 }
 
 void MainWindow::closeEvent(QCloseEvent* event)
@@ -69,11 +69,11 @@ void MainWindow::initializeGameplayAreaScene()
     Drawer::setScene(&scene_);
 }
 
-void MainWindow::sceneUpdateSlot()
-{
-    scene_.update();
-    updatePiecesFrontends();
-}
+// void MainWindow::sceneUpdateSlot()
+// {
+//     scene_.update();
+//     updatePiecesFrontends();
+// }
 
 void MainWindow::showEndGameDialog(Player losingPlayer, GameEndReason reason)
 {
@@ -112,39 +112,39 @@ std::vector<PlayableTile*> MainWindow::getPlayableTiles() const
     return checkerboard_->getPlayableTiles();
 }
 
-std::vector<PieceFrontend*> MainWindow::getPiecesFrontends() const
-{
-    std::vector<PieceFrontend*> piecesFrontends;
+// std::vector<PieceFrontend*> MainWindow::getPiecesFrontends() const
+// {
+//     std::vector<PieceFrontend*> piecesFrontends;
+//
+//     for(const auto& pieceFrontend : piecesFrontends_)
+//     {
+//         piecesFrontends.push_back(pieceFrontend.get());
+//     }
+//
+//     return piecesFrontends;
+// }
 
-    for(const auto& pieceFrontend : piecesFrontends_)
-    {
-        piecesFrontends.push_back(pieceFrontend.get());
-    }
+// void MainWindow::updatePiecesFrontends()
+// {
+//     for(const auto& elem : piecesFrontends_)
+//     {
+//         elem->updateColours();
+//     }
+// }
 
-    return piecesFrontends;
-}
-
-void MainWindow::updatePiecesFrontends()
-{
-    for(const auto& elem : piecesFrontends_)
-    {
-        elem->updateColours();
-    }
-}
-
-void MainWindow::removePieceFrontendAtCoordinates(const Coordinates& coordinates)
-{
-    auto iter = std::ranges::find_if(piecesFrontends_, [coordinates](const auto& pieceFrontend)
-    {
-        return pieceFrontend->getPiece().getCoordinates() == coordinates;
-    });
-
-    if(iter != piecesFrontends_.end())
-    {
-        piecesFrontends_.erase(iter);
-    }
-    else
-    {
-        throw std::runtime_error("Error, trying to remove piece frontend which is not present in pieces frontends");
-    }
-}
+// void MainWindow::removePieceFrontendAtCoordinates(const Coordinates& coordinates)
+// {
+//     auto iter = std::ranges::find_if(piecesFrontends_, [coordinates](const auto& pieceFrontend)
+//     {
+//         return pieceFrontend->getPiece().getCoordinates() == coordinates;
+//     });
+//
+//     if(iter != piecesFrontends_.end())
+//     {
+//         piecesFrontends_.erase(iter);
+//     }
+//     else
+//     {
+//         throw std::runtime_error("Error, trying to remove piece frontend which is not present in pieces frontends");
+//     }
+// }

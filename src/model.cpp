@@ -3,6 +3,9 @@
 Model::Model(const GameConfig& gameConfig)
 {
     reset();
+
+    piecesManager_ = std::make_unique<PiecesManager>();
+    piecesModel_ = std::make_unique<PiecesModel>(*piecesManager_);
 }
 
 void Model::reset()

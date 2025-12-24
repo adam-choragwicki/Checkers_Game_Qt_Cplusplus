@@ -6,7 +6,8 @@ void PiecesPlacement::createPiece(const Coordinates& coordinates, Player player)
 {
     if(!isPieceAtCoordinates(coordinates))
     {
-        pieces_.push_back(std::make_unique<Piece>(coordinates, player));
+        const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
+        piecesModels_.push_back(std::make_unique<PieceModel>(*ref));
     }
     else
     {

@@ -3,6 +3,7 @@
 #include "coordinates.h"
 #include "player_manager.h"
 #include "piece.h"
+#include "piece_model.h"
 #include <vector>
 
 class PiecesPlacement
@@ -23,4 +24,5 @@ public:
     [[nodiscard]] Player getPlayerWithNoPiecesLeft() const;
 
     std::vector<std::unique_ptr<Piece>> pieces_;
+    std::vector<std::unique_ptr<PieceModel>> piecesModels_;
 };
