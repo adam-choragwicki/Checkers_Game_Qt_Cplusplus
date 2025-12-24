@@ -1,6 +1,10 @@
 import QtQuick
 
 Rectangle {
+    id: redPieceRoot
+    readonly property color selectedPieceOutlineColor: "white"
+    readonly property color activePieceOutlineColor: Qt.rgba(255 / 255, 255 / 255, 0, 1) // 255, 255, 0
+
     width: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
     height: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
 
@@ -9,4 +13,13 @@ Rectangle {
 
     border.width: uiScaler.px(5) // outline width
     border.color: Qt.rgba(170 / 255, 0, 0, 1) // outline color
+    // border.color: activePieceOutlineColor
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            console.log("Red piece clicked")
+            redPieceRoot.border.color = redPieceRoot.selectedPieceOutlineColor
+        }
+    }
 }
