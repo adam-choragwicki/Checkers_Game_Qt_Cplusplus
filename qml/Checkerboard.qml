@@ -1,56 +1,61 @@
 import QtQuick
 
-Rectangle {
-    id: borderRect
-    anchors.centerIn: parent
-
-    // outer size = board size and border on all sides
-    width: checkerboardRoot.width + 2 * border.width
-    height: checkerboardRoot.height + 2 * border.width
-
-    color: "transparent"
-    border.color: "black"
-    border.width: 4 // this has to be even, otherwise there is sub-pixel positioning and rendering issues
+Item {
+    width: borderRect.width
+    height: borderRect.height
 
     Rectangle {
-        id: checkerboardRoot
+        id: borderRect
         anchors.centerIn: parent
-        width: 640 // 8 * 80 px per tile
-        height: 640 // 8 * 80 px per tile
 
-        color: "white"
+        // outer size = board size and border on all sides
+        width: checkerboard.width + 2 * border.width
+        height: checkerboard.height + 2 * border.width
 
-        // Colors used in the checkerboard
-        readonly property color playableTileColor: Qt.rgba(140 / 255, 90 / 255, 40 / 255, 1) // whitish
-        readonly property color nonPlayableTileColor: Qt.rgba(230 / 255, 200 / 255, 160 / 255, 1) // brownish
+        color: "transparent"
+        border.color: "black"
+        border.width: 4 // this has to be even, otherwise there is sub-pixel positioning and rendering issues
 
-        readonly property int gridRowCount: 8
-        readonly property int gridColumnCount: 8
+        Rectangle {
+            id: checkerboard
+            anchors.centerIn: parent
+            width: 640 // 8 * 80 px per tile
+            height: 640 // 8 * 80 px per tile
 
-        property real tileSize: 80 // TODO scalable
+            color: "white"
 
-        // Checkerboard tiles
-        Repeater {
-            model: checkerboardRoot.gridRowCount * checkerboardRoot.gridColumnCount // total number of squares in the grid
+            readonly property int gridRowCount: 8
+            readonly property int gridColumnCount: 8
 
-            delegate: Rectangle {
-                width: checkerboardRoot.tileSize
-                height: checkerboardRoot.tileSize
+            property real tileSize: 80 // TODO scalable
 
-                // Compute the coordinates in the grid
-                // gridX: column index (0 to gridColumnCount-1)
-                // gridY: row index (0 to gridRowCount-1)
-                property int gridX: index % checkerboardRoot.gridColumnCount
-                property int gridY: Math.floor(index / checkerboardRoot.gridColumnCount)
+            // Checkerboard tiles
+            Repeater {
+                model: checkerboard.gridRowCount * checkerboard.gridColumnCount // total number of squares in the grid
 
-                x: gridX * checkerboardRoot.tileSize
-                y: gridY * checkerboardRoot.tileSize
+                delegate: Rectangle {
+                    width: checkerboard.tileSize
+                    height: checkerboard.tileSize
 
-                color: {
-                    if (gridX % 2 === 0) {
-                        return (gridY % 2 === 0) ? checkerboardRoot.nonPlayableTileColor : checkerboardRoot.playableTileColor;
-                    } else {
-                        return (gridY % 2 === 0) ? checkerboardRoot.playableTileColor : checkerboardRoot.nonPlayableTileColor;
+                    // Colors used in the checkerboard
+                    readonly property color playableTileColor: Qt.rgba(140 / 255, 90 / 255, 40 / 255, 1) // whitish
+                    readonly property color nonPlayableTileColor: Qt.rgba(230 / 255, 200 / 255, 160 / 255, 1) // brownish
+
+                    // Compute the coordinates in the grid
+                    // gridX: column index (0 to gridColumnCount-1)
+                    // gridY: row index (0 to gridRowCount-1)
+                    property int gridX: index % checkerboard.gridColumnCount
+                    property int gridY: Math.floor(index / checkerboard.gridColumnCount)
+
+                    x: gridX * checkerboard.tileSize
+                    y: gridY * checkerboard.tileSize
+
+                    color: {
+                        if (gridX % 2 === 0) {
+                            return (gridY % 2 === 0) ? nonPlayableTileColor : playableTileColor;
+                        } else {
+                            return (gridY % 2 === 0) ? playableTileColor : nonPlayableTileColor;
+                        }
                     }
                 }
             }

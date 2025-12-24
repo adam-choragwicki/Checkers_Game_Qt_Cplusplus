@@ -6,10 +6,10 @@ Window {
     minimumHeight: 800 // TODO remove, taken from main_window.cpp
     visible: true
 
-    color: Qt.rgba(0, 160/255, 0, 1)
+    color: Qt.rgba(0, 160 / 255, 0, 1)
 
     Checkerboard {
-        
+        anchors.centerIn: parent
     }
 
     // Component.onCompleted: {
