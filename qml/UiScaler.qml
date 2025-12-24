@@ -21,12 +21,4 @@ Item {
 
         return value
     }
-
-    function font(value: real): real {
-        if (scalingEnabled) {
-            return value * scale
-        }
-
-        return value
-    }
 }
