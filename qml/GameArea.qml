@@ -31,16 +31,16 @@ Item {
                 )
             }
 
-            x: (model.xRole * 80) + 15 // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
-            y: (model.yRole * 80) + 15 // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
-            width: 50 // TODO Taken from GuiConfig::Piece::SIZE
-            height: 50 // TODO Taken from GuiConfig::Piece::SIZE
+            x: (model.xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
+            y: (model.yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
+            width: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
+            height: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
             visible: model.aliveRole
             color: Qt.rgba(50 / 255, 50 / 255, 50 / 255, 1)
 
             radius: 50 // TODO any number which makes it circle
 
-            border.width: 5 // outline width
+            border.width: uiScaler.px(5) // outline width
             border.color: "black" // outline color
         }
 

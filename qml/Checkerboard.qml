@@ -4,6 +4,8 @@ Item {
     width: borderRect.width
     height: borderRect.height
 
+    property alias tileSize: checkerboard.tileSize
+
     Rectangle {
         id: borderRect
         anchors.centerIn: parent
