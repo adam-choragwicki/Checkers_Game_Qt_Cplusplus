@@ -1,5 +1,6 @@
 #include "piece.h"
 #include "selected_piece_manager.h"
+#include <QDebug>
 
 Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coordinates_(coordinates), player_(player)
 {
@@ -11,6 +12,8 @@ Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coo
     }
 
     id_ = ++counter_;
+
+    qDebug() << "Piece created:" << id_;
 }
 
 void Piece::setState(State newState)

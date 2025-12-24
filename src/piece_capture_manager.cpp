@@ -1,7 +1,7 @@
 #include <set>
 #include "piece_capture_manager.h"
 
-bool PieceCaptureManager::checkCapturePossibility(const Piece& piece, const PiecesPlacement& piecesPlacement, const Coordinates& targetTileCoordinates)
+bool PieceCaptureManager::checkCapturePossibility(const Piece& piece, const PiecesManager& piecesPlacement, const Coordinates& targetTileCoordinates)
 {
     const Coordinates pieceCoordinates = piece.getCoordinates();
 
@@ -31,7 +31,7 @@ bool PieceCaptureManager::checkCapturePossibility(const Piece& piece, const Piec
     return false;
 }
 
-std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(Player activePlayer, const PiecesPlacement& piecesPlacement)
+std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(Player activePlayer, const PiecesManager& piecesPlacement)
 {
     std::vector<Piece*> piecesWhichCanCapture;
 
@@ -91,7 +91,7 @@ std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCo
     return validCaptureCoordinates;
 }
 
-bool PieceCaptureManager::checkIfPieceCanCapture(const Piece& piece, const PiecesPlacement& piecesPlacement)
+bool PieceCaptureManager::checkIfPieceCanCapture(const Piece& piece, const PiecesManager& piecesPlacement)
 {
     std::set<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
 

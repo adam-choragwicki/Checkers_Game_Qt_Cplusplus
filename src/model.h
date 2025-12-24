@@ -15,15 +15,15 @@ public:
     Model(const GameConfig& gameConfig);
     void reset();
 
-    [[nodiscard]] const PiecesPlacement& getPiecesPlacement() const
-    {
-        return *piecesPlacement_;
-    }
-
-    PiecesPlacement& getPiecesPlacement()
-    {
-        return *piecesPlacement_;
-    }
+    // [[nodiscard]] const PiecesPlacement& getPiecesPlacement() const
+    // {
+    //     return *piecesPlacement_;
+    // }
+    //
+    // PiecesPlacement& getPiecesPlacement()
+    // {
+    //     return *piecesPlacement_;
+    // }
 
     [[nodiscard]] MultiCaptureManager& getMultiCaptureManager()
     {
@@ -55,6 +55,8 @@ public:
         gameBeforeFirstRun_ = beforeFirstRun;
     }
 
+    PiecesManager& getPiecesManager() { return *piecesManager_; }
+
     Q_PROPERTY(QObject* piecesModel READ getPiecesModel CONSTANT)
     [[nodiscard]] PiecesModel& getPiecesModel() const { return *piecesModel_; }
     // [[nodiscard]] StandardPelletsManager& getStandardPelletsManager() const { return *standardPelletsManager_; }
@@ -64,7 +66,7 @@ public:
 private:
     std::unique_ptr<Checkerboard> checkerboard_;
 
-    std::unique_ptr<PiecesPlacement> piecesPlacement_;
+    // std::unique_ptr<PiecesPlacement> piecesPlacement_;
     std::unique_ptr<MultiCaptureManager> multiCaptureManager_;
     std::unique_ptr<PlayerManager> playerManager_;
     bool moveInProgress_{};

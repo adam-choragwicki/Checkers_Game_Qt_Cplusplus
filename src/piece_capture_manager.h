@@ -2,13 +2,13 @@
 
 #include "piece.h"
 #include "common.h"
-#include "pieces_placement.h"
+#include "pieces_manager.h"
 #include <set>
 
 namespace PieceCaptureManager
 {
-    std::vector<Piece*> whichPiecesCanCapture(Player activePlayer, const PiecesPlacement& piecesPlacement);
-    bool checkCapturePossibility(const Piece& piece, const PiecesPlacement& piecesPlacement, const Coordinates& targetTileCoordinates);
-    bool checkIfPieceCanCapture(const Piece& piece, const PiecesPlacement& piecesPlacement);
+    std::vector<Piece*> whichPiecesCanCapture(Player activePlayer, const PiecesManager& piecesPlacement);
+    bool checkCapturePossibility(const Piece& piece, const PiecesManager& piecesPlacement, const Coordinates& targetTileCoordinates);
+    bool checkIfPieceCanCapture(const Piece& piece, const PiecesManager& piecesPlacement);
     std::set<Coordinates> generatePossiblePieceCaptureOptionsCoordinates(const Piece& piece);
 }

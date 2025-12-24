@@ -47,10 +47,13 @@ void PiecesManager::createPieces()
     placePieces(playerUpperStartingPiecesCoordinates, Player::UPPER);
 }
 
-void PiecesManager::markPiecesWhichCanMove(std::vector<Piece*>& pieces)
+void PiecesManager::markPiecesWhichCanMove(const std::vector<Piece*>& pieces)
 {
+    qDebug() << "Marking" << pieces.size() << "which can move";
+
     for (auto& piece: pieces)
     {
+        qDebug() << "Piece" << piece->getId() << "can move";
         PieceStateManager::markPieceHasValidMovePossible(*piece);
     }
 }

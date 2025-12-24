@@ -1,6 +1,6 @@
 #include "piece_movement_manager.h"
 
-bool PieceMovementManager::checkMovePossibility(const Piece& piece, const PiecesPlacement& piecesPlacement, const Coordinates& targetTileCoordinates)
+bool PieceMovementManager::checkMovePossibility(const Piece& piece, const PiecesManager& piecesPlacement, const Coordinates& targetTileCoordinates)
 {
     if(!piecesPlacement.isPieceAtCoordinates(targetTileCoordinates))
     {
@@ -14,7 +14,7 @@ bool PieceMovementManager::checkMovePossibility(const Piece& piece, const Pieces
     }
 }
 
-std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(Player activePlayer, const PiecesPlacement& piecesPlacement)
+std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(Player activePlayer, const PiecesManager& piecesPlacement)
 {
     std::vector<Piece*> piecesWhichCanMove;
 
@@ -74,7 +74,7 @@ std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptions
     return validMovementCoordinates;
 }
 
-bool PieceMovementManager::checkIfPieceCanMove(const Piece& piece, const PiecesPlacement& piecesPlacement)
+bool PieceMovementManager::checkIfPieceCanMove(const Piece& piece, const PiecesManager& piecesPlacement)
 {
     std::set<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
 
