@@ -16,6 +16,7 @@ qt_add_qml_module(${LIB_NAME}
 #        GameInput.qml
         UiScaler.qml
 
+        AbstractPiece.qml
         BlackPiece.qml
         RedPiece.qml
 
