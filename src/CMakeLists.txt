@@ -18,7 +18,9 @@ set(BACKEND_SOURCE_FILES
         coordinates_database.h coordinates_database.cpp
         pieces_placement.h pieces_placement.cpp
         piece_state_manager.h piece_state_manager.cpp
-        game_config.cpp game_config.h)
+        game_config.cpp game_config.h
+        piece_model.cpp piece_model.h
+        pieces_model.cpp pieces_model.h)
 
 add_library(lib${PROJECT_NAME}Backend ${BACKEND_SOURCE_FILES})
 target_include_directories(lib${PROJECT_NAME}Backend PUBLIC .)
