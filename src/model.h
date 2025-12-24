@@ -4,6 +4,7 @@
 #include "multi_capture_manager.h"
 #include <memory>
 
+#include "checkerboard.h"
 #include "game_config.h"
 #include "pieces_manager.h"
 #include "pieces_model.h"
@@ -58,7 +59,11 @@ public:
     [[nodiscard]] PiecesModel& getPiecesModel() const { return *piecesModel_; }
     // [[nodiscard]] StandardPelletsManager& getStandardPelletsManager() const { return *standardPelletsManager_; }
 
+    Checkerboard& getCheckerboard() const { return *checkerboard_; }
+
 private:
+    std::unique_ptr<Checkerboard> checkerboard_;
+
     std::unique_ptr<PiecesPlacement> piecesPlacement_;
     std::unique_ptr<MultiCaptureManager> multiCaptureManager_;
     std::unique_ptr<PlayerManager> playerManager_;

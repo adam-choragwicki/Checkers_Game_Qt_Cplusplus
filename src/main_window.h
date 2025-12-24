@@ -24,7 +24,7 @@ signals:
     void applicationTerminationRequest();
 
 public slots:
-    void sceneUpdateSlot();
+    // void sceneUpdateSlot();
 
 public:
     explicit MainWindow(const Model& model);
@@ -32,7 +32,7 @@ public:
 
     void reset();
 
-    [[nodiscard]] std::vector<PlayableTile*> getPlayableTiles() const;
+    // [[nodiscard]] std::vector<PlayableTile*> getPlayableTiles() const;
     // [[nodiscard]] std::vector<PieceFrontend*> getPiecesFrontends() const;
 
     // void updatePiecesFrontends();
@@ -49,7 +49,7 @@ private:
 
     Ui::MainWindow* ui_;
     QGraphicsScene scene_;
-    std::unique_ptr<Checkerboard> checkerboard_;
+    // std::unique_ptr<Checkerboard> checkerboard_;
 
     // std::vector<std::unique_ptr<PieceFrontend>> piecesFrontends_;
 

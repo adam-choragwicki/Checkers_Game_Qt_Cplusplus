@@ -4,11 +4,11 @@ Item {
     id: gameArea
 
     onWidthChanged: {
-        console.log("Game area width changed to " + width)
+        // console.log("Game area width changed to " + width)
     }
 
     onHeightChanged: {
-        console.log("Game area height changed to " + height)
+        // console.log("Game area height changed to " + height)
     }
 
     Checkerboard {

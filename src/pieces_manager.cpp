@@ -11,11 +11,11 @@ void PiecesManager::createPiece(const Coordinates& coordinates, Player player)
         const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
         // piecesModels_.push_back(std::make_unique<PieceModel>(*ref));
 
-        qDebug() << "Piece created at coordinates: " << coordinates;
+        // qDebug() << "Piece created at coordinates: " << coordinates;
     }
     else
     {
-        throw std::runtime_error("Error, piece is already present on given coordinates");
+        throw std::runtime_error("Error, piece is already present on given coorrHdinates");
     }
 }
 

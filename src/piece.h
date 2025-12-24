@@ -6,7 +6,7 @@
 
 class Piece : public QObject
 {
-Q_OBJECT
+    Q_OBJECT
 
     friend std::ostream& operator<<(std::ostream& os, const Piece& piece);
 
@@ -21,23 +21,20 @@ public slots:
 public:
     Piece(const Coordinates& coordinates, Player player, bool promoted = false);
 
-    [[nodiscard]] int getColumn() const
-    { return coordinates_.getColumn(); }
+    [[nodiscard]] int getColumn() const { return coordinates_.getColumn(); }
 
-    [[nodiscard]] int getRow() const
-    { return coordinates_.getRow(); }
+    [[nodiscard]] int getRow() const { return coordinates_.getRow(); }
 
-    [[nodiscard]] const Coordinates& getCoordinates() const
-    { return coordinates_; }
+    [[nodiscard]] const Coordinates& getCoordinates() const { return coordinates_; }
 
-    [[nodiscard]] Player getPlayer() const
-    { return player_; }
+    [[nodiscard]] Player getPlayer() const { return player_; }
 
     [[nodiscard]] int getPlayerAsInt() const // TODO fix
-    { return static_cast<int>(player_); }
+    {
+        return static_cast<int>(player_);
+    }
 
-    [[nodiscard]] bool isPromoted() const
-    { return promoted_; }
+    [[nodiscard]] bool isPromoted() const { return promoted_; }
 
     void moveToTile(const Coordinates& coordinates);
     void promote();
@@ -65,6 +62,8 @@ public:
         return alive_;
     }
 
+    int getId() const { return id_; }
+
 private:
     enum class State
     {
@@ -79,4 +78,7 @@ private:
     bool promoted_ = false;
 
     bool alive_ = true;
+
+    inline static int counter_{};
+    int id_{};
 };

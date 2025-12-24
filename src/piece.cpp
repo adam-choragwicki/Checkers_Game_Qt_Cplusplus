@@ -5,17 +5,19 @@ Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coo
 {
     state_ = State::DISABLED;
 
-    if(promoted)
+    if (promoted)
     {
         promote();
     }
+
+    id_ = ++counter_;
 }
 
 void Piece::setState(State newState)
 {
-    if(state_ == State::UNINITIALIZED)
+    if (state_ == State::UNINITIALIZED)
     {
-        if(newState == State::DISABLED)
+        if (newState == State::DISABLED)
         {
             /* Piece initialization */
         }
@@ -24,13 +26,13 @@ void Piece::setState(State newState)
             throw std::runtime_error("Error, unsupported piece state transition");
         }
     }
-    else if(state_ == State::DISABLED)
+    else if (state_ == State::DISABLED)
     {
-        if(newState == State::ACTIVE)
+        if (newState == State::ACTIVE)
         {
             /* New turn */
         }
-        else if(newState == State::DISABLED)
+        else if (newState == State::DISABLED)
         {
             /* Do nothing */
         }
@@ -39,17 +41,17 @@ void Piece::setState(State newState)
             throw std::runtime_error("Error, unsupported piece state transition");
         }
     }
-    else if(state_ == State::ACTIVE)
+    else if (state_ == State::ACTIVE)
     {
-        if(newState == State::SELECTED)
+        if (newState == State::SELECTED)
         {
             SelectedPieceManager::switchSelectedPiece(this);
         }
-        else if(newState == State::DISABLED)
+        else if (newState == State::DISABLED)
         {
             /* End turn */
         }
-        else if(state_ == State::ACTIVE)
+        else if (state_ == State::ACTIVE)
         {
             /* Do nothing */
         }
@@ -58,13 +60,13 @@ void Piece::setState(State newState)
             throw std::runtime_error("Error, unsupported piece state transition");
         }
     }
-    else if(state_ == State::SELECTED)
+    else if (state_ == State::SELECTED)
     {
-        if(newState == State::ACTIVE)
+        if (newState == State::ACTIVE)
         {
             /* ACTIVE piece clicked */
         }
-        else if(newState == State::DISABLED)
+        else if (newState == State::DISABLED)
         {
             /* End turn */
             SelectedPieceManager::resetSelectedPiece();

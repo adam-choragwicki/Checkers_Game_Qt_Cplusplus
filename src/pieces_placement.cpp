@@ -4,7 +4,7 @@
 
 void PiecesPlacement::createPiece(const Coordinates& coordinates, Player player)
 {
-    if(!isPieceAtCoordinates(coordinates))
+    if (!isPieceAtCoordinates(coordinates))
     {
         const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
         piecesModels_.push_back(std::make_unique<PieceModel>(*ref));
@@ -24,9 +24,9 @@ void PiecesPlacement::createPieces()
 
     auto placePieces = [this, &playableTilesCoordinates](const std::set<Coordinates>& piecesCoordinates, const Player& player)
     {
-        for(const auto& pieceCoordinates : piecesCoordinates)
+        for (const auto& pieceCoordinates: piecesCoordinates)
         {
-            if(playableTilesCoordinates.contains(pieceCoordinates))
+            if (playableTilesCoordinates.contains(pieceCoordinates))
             {
                 createPiece(pieceCoordinates, player);
             }
@@ -41,10 +41,13 @@ void PiecesPlacement::createPieces()
     placePieces(playerUpperStartingPiecesCoordinates, Player::UPPER);
 }
 
-void PiecesPlacement::markPiecesWhichCanMove(std::vector<Piece*>& pieces)
+void PiecesPlacement::markPiecesWhichCanMove(const std::vector<Piece*>& pieces)
 {
-    for(auto& piece : pieces)
+    qDebug() << "Marking" << pieces.size() << "which can move";
+
+    for (auto& piece: pieces)
     {
+        qDebug() << "Piece" << piece->getId() << "can move";
         PieceStateManager::markPieceHasValidMovePossible(*piece);
     }
 }
@@ -59,7 +62,7 @@ bool PiecesPlacement::isPieceAtCoordinates(const Coordinates& coordinates) const
 
 Piece& PiecesPlacement::getPieceAtCoordinates(const Coordinates& coordinates) const
 {
-    if(isPieceAtCoordinates(coordinates))
+    if (isPieceAtCoordinates(coordinates))
     {
         auto iter = std::find_if(pieces_.begin(), pieces_.end(), [coordinates](const std::unique_ptr<Piece>& piece)
         {
@@ -81,7 +84,7 @@ void PiecesPlacement::removePieceAtCoordinates(const Coordinates& coordinates)
         return piece->getCoordinates() == coordinates;
     });
 
-    if(iter != pieces_.end())
+    if (iter != pieces_.end())
     {
         pieces_.erase(iter);
     }
@@ -106,11 +109,11 @@ bool PiecesPlacement::didAnyPlayerRunOutOfPieces() const
 
 Player PiecesPlacement::getPlayerWithNoPiecesLeft() const
 {
-    if(countPlayerPieces(Player::LOWER) == 0)
+    if (countPlayerPieces(Player::LOWER) == 0)
     {
         return Player::LOWER;
     }
-    else if(countPlayerPieces(Player::UPPER) == 0)
+    else if (countPlayerPieces(Player::UPPER) == 0)
     {
         return Player::UPPER;
     }

@@ -19,8 +19,8 @@ Window {
     property real aspectRatio: width / height
 
     onAspectRatioChanged: {
-        console.log("Window size is now " + width + "x" + height)
-        console.log("Aspect ratio is now " + aspectRatio)
+        // console.log("Window size is now " + width + "x" + height)
+        // console.log("Aspect ratio is now " + aspectRatio)
     }
 
     UiScaler {

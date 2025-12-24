@@ -32,19 +32,19 @@ void Controller::onQmlEngineFullyInitialized()
 
 void Controller::processNewGameRequest()
 {
-    // if(!model_.isGameBeforeFirstRun())
-    // {
-    //     model_.reset();
-    //     // view_.reset();
-    // }
-    //
-    // model_.setGameBeforeFirstRun(false);
-    //
-    // for(PlayableTile* playableTile : view_.getPlayableTiles())
-    // {
-    //     connect(playableTile, &PlayableTile::clickedSignal, this, &Controller::processTileClicked);
-    // }
-    //
+    if (!model_.isGameBeforeFirstRun())
+    {
+        model_.reset();
+        // view_.reset();
+    }
+
+    model_.setGameBeforeFirstRun(false);
+
+    for (PlayableTile* playableTile: model_.getCheckerboard().getPlayableTiles())
+    {
+        connect(playableTile, &PlayableTile::clickedSignal, this, &Controller::processTileClicked);
+    }
+
     // for(PieceFrontend* pieceFrontend : view_.getPiecesFrontends())
     // {
     //     connect(&pieceFrontend->getPiece(), &Piece::stateChanged, &view_, &MainWindow::sceneUpdateSlot);
@@ -52,8 +52,8 @@ void Controller::processNewGameRequest()
     //     connect(&pieceFrontend->getPiece(), &Piece::promoted, pieceFrontend, &PieceFrontend::addCrown);
     //     connect(pieceFrontend, &PieceFrontend::endMovement, &pieceFrontend->getPiece(), &Piece::processEndMovement);
     // }
-    //
-    // checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+
+    checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
 }
 
 void Controller::processApplicationTerminationRequest()
@@ -63,9 +63,11 @@ void Controller::processApplicationTerminationRequest()
 
 void Controller::checkAndMarkPlayerMoveOptions(Player player)
 {
-    if(model_.getMultiCaptureManager().isMultiCaptureInProgress())
+    if (model_.getMultiCaptureManager().isMultiCaptureInProgress())
     {
-        if(PieceCaptureManager::checkIfPieceCanCapture(*model_.getMultiCaptureManager().getMulticapturingPiece(), model_.getPiecesPlacement()))
+        qDebug() << "Multi capture in progress";
+
+        if (PieceCaptureManager::checkIfPieceCanCapture(*model_.getMultiCaptureManager().getMulticapturingPiece(), model_.getPiecesPlacement()))
         {
             std::vector<Piece*> piecesWhichCanCapture{model_.getMultiCaptureManager().getMulticapturingPiece()};
             model_.getPiecesPlacement().markPiecesWhichCanMove(piecesWhichCanCapture);
@@ -79,33 +81,38 @@ void Controller::checkAndMarkPlayerMoveOptions(Player player)
 
     std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, model_.getPiecesPlacement());
 
-    if(piecesWhichCanCapture.empty())
+    if (piecesWhichCanCapture.empty())
     {
+        qDebug() << "Player" << static_cast<int>(player) << "has no pieces which can capture";
+
         std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, model_.getPiecesPlacement());
 
-        if(piecesWhichCanMove.empty())
+        if (piecesWhichCanMove.empty())
         {
+            qInfo() << "Player" << static_cast<int>(player) << "has no pieces which can move, game over";
             endGame(model_.getPlayerManager().getActivePlayer(), GameEndReason::NO_MOVES_LEFT);
         }
         else
         {
+            qDebug() << "Player" << static_cast<int>(player) << "has pieces which can move";
             model_.getPiecesPlacement().markPiecesWhichCanMove(piecesWhichCanMove);
         }
     }
     else
     {
+        qDebug() << "Player" << static_cast<int>(player) << "has pieces which can capture";
         model_.getPiecesPlacement().markPiecesWhichCanMove(piecesWhichCanCapture);
     }
 }
 
 void Controller::processTileClicked(const Coordinates& targetTileCoordinates)
 {
-    if(!model_.isMoveInProgress())
+    if (!model_.isMoveInProgress())
     {
         model_.setMoveInProgress(true);
 
         /*Ignore clicking on tile unless any piece is selected*/
-        if(SelectedPieceManager::isAnyPieceSelected())
+        if (SelectedPieceManager::isAnyPieceSelected())
         {
             Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
             processPieceMove(selectedPiece, targetTileCoordinates);
@@ -120,20 +127,20 @@ void Controller::processTileClicked(const Coordinates& targetTileCoordinates)
 void Controller::processPieceMove(Piece& piece, const Coordinates& targetTileCoordinates)
 {
     /*If any capture is possible then any capture has to be the next move*/
-    if(PieceCaptureManager::checkIfPieceCanCapture(piece, model_.getPiecesPlacement()))
+    if (PieceCaptureManager::checkIfPieceCanCapture(piece, model_.getPiecesPlacement()))
     {
-        if(PieceCaptureManager::checkCapturePossibility(piece, model_.getPiecesPlacement(), targetTileCoordinates))
+        if (PieceCaptureManager::checkCapturePossibility(piece, model_.getPiecesPlacement(), targetTileCoordinates))
         {
             capturePiece(piece, targetTileCoordinates);
 
-            if(checkEligibilityAndPromotePiece(piece))
+            if (checkEligibilityAndPromotePiece(piece))
             {
                 model_.getMultiCaptureManager().endMultiCapture();
 
                 /*Turn ends immediately after promotion, no immediate backward capture is possible*/
                 endTurn();
             }
-            else if(PieceCaptureManager::checkIfPieceCanCapture(piece, model_.getPiecesPlacement()))
+            else if (PieceCaptureManager::checkIfPieceCanCapture(piece, model_.getPiecesPlacement()))
             {
                 model_.getMultiCaptureManager().startMultiCapture(piece);
                 disableAllPieces();
@@ -150,9 +157,9 @@ void Controller::processPieceMove(Piece& piece, const Coordinates& targetTileCoo
             PieceStateManager::deselectPiece(piece);
         }
     }
-    else if(PieceMovementManager::checkIfPieceCanMove(piece, model_.getPiecesPlacement()))
+    else if (PieceMovementManager::checkIfPieceCanMove(piece, model_.getPiecesPlacement()))
     {
-        if(PieceMovementManager::checkMovePossibility(piece, model_.getPiecesPlacement(), targetTileCoordinates))
+        if (PieceMovementManager::checkMovePossibility(piece, model_.getPiecesPlacement(), targetTileCoordinates))
         {
             movePiece(piece, targetTileCoordinates);
             checkEligibilityAndPromotePiece(piece);
@@ -167,9 +174,9 @@ void Controller::processPieceMove(Piece& piece, const Coordinates& targetTileCoo
 
 void Controller::disableAllPieces()
 {
-    for(const auto& piece : model_.getPiecesPlacement().getPieces())
+    for (const auto& piece: model_.getPiecesPlacement().getPieces())
     {
-        if(!piece->isDisabled())
+        if (!piece->isDisabled())
         {
             PieceStateManager::disablePiece(*piece);
         }
@@ -193,7 +200,7 @@ void Controller::capturePiece(Piece& piece, const Coordinates& targetTileCoordin
 
 void Controller::endTurn()
 {
-    if(model_.getPiecesPlacement().didAnyPlayerRunOutOfPieces())
+    if (model_.getPiecesPlacement().didAnyPlayerRunOutOfPieces())
     {
         endGame(model_.getPiecesPlacement().getPlayerWithNoPiecesLeft(), GameEndReason::NO_PIECES_LEFT);
     }
@@ -205,7 +212,7 @@ void Controller::endTurn()
 
 bool Controller::checkEligibilityAndPromotePiece(Piece& piece)
 {
-    if(PiecePromotionManager::checkPromotionEligibility(piece))
+    if (PiecePromotionManager::checkPromotionEligibility(piece))
     {
         piece.promote();
         return true;

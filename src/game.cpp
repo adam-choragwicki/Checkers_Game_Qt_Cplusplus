@@ -4,7 +4,7 @@
 
 Game::Game()
 {
-    printAppInfo();
+    // printAppInfo(); // TODO restore this
 
     gameConfig_ = std::make_unique<GameConfig>();
 

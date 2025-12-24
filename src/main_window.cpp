@@ -14,7 +14,7 @@ MainWindow::MainWindow(const Model& model) : model_(model), ui_(new Ui::MainWind
 
     initializeGameplayAreaScene();
 
-    checkerboard_ = std::make_unique<Checkerboard>();
+    // checkerboard_ = std::make_unique<Checkerboard>();
 
     reset();
 
@@ -107,10 +107,10 @@ void MainWindow::showEndGameDialog(Player losingPlayer, GameEndReason reason)
     }
 }
 
-std::vector<PlayableTile*> MainWindow::getPlayableTiles() const
-{
-    return checkerboard_->getPlayableTiles();
-}
+// std::vector<PlayableTile*> MainWindow::getPlayableTiles() const
+// {
+//     return checkerboard_->getPlayableTiles();
+// }
 
 // std::vector<PieceFrontend*> MainWindow::getPiecesFrontends() const
 // {

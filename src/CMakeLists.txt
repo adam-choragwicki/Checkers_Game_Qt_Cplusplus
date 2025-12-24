@@ -25,7 +25,7 @@ set(BACKEND_SOURCE_FILES
 
 add_library(lib${PROJECT_NAME}Backend ${BACKEND_SOURCE_FILES})
 target_include_directories(lib${PROJECT_NAME}Backend PUBLIC .)
-target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt6::Core Qt6::Quick)
+target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt6::Core Qt6::Quick Qt6::Widgets) # TODO remove widgets
 
 
 set(UI_FORMS_DIR ../ui_forms)
