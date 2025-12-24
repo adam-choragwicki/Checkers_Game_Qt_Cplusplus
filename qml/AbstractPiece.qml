@@ -1,6 +1,10 @@
 import QtQuick
 
 Rectangle {
+    id: abstractPiece
+
+    required property int number
+
     readonly property color selectedPieceOutlineColor: "white"
     readonly property color activePieceOutlineColor: Qt.rgba(255 / 255, 255 / 255, 0, 1) // 255, 255, 0
 
@@ -10,4 +14,12 @@ Rectangle {
     radius: 50 // circle
 
     border.width: uiScaler.px(5) // outline width
+
+    Text {
+        anchors.centerIn: parent
+        text: number
+        font.bold: true
+        font.pixelSize: uiScaler.px(30)
+        color: "white"
+    }
 }

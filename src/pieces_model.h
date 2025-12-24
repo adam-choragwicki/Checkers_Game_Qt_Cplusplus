@@ -8,7 +8,7 @@ class PiecesModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    enum Roles { XRole = Qt::UserRole + 1, YRole, PlayerRole, AliveRole };
+    enum Roles { XRole = Qt::UserRole + 1, YRole, PlayerRole, AliveRole, IdRole };
 
     explicit PiecesModel(const PiecesManager& piecesManager);
     void refresh();
@@ -16,7 +16,7 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role) const override;
     QHash <int, QByteArray> roleNames() const override;
-    virtual void brickChanged(int index); // virtual for testing purposes
+    virtual void brickChanged(int index); // TODO use as piece changed
 
 private:
     const PiecesManager& piecesManager_;

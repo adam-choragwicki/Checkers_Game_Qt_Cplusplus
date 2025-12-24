@@ -25,18 +25,24 @@ Item {
             y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
             visible: aliveRole
             sourceComponent: playerRole === 1 ? redPieceComponent : blackPieceComponent
+
+            onLoaded: {
+                item.number = idRole
+            }
         }
     }
 
     Component {
         id: redPieceComponent
         RedPiece {
+            number: idRole
         }
     }
 
     Component {
         id: blackPieceComponent
         BlackPiece {
+            number: idRole
         }
     }
 
