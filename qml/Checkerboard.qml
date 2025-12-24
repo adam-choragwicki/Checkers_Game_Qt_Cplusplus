@@ -19,15 +19,15 @@ Item {
         Rectangle {
             id: checkerboard
             anchors.centerIn: parent
-            width: 640 // 8 * 80 px per tile
-            height: 640 // 8 * 80 px per tile
+            width: 8 * tileSize
+            height: 8 * tileSize
 
             color: "white"
 
             readonly property int gridRowCount: 8
             readonly property int gridColumnCount: 8
 
-            property real tileSize: 80 // TODO scalable
+            property real tileSize: uiScaler.px(80)
 
             // Checkerboard tiles
             Repeater {

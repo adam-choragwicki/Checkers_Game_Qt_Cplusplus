@@ -12,9 +12,9 @@ qt_add_qml_module(${LIB_NAME}
         QML_FILES
         Main.qml
         Checkerboard.qml
-#        GameArea.qml
+        GameArea.qml
 #        GameInput.qml
-#        UiScaler.qml
+        UiScaler.qml
 
 #        Arena.qml
 
