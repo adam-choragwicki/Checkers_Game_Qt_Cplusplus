@@ -11,6 +11,7 @@ qt_add_qml_module(${LIB_NAME}
         OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/CheckersQml
         QML_FILES
         Main.qml
+        Checkerboard.qml
 #        GameArea.qml
 #        GameInput.qml
 #        UiScaler.qml

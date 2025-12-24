@@ -1,16 +1,18 @@
 import QtQuick
 
-Window {
-    id: mainWindow
-    minimumWidth: 730 // TODO remove, taken from main_window.cpp
-    minimumHeight: 800 // TODO remove, taken from main_window.cpp
+Rectangle {
+    id: checkerboardRoot
+    width: 640 // 8 * 80 px per tile
+    height: 640 // 8 * 80 px per tile
     visible: true
 
-    color: Qt.rgba(0, 160/255, 0, 1)
+    color: "white"
 
-    Checkerboard {
-        
-    }
+    anchors.centerIn: parent
+
+    border.width: 5
+
+    border.color: "black"
 
     // Component.onCompleted: {
     //     if (Controller.startInFullScreenEnabled) {
