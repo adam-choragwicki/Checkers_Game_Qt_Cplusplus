@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls // for tile tooltip
 
 Item {
     width: borderRect.width
@@ -59,6 +60,14 @@ Item {
                             return (gridY % 2 === 0) ? playableTileColor : nonPlayableTileColor;
                         }
                     }
+
+                    HoverHandler {
+                        id: hover
+                    }
+
+                    ToolTip.visible: hover.hovered
+                    ToolTip.text: (gridY + 1) + "," + (gridX + 1)
+                    ToolTip.delay: 200
                 }
             }
         }
