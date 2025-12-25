@@ -4,7 +4,8 @@ AbstractPiece {
     id: redPieceRoot
 
     color: Qt.rgba(220 / 255, 0, 0, 1)
-    border.color: Qt.rgba(170 / 255, 0, 0, 1) // outline color
+
+    readonly property color disabledPieceOutlineColor: Qt.rgba(170 / 255, 0, 0, 1) // reddish
 
     MouseArea {
         anchors.fill: parent
@@ -19,7 +20,7 @@ AbstractPiece {
         console.log("QML: Red piece " + number + " piece state changed to " + pieceState)
 
         if (pieceState === 1) {
-            redPieceRoot.border.color = "transparent" // no outline
+            redPieceRoot.border.color = disabledPieceOutlineColor
         } else if (pieceState === 2) {
             redPieceRoot.border.color = activePieceOutlineColor
         } else if (pieceState === 3) {
