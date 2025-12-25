@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Controls // for tile tooltip
 
 Item {
     width: borderRect.width
@@ -53,21 +52,6 @@ Item {
                             return (gridY % 2 === 0) ? nonPlayableTileComponent : playableTileComponent;
                         } else {
                             return (gridY % 2 === 0) ? playableTileComponent : nonPlayableTileComponent;
-                        }
-                    }
-
-                    HoverHandler {
-                        id: hover
-                    }
-
-                    ToolTip.visible: hover.hovered
-                    ToolTip.text: (gridY + 1) + "," + (gridX + 1)
-                    ToolTip.delay: 200
-
-                    TapHandler {
-                        onTapped: {
-                            console.log("QML: Tile clicked at (" + (gridY + 1) + "," + (gridY + 1) + ")")
-                            Controller.processTileClicked(gridY + 1, gridX + 1)
                         }
                     }
                 }
