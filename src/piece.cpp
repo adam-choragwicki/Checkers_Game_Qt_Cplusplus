@@ -18,18 +18,7 @@ Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coo
 
 void Piece::setState(State newState)
 {
-    if (state_ == State::UNINITIALIZED)
-    {
-        if (newState == State::DISABLED)
-        {
-            /* Piece initialization */
-        }
-        else
-        {
-            throw std::runtime_error("Error, unsupported piece state transition");
-        }
-    }
-    else if (state_ == State::DISABLED)
+    if (state_ == State::DISABLED)
     {
         if (newState == State::ACTIVE)
         {
@@ -85,6 +74,9 @@ void Piece::setState(State newState)
     }
 
     state_ = newState;
+
+    qDebug() << "Piece" << id_ << "state changed to" << static_cast<int>(state_);
+
     emit stateChanged();
 }
 

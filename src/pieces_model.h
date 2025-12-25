@@ -8,7 +8,7 @@ class PiecesModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    enum Roles { XRole = Qt::UserRole + 1, YRole, PlayerRole, AliveRole, IdRole };
+    enum Roles { XRole = Qt::UserRole + 1, YRole, PlayerRole, AliveRole, IdRole, StateRole };
 
     explicit PiecesModel(const PiecesManager& piecesManager);
     void refresh();

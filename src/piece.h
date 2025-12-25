@@ -64,11 +64,13 @@ public:
 
     int getId() const { return id_; }
 
+    int getState() { return static_cast<int>(state_); }
+
 private:
-    enum class State
+    enum class State // TODO expose to QML
     {
-        UNINITIALIZED, DISABLED, ACTIVE, SELECTED
-    } state_ = State::UNINITIALIZED;
+        DISABLED = 1, ACTIVE = 2, SELECTED = 3
+    } state_ = State::DISABLED;
 
     void setState(State state);
 
