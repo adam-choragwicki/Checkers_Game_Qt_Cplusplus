@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QDebug>
+
 enum class Player
 {
     UPPER = 1,
@@ -9,9 +11,14 @@ enum class Player
 class PlayerManager
 {
 public:
-    PlayerManager() {activePlayer_ = startingPlayer_;}
-    Player& getActivePlayer() {return activePlayer_;}
-    void switchPlayer() { activePlayer_ = (activePlayer_ == Player::UPPER) ? Player::LOWER : Player::UPPER;}
+    PlayerManager() { activePlayer_ = startingPlayer_; }
+    Player& getActivePlayer() { return activePlayer_; }
+
+    void switchPlayer()
+    {
+        activePlayer_ = activePlayer_ == Player::UPPER ? Player::LOWER : Player::UPPER;
+        qDebug() << "SWITCHED PLAYER TO PLAYER" << static_cast<int>(activePlayer_);
+    }
 
 private:
     Player activePlayer_;

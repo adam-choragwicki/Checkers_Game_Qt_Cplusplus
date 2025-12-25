@@ -63,7 +63,7 @@ void PiecesManager::createPieces()
 
 void PiecesManager::markPiecesWhichCanMove(const std::vector<Piece*>& pieces)
 {
-    qDebug() << "Marking" << pieces.size() << "which can move";
+    qDebug() << "Marking" << pieces.size() << "pieces which can move";
 
     for (auto& piece: pieces)
     {

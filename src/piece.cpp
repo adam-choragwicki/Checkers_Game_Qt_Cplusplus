@@ -13,7 +13,7 @@ Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coo
 
     id_ = ++counter_;
 
-    qDebug() << "Piece created:" << id_;
+    // qDebug() << "Piece created:" << id_;
 }
 
 void Piece::setState(const State newState)
@@ -77,7 +77,7 @@ void Piece::setState(const State newState)
 
     qDebug() << "C++: Piece" << id_ << "state changed to" << static_cast<int>(state_);
 
-    qDebug() << "C++: Emiting stateChanged signal";
+    qDebug() << "C++: Piece" << id_ << " Emitting stateChanged signal";
     emit stateChanged();
 }
 

@@ -11,13 +11,11 @@ AbstractPiece {
         anchors.fill: parent
         onClicked: {
             piecesModel.pieceClicked(number)
-
-            console.log("QML: Black piece " + number + " piece state is " + pieceState)
         }
     }
 
     onPieceStateChanged: {
-        console.log("QML: Black piece " + number + " piece state changed to " + pieceState)
+        // console.log("QML: Black piece " + number + " piece state changed to " + pieceState)
 
         if (pieceState === 1) {
             blackPieceRoot.border.color = disabledPieceOutlineColor

@@ -207,6 +207,7 @@ void Controller::capturePiece(Piece& piece, const Coordinates& targetTileCoordin
 
 void Controller::endTurn()
 {
+    qDebug() << "============================================= END TURN =============================================";
     if (model_.getPiecesManager().didAnyPlayerRunOutOfPieces())
     {
         endGame(model_.getPiecesManager().getPlayerWithNoPiecesLeft(), GameEndReason::NO_PIECES_LEFT);
