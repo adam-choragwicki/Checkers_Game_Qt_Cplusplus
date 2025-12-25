@@ -15,7 +15,7 @@ AbstractPiece {
     }
 
     onPieceStateChanged: {
-        // console.log("QML: Black piece " + number + " piece state changed to " + pieceState)
+        console.log("QML: Black piece " + number + " piece state changed to " + pieceState)
 
         if (pieceState === 1) {
             blackPieceRoot.border.color = disabledPieceOutlineColor

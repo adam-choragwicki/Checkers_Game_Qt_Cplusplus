@@ -125,7 +125,8 @@ void Controller::processTileClicked(const int row, const int column) // TODO sen
             processPieceMove(selectedPiece, targetTileCoordinates);
         }
 
-        emit sceneUpdateSignal();
+        // emit sceneUpdateSignal();
+        model_.getPiecesModel().refresh();
 
         model_.setMoveInProgress(false);
     }

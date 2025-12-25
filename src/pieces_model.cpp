@@ -37,7 +37,7 @@ QHash<int, QByteArray> PiecesModel::roleNames() const
     };
 }
 
-void PiecesModel::brickChanged(const int index)
+void PiecesModel::brickChanged(const int index) // TODO use as piece changed
 {
     const QModelIndex idx = createIndex(index, 0);
     emit dataChanged(idx, idx, {AliveRole});
