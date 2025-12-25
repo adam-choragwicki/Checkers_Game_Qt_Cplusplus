@@ -83,7 +83,11 @@ void Piece::setState(const State newState)
 
 void Piece::moveToTile(const Coordinates& newCoordinates)
 {
-    emit startAnimatedMovement(coordinates_, newCoordinates);
+    qDebug() << "C++: Moving piece" << id_ << "to coordinates" << newCoordinates;
+
+    coordinates_ = newCoordinates;
+
+    // emit startAnimatedMovement(coordinates_, newCoordinates);
 }
 
 void Piece::promote()

@@ -36,7 +36,7 @@ public:
 
     [[nodiscard]] bool isPromoted() const { return promoted_; }
 
-    void moveToTile(const Coordinates& coordinates);
+    void moveToTile(const Coordinates& newCoordinates);
     void promote();
 
     [[nodiscard]] bool isDisabled() const;

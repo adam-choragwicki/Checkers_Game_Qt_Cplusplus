@@ -54,6 +54,8 @@ void PiecesManager::createPieces()
             {
                 throw std::runtime_error("Error, cannot place piece on non-playable tile");
             }
+
+            return; // TODO temporary to just create one piece per player
         }
     };
 

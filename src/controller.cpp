@@ -134,7 +134,7 @@ void Controller::processTileClicked(const int row, const int column) // TODO sen
 
 void Controller::processPieceMove(Piece& piece, const Coordinates& targetTileCoordinates)
 {
-    /*If any capture is possible then any capture has to be the next move*/
+    /*If any capture is possible, then any capture has to be the next move*/
     if (PieceCaptureManager::checkIfPieceCanCapture(piece, model_.getPiecesManager()))
     {
         if (PieceCaptureManager::checkCapturePossibility(piece, model_.getPiecesManager(), targetTileCoordinates))
@@ -194,6 +194,7 @@ void Controller::disableAllPieces()
 void Controller::movePiece(Piece& piece, const Coordinates& targetTileCoordinates)
 {
     piece.moveToTile(targetTileCoordinates);
+    model_.getPiecesModel().refresh();
 }
 
 void Controller::capturePiece(Piece& piece, const Coordinates& targetTileCoordinates)
