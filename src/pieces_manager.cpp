@@ -19,6 +19,20 @@ void PiecesManager::createPiece(const Coordinates& coordinates, Player player)
     }
 }
 
+Piece* PiecesManager::findPieceById(const int id) const
+{
+    for (const auto& piece: pieces_)
+    {
+        if (piece->getId() == id)
+        {
+            return piece.get();
+        }
+    }
+
+    qFatal("Piece with id %d not found", id);
+    throw std::runtime_error("Error, piece with given id not found");
+}
+
 void PiecesManager::createPieces()
 {
     pieces_.reserve(24); // 24 pieces in total

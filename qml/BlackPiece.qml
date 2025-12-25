@@ -9,29 +9,23 @@ AbstractPiece {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            console.log("Black piece clicked")
-            blackPieceRoot.border.color = selectedPieceOutlineColor
+            piecesModel.pieceClicked(number)
+
+            console.log("QML: Black piece " + number + " piece state is " + pieceState)
         }
     }
 
-    onStateChanged: {
-        console.log("Black piece " + number + " state changed to " + state)
+    onPieceStateChanged: {
+        console.log("QML: Black piece " + number + " piece state changed to " + pieceState)
 
-        if(state === 1)
-        {
+        if (pieceState === 1) {
             blackPieceRoot.border.color = "transparent" // no outline
-        }
-        else if(state === 2)
-        {
+        } else if (pieceState === 2) {
             blackPieceRoot.border.color = activePieceOutlineColor
-        }
-        else if(state === 3)
-        {
+        } else if (pieceState === 3) {
             blackPieceRoot.border.color = selectedPieceOutlineColor
-        }
-        else
-        {
-            console.error("Invalid state " + state + " of black piece")
+        } else {
+            console.error("QML: Invalid piece state " + pieceState + " of black piece")
         }
     }
 }

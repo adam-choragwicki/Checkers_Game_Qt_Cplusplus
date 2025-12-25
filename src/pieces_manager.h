@@ -78,6 +78,7 @@ public:
                                                       }));
     }
 
+    Piece* findPieceById(int id) const;
 
     void createPieces();
     void createPiece(const Coordinates& coordinates, Player player);

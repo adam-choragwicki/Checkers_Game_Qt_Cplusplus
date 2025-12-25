@@ -15,8 +15,10 @@ public:
 
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;
     QVariant data(const QModelIndex& index, int role) const override;
-    QHash <int, QByteArray> roleNames() const override;
+    QHash<int, QByteArray> roleNames() const override;
     virtual void brickChanged(int index); // TODO use as piece changed
+
+    Q_INVOKABLE void pieceClicked(int pieceId);
 
 private:
     const PiecesManager& piecesManager_;

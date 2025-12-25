@@ -4,7 +4,7 @@ Rectangle {
     id: abstractPiece
 
     required property int number
-    required property int state
+    required property int pieceState
 
     readonly property color activePieceOutlineColor: Qt.rgba(255 / 255, 255 / 255, 0, 1) // 255, 255, 0
     readonly property color selectedPieceOutlineColor: "white"

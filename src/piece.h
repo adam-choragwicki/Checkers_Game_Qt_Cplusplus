@@ -66,14 +66,14 @@ public:
 
     int getState() { return static_cast<int>(state_); }
 
-private:
     enum class State // TODO expose to QML
     {
         DISABLED = 1, ACTIVE = 2, SELECTED = 3
     } state_ = State::DISABLED;
 
-    void setState(State state);
+    void setState(State newState);
 
+private:
     Coordinates coordinates_;
 
     const Player player_;

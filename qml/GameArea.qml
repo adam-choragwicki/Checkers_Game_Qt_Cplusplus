@@ -28,7 +28,7 @@ Item {
 
             onLoaded: {
                 item.number = idRole
-                item.state = stateRole
+                item.pieceState = stateRole
             }
         }
     }
@@ -37,7 +37,7 @@ Item {
         id: redPieceComponent
         RedPiece {
             number: idRole
-            state: stateRole
+            pieceState: stateRole
         }
     }
 
@@ -45,7 +45,7 @@ Item {
         id: blackPieceComponent
         BlackPiece {
             number: idRole
-            state: stateRole
+            pieceState: stateRole
         }
     }
 

@@ -39,6 +39,24 @@ QHash<int, QByteArray> PiecesModel::roleNames() const
 
 void PiecesModel::brickChanged(const int index)
 {
-    QModelIndex idx = createIndex(index, 0);
+    const QModelIndex idx = createIndex(index, 0);
     emit dataChanged(idx, idx, {AliveRole});
+}
+
+void PiecesModel::pieceClicked(const int pieceId)
+{
+    if (auto* piece = piecesManager_.findPieceById(pieceId))
+    {
+        Q_ASSERT(pieceId == piece->getId());
+
+        qDebug() << "C++: Piece" << pieceId << "clicked";
+
+        if (piece->isActive())
+        {
+            qDebug() << "C++: Setting piece" << pieceId << "as selected";
+            piece->setState(Piece::State::SELECTED);
+        }
+    }
+
+    refresh(); // TODO this is quick hack ?, model should not be fully updated when only one piece is updated, or should it?
 }

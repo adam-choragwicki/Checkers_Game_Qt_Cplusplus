@@ -16,7 +16,7 @@ Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coo
     qDebug() << "Piece created:" << id_;
 }
 
-void Piece::setState(State newState)
+void Piece::setState(const State newState)
 {
     if (state_ == State::DISABLED)
     {
@@ -75,8 +75,9 @@ void Piece::setState(State newState)
 
     state_ = newState;
 
-    qDebug() << "Piece" << id_ << "state changed to" << static_cast<int>(state_);
+    qDebug() << "C++: Piece" << id_ << "state changed to" << static_cast<int>(state_);
 
+    qDebug() << "C++: Emiting stateChanged signal";
     emit stateChanged();
 }
 
