@@ -18,7 +18,8 @@ signals:
     void sceneUpdateSignal();
 
 public slots:
-    void processTileClicked(const Coordinates& targetTileCoordinates);
+    void processTileClicked(int row, int column);
+    // void processTileClicked(const Coordinates& targetTileCoordinates);
     void onQmlEngineFullyInitialized();
 
 private slots:

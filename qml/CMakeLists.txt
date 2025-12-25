@@ -20,6 +20,9 @@ qt_add_qml_module(${LIB_NAME}
         BlackPiece.qml
         RedPiece.qml
 
+        PlayableTile.qml
+        NonPlayableTile.qml
+
 #        Arena.qml
 
 #        entities/Pacman.qml

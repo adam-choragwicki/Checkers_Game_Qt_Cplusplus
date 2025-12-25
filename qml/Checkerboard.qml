@@ -36,13 +36,11 @@ Item {
             Repeater {
                 model: checkerboard.gridRowCount * checkerboard.gridColumnCount // total number of squares in the grid
 
-                delegate: Rectangle {
+                delegate: Loader {
+                    x: gridX * checkerboard.tileSize
+                    y: gridY * checkerboard.tileSize
                     width: checkerboard.tileSize
                     height: checkerboard.tileSize
-
-                    // Colors used in the checkerboard
-                    readonly property color playableTileColor: Qt.rgba(140 / 255, 90 / 255, 40 / 255, 1) // whitish
-                    readonly property color nonPlayableTileColor: Qt.rgba(230 / 255, 200 / 255, 160 / 255, 1) // brownish
 
                     // Compute the coordinates in the grid
                     // gridX: column index (0 to gridColumnCount-1)
@@ -50,14 +48,11 @@ Item {
                     property int gridX: index % checkerboard.gridColumnCount
                     property int gridY: Math.floor(index / checkerboard.gridColumnCount)
 
-                    x: gridX * checkerboard.tileSize
-                    y: gridY * checkerboard.tileSize
-
-                    color: {
+                    sourceComponent: {
                         if (gridX % 2 === 0) {
-                            return (gridY % 2 === 0) ? nonPlayableTileColor : playableTileColor;
+                            return (gridY % 2 === 0) ? nonPlayableTileComponent : playableTileComponent;
                         } else {
-                            return (gridY % 2 === 0) ? playableTileColor : nonPlayableTileColor;
+                            return (gridY % 2 === 0) ? playableTileComponent : nonPlayableTileComponent;
                         }
                     }
 
@@ -68,6 +63,25 @@ Item {
                     ToolTip.visible: hover.hovered
                     ToolTip.text: (gridY + 1) + "," + (gridX + 1)
                     ToolTip.delay: 200
+
+                    TapHandler {
+                        onTapped: {
+                            console.log("QML: Tile clicked at (" + (gridY + 1) + "," + (gridY + 1) + ")")
+                            Controller.processTileClicked(gridY + 1, gridX + 1)
+                        }
+                    }
+                }
+            }
+
+            Component {
+                id: playableTileComponent
+                PlayableTile {
+                }
+            }
+
+            Component {
+                id: nonPlayableTileComponent
+                NonPlayableTile {
                 }
             }
         }

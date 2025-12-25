@@ -42,10 +42,10 @@ void Controller::processNewGameRequest()
 
     model_.setGameBeforeFirstRun(false);
 
-    for (PlayableTile* playableTile: model_.getCheckerboard().getPlayableTiles())
-    {
-        connect(playableTile, &PlayableTile::clickedSignal, this, &Controller::processTileClicked);
-    }
+    // for (PlayableTile* playableTile: model_.getCheckerboard().getPlayableTiles())
+    // {
+    //     connect(playableTile, &PlayableTile::clickedSignal, this, &Controller::processTileClicked);
+    // }
 
     // for(PieceFrontend* pieceFrontend : view_.getPiecesFrontends())
     // {
@@ -107,8 +107,13 @@ void Controller::checkAndMarkPlayerMoveOptions(Player player)
     }
 }
 
-void Controller::processTileClicked(const Coordinates& targetTileCoordinates)
+// void Controller::processTileClicked(const Coordinates& targetTileCoordinates)
+void Controller::processTileClicked(const int row, const int column) // TODO send coordinates from QML directly?
 {
+    const Coordinates targetTileCoordinates(row, column);
+
+    qDebug() << "C++: Tile clicked at coordinates" << targetTileCoordinates;
+
     if (!model_.isMoveInProgress())
     {
         model_.setMoveInProgress(true);
