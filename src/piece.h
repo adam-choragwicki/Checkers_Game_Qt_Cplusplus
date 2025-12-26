@@ -11,7 +11,6 @@ class Piece : public QObject
     friend std::ostream& operator<<(std::ostream& os, const Piece& piece);
 
 signals:
-    void stateChanged();
     void startAnimatedMovement(const Coordinates& currentCoordinates, const Coordinates& newCoordinates);
     void promoted();
 
