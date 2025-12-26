@@ -35,6 +35,12 @@ public:
 
     void reset() // override
     {
+        for (auto& piece: pieces_)
+        {
+            qDebug() << "Resetting piece" << piece->getId();
+            piece->reset();
+        }
+
         // AbstractPelletsManager::reset();
 
         // emit resetRequested();

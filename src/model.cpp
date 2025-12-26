@@ -18,6 +18,9 @@ void Model::reset()
 {
     // piecesPlacement_ = std::make_unique<PiecesPlacement>();
     // piecesPlacement_->createPieces();
+
+    piecesManager_->reset();
+
     multiCaptureManager_ = std::make_unique<MultiCaptureManager>();
     playerManager_ = std::make_unique<PlayerManager>();
     moveInProgress_ = false;

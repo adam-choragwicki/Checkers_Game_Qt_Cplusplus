@@ -22,6 +22,8 @@ public slots:
 public:
     Piece(const Coordinates& coordinates, Player player, bool promoted = false);
 
+    void reset();
+
     [[nodiscard]] int getColumn() const { return coordinates_.getColumn(); }
 
     [[nodiscard]] int getRow() const { return coordinates_.getRow(); }
@@ -63,6 +65,7 @@ public:
     void setState(State newState);
 
 private:
+    const Coordinates STARTING_COORDINATES_;
     Coordinates coordinates_;
 
     const Player player_;

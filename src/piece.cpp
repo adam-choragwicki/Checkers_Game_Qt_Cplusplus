@@ -2,7 +2,7 @@
 #include "selected_piece_manager.h"
 #include <QDebug>
 
-Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coordinates_(coordinates), player_(player)
+Piece::Piece(const Coordinates& coordinates, const Player player, const bool promoted) : STARTING_COORDINATES_(coordinates), coordinates_(coordinates), player_(player)
 {
     state_ = State::DISABLED;
 
@@ -14,6 +14,16 @@ Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coo
     id_ = counter_++;
 
     // qDebug() << "Piece created:" << id_;
+}
+
+void Piece::reset()
+{
+    coordinates_ = STARTING_COORDINATES_;
+    alive_ = true;
+    promoted_ = false;
+    state_ = State::DISABLED;
+
+    emit pieceChanged(id_);
 }
 
 void Piece::setState(const State newState)
