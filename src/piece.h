@@ -47,16 +47,6 @@ public:
     void setActive();
     void setSelected();
 
-    int x() const
-    {
-        return coordinates_.getColumn(); // TODO row or column?
-    }
-
-    int y() const
-    {
-        return coordinates_.getRow(); // TODO row or column?
-    }
-
     [[nodiscard]] bool isAlive() const
     {
         return alive_;

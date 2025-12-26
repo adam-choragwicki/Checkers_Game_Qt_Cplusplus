@@ -11,7 +11,7 @@ Piece::Piece(const Coordinates& coordinates, Player player, bool promoted) : coo
         promote();
     }
 
-    id_ = ++counter_;
+    id_ = counter_++;
 
     // qDebug() << "Piece created:" << id_;
 }

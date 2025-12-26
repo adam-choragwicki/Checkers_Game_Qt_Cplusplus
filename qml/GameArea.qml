@@ -24,7 +24,7 @@ Item {
             x: (xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
             y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
 
-            property int pieceMovementAnimationDurationMs: 100 // TODO ( take it from C++ context property)
+            property int pieceMovementAnimationDurationMs: 500 // TODO ( take it from C++ context property)
 
             Behavior on x {
                 NumberAnimation { duration: pieceMovementAnimationDurationMs } // or a constant
