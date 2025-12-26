@@ -53,7 +53,6 @@ Window {
         }
     }
 
-
     /* Overlays */
     EndGameOverlay {
         visible: false

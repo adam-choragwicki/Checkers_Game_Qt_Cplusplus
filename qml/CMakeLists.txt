@@ -13,7 +13,7 @@ qt_add_qml_module(${LIB_NAME}
         Main.qml
         Checkerboard.qml
         GameArea.qml
-#        GameInput.qml
+        GameInput.qml
         UiScaler.qml
 
         AbstractPiece.qml

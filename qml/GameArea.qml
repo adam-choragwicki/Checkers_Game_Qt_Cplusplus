@@ -67,12 +67,9 @@ Item {
         }
     }
 
-    // //
-    // // INPUT HANDLER
-    // //
-    // GameInput {
-    //     id: gameInput
-    //     objectName: "gameInput"
-    //     anchors.fill: parent
-    // }
+    GameInput {
+        id: gameInput
+        objectName: "gameInput"
+        anchors.fill: parent
+    }
 }
