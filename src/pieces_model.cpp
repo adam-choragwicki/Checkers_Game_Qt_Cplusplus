@@ -75,6 +75,5 @@ void PiecesModel::pieceClicked(const int pieceId)
         }
     }
 
-    const QModelIndex index = createIndex(pieceId, 0);
-    emit dataChanged(index, index, {StateRole});
+    pieceChanged(pieceId); // TODO only state is changed here
 }
