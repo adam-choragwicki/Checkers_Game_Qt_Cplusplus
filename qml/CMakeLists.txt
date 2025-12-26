@@ -38,7 +38,6 @@ qt_add_qml_module(${LIB_NAME}
 #
 #        Score.qml
 #
-#        overlays/TextOverlay.qml
-#        overlays/EndGameOverlay.qml
-#        overlays/EscapeMenuOverlay.qml
+        overlays/EndGameOverlay.qml
+        overlays/EscapeMenuOverlay.qml
 )
