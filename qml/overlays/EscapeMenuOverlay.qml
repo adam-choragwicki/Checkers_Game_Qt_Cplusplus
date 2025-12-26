@@ -36,7 +36,7 @@ Item {
                     anchors.centerIn: parent
                     text: modelData
                     color: "white"
-                    font.pixelSize: uiScaler.font(36)
+                    font.pixelSize: uiScaler.px(36)
                     font.bold: true
                 }
 

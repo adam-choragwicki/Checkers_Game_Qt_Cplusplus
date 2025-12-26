@@ -53,27 +53,23 @@ Window {
         }
     }
 
-    //
-    // /* Overlays */
-    // TextOverlay {
-    //     visible: false
-    // }
-    //
-    // EndGameOverlay {
-    //     visible: false
-    //     objectName: "endGameOverlay"
-    //     anchors.fill: parent
-    //     onPlayAgainClicked: Controller.onPlayAgainClicked()
-    //     onQuitClicked: Controller.onQuitClicked()
-    // }
-    //
-    // EscapeMenuOverlay {
-    //     visible: false
-    //     objectName: "escapeMenuOverlay"
-    //     anchors.fill: parent
-    //
-    //     onResumeClicked: Controller.onResumeClicked()
-    //     onRestartClicked: Controller.onRestartClicked()
-    //     onQuitClicked: Controller.onQuitClicked()
-    // }
+
+    /* Overlays */
+    EndGameOverlay {
+        visible: false
+        objectName: "endGameOverlay"
+        anchors.fill: parent
+        onPlayAgainClicked: Controller.onPlayAgainClicked()
+        onQuitClicked: Controller.onQuitClicked()
+    }
+
+    EscapeMenuOverlay {
+        visible: false
+        objectName: "escapeMenuOverlay"
+        anchors.fill: parent
+
+        onResumeClicked: Controller.onResumeClicked()
+        onRestartClicked: Controller.onRestartClicked()
+        onQuitClicked: Controller.onQuitClicked()
+    }
 }

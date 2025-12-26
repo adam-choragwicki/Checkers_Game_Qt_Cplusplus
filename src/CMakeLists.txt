@@ -21,7 +21,30 @@ set(BACKEND_SOURCE_FILES
         game_config.cpp game_config.h
         piece_model.cpp piece_model.h
         pieces_model.cpp pieces_model.h
-        pieces_manager.cpp pieces_manager.h)
+        pieces_manager.cpp pieces_manager.h
+
+        qml_helper.h
+        overlay_manager.h overlay_manager.cpp
+
+        state_machine/abstract_state.h
+        state_machine/game_state_manager.h
+        state_machine/game_state_type.h
+        state_machine/i_state_actions.h
+        state_machine/states/ended_defeat_state.h
+        state_machine/states/ended_victory_state.h
+        state_machine/states/escape_menu_state.h
+        state_machine/states/initialization_state.h
+        state_machine/states/paused_for_debug_state.h
+        state_machine/states/ready_to_start_state.h
+        state_machine/states/running_state.h
+
+        game_coordinator.cpp game_coordinator.h
+
+        input_handler.cpp input_handler.h
+        window_manager.cpp window_manager.h
+
+        game_result.h
+        resolution.h)
 
 add_library(lib${PROJECT_NAME}Backend ${BACKEND_SOURCE_FILES})
 target_include_directories(lib${PROJECT_NAME}Backend PUBLIC .)

@@ -27,7 +27,7 @@ Item {
         Text {
             text: endGameOverlayRoot.message
             color: "white"
-            font.pixelSize: uiScaler.font(64)
+            font.pixelSize: uiScaler.px(64)
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenter: parent.horizontalCenter
@@ -36,7 +36,7 @@ Item {
         Text {
             text: "SCORE\n" + endGameOverlayRoot.score
             color: "white"
-            font.pixelSize: uiScaler.font(40)
+            font.pixelSize: uiScaler.px(40)
             horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenter: parent.horizontalCenter
         }
@@ -58,7 +58,7 @@ Item {
                     anchors.centerIn: parent
                     text: modelData
                     color: "white"
-                    font.pixelSize: uiScaler.font(36)
+                    font.pixelSize: uiScaler.px(36)
                     font.bold: true
                 }
 

@@ -119,10 +119,6 @@ Item {
     // }
     //
     // /* Overlays */
-    // TextOverlay {
-    //     visible: false
-    // }
-    //
     // EndGameOverlay {
     //     visible: false
     //     objectName: "endGameOverlay"
