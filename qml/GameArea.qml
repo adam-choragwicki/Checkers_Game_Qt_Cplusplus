@@ -37,6 +37,7 @@ Item {
             sourceComponent: playerRole === 1 ? redPieceComponent : blackPieceComponent
 
             onLoaded: {
+                console.log("QML: Loader loaded piece " + idRole)
                 item.number = idRole
                 item.pieceState = stateRole
             }
