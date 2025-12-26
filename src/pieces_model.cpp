@@ -25,9 +25,8 @@ QVariant PiecesModel::data(const QModelIndex& index, int role) const
         case AliveRole: return piece->isAlive();
         case IdRole: return piece->getId();
         case StateRole: return piece->getState();
+        default: qFatal("Unknown role");
     }
-
-    return {};
 }
 
 QHash<int, QByteArray> PiecesModel::roleNames() const
