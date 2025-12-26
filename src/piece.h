@@ -49,10 +49,8 @@ public:
     void setActive();
     void setSelected();
 
-    [[nodiscard]] bool isAlive() const
-    {
-        return alive_;
-    }
+    [[nodiscard]] bool isAlive() const { return alive_; }
+    void setAlive(const bool alive) { alive_ = alive; }
 
     int getId() const { return id_; }
 

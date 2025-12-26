@@ -8,7 +8,8 @@ void PiecesManager::createPiece(const Coordinates& coordinates, Player player)
 {
     if (!isPieceAtCoordinates(coordinates))
     {
-        const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
+        pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
+        // const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
         // piecesModels_.push_back(std::make_unique<PieceModel>(*ref));
 
         // qDebug() << "Piece created at coordinates: " << coordinates;
@@ -99,7 +100,7 @@ Piece& PiecesManager::getPieceAtCoordinates(const Coordinates& coordinates) cons
     }
 }
 
-void PiecesManager::removePieceAtCoordinates(const Coordinates& coordinates)
+void PiecesManager::killPieceAtCoordinates(const Coordinates& coordinates)
 {
     auto iter = std::ranges::find_if(pieces_, [coordinates](const auto& piece)
     {
@@ -108,11 +109,11 @@ void PiecesManager::removePieceAtCoordinates(const Coordinates& coordinates)
 
     if (iter != pieces_.end())
     {
-        pieces_.erase(iter);
+        (*iter)->setAlive(false);
     }
     else
     {
-        throw std::runtime_error("Error, trying to remove piece which is not present in pieces placement");
+        throw std::runtime_error("Error, trying to kill piece which is not present in pieces placement");
     }
 }
 

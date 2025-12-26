@@ -86,7 +86,7 @@ public:
     [[nodiscard]] bool isPieceAtCoordinates(const Coordinates& coordinates) const;
     [[nodiscard]] Piece& getPieceAtCoordinates(const Coordinates& coordinates) const;
     void markPiecesWhichCanMove(const std::vector<Piece*>& pieces);
-    void removePieceAtCoordinates(const Coordinates& coordinates);
+    void killPieceAtCoordinates(const Coordinates& coordinates);
     [[nodiscard]] size_t countPlayerPieces(Player player) const;
     [[nodiscard]] bool didAnyPlayerRunOutOfPieces() const;
     [[nodiscard]] Player getPlayerWithNoPiecesLeft() const;

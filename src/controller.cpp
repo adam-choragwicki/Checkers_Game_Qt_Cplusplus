@@ -203,7 +203,7 @@ void Controller::capturePiece(Piece& piece, const Coordinates& targetTileCoordin
 
     movePiece(piece, targetTileCoordinates);
 
-    model_.getPiecesManager().removePieceAtCoordinates(coordinatesOfPieceBetween);
+    model_.getPiecesManager().killPieceAtCoordinates(coordinatesOfPieceBetween); // TODO add delay, piece should be removed after animation is finished
     // view_.removePieceFrontendAtCoordinates(coordinatesOfPieceBetween);
 }
 
