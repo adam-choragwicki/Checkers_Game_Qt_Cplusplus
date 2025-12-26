@@ -8,14 +8,6 @@ PiecesModel::PiecesModel(const PiecesManager& piecesManager) : piecesManager_(pi
     }
 }
 
-void PiecesModel::refresh()
-{
-    qDebug() << "Refreshing model";
-
-    beginResetModel();
-    endResetModel();
-}
-
 int PiecesModel::rowCount(const QModelIndex&) const
 {
     return static_cast<int>(piecesManager_.getPieces().size());

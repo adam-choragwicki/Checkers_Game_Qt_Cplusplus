@@ -11,7 +11,6 @@ public:
     enum Roles { XRole = Qt::UserRole + 1, YRole, PlayerRole, AliveRole, IdRole, StateRole };
 
     explicit PiecesModel(const PiecesManager& piecesManager);
-    void refresh();
 
     // QAbstractItemModel interface
     int rowCount(const QModelIndex& parent) const override;
