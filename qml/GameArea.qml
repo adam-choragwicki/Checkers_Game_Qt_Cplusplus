@@ -21,6 +21,7 @@ Item {
         model: piecesModel
 
         delegate: Loader {
+            id: loader
             x: (xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
             y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
 
@@ -38,8 +39,18 @@ Item {
 
             onLoaded: {
                 console.log("QML: Loader loaded piece " + idRole)
-                item.number = idRole
-                item.pieceState = stateRole
+            }
+
+            Binding {
+                target: loader.item
+                property: "number"
+                value: idRole
+            }
+
+            Binding {
+                target: loader.item
+                property: "pieceState"
+                value: stateRole
             }
         }
     }
@@ -47,16 +58,12 @@ Item {
     Component {
         id: redPieceComponent
         RedPiece {
-            number: idRole
-            pieceState: stateRole
         }
     }
 
     Component {
         id: blackPieceComponent
         BlackPiece {
-            number: idRole
-            pieceState: stateRole
         }
     }
 
