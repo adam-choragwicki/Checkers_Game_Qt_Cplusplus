@@ -126,7 +126,7 @@ void Controller::processTileClicked(const int row, const int column) // TODO sen
         }
 
         // emit sceneUpdateSignal();
-        model_.getPiecesModel().refresh();
+        // model_.getPiecesModel().refresh();
 
         model_.setMoveInProgress(false);
     }
@@ -194,7 +194,7 @@ void Controller::disableAllPieces()
 void Controller::movePiece(Piece& piece, const Coordinates& targetTileCoordinates)
 {
     piece.moveToTile(targetTileCoordinates);
-    model_.getPiecesModel().refresh();
+    // model_.getPiecesModel().refresh();
 }
 
 void Controller::capturePiece(Piece& piece, const Coordinates& targetTileCoordinates)

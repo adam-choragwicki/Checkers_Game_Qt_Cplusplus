@@ -15,6 +15,8 @@ signals:
     void startAnimatedMovement(const Coordinates& currentCoordinates, const Coordinates& newCoordinates);
     void promoted();
 
+    void pieceChanged(int id);
+
 public slots:
     void processEndMovement(const Coordinates& newCoordinates);
 

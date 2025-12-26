@@ -77,8 +77,10 @@ void Piece::setState(const State newState)
 
     qDebug() << "C++: Piece" << id_ << "state changed to" << static_cast<int>(state_);
 
-    qDebug() << "C++: Piece" << id_ << " Emitting stateChanged signal";
-    emit stateChanged();
+    qDebug() << "C++: Piece" << id_ << " Emitting pieceChanged signal";
+
+    emit pieceChanged(id_);
+//    emit stateChanged();
 }
 
 void Piece::moveToTile(const Coordinates& newCoordinates)
@@ -87,6 +89,7 @@ void Piece::moveToTile(const Coordinates& newCoordinates)
 
     coordinates_ = newCoordinates;
 
+    emit pieceChanged(id_);
     // emit startAnimatedMovement(coordinates_, newCoordinates);
 }
 

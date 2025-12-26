@@ -18,7 +18,7 @@ public:
     QVariant data(const QModelIndex& index, int role) const override;
     QHash<int, QByteArray> roleNames() const override;
 
-    virtual void brickChanged(int index); // TODO use as piece changed
+    void pieceChanged(int index);
 
     Q_INVOKABLE void pieceClicked(int pieceId);
 

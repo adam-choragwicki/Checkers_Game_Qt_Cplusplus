@@ -1,6 +1,12 @@
 #include "pieces_model.h"
 
-PiecesModel::PiecesModel(const PiecesManager& piecesManager) : piecesManager_(piecesManager) {}
+PiecesModel::PiecesModel(const PiecesManager& piecesManager) : piecesManager_(piecesManager)
+{
+    for (const auto& piece: piecesManager_.getPieces())
+    {
+        connect(piece.get(), &Piece::pieceChanged, this, &PiecesModel::pieceChanged);
+    }
+}
 
 void PiecesModel::refresh()
 {
@@ -45,10 +51,13 @@ QHash<int, QByteArray> PiecesModel::roleNames() const
     return {{XRole, "xRole"}, {YRole, "yRole"}, {PlayerRole, "playerRole"}, {AliveRole, "aliveRole"}, {IdRole, "idRole"}, {StateRole, "stateRole"}};
 }
 
-void PiecesModel::brickChanged(const int index) // TODO use as piece changed
+void PiecesModel::pieceChanged(const int index)
 {
+    qDebug() << "C++: Processing piece changed for piece: " << index;
+    qDebug() << "C++: Emitting dataChanged for piece: " << index;
+
     const QModelIndex idx = createIndex(index, 0);
-    emit dataChanged(idx, idx, {AliveRole});
+    emit dataChanged(idx, idx);
 }
 
 void PiecesModel::pieceClicked(const int pieceId)
