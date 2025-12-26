@@ -28,11 +28,11 @@ QVariant PiecesModel::data(const QModelIndex& index, const int role) const
         throw std::runtime_error("Invalid index");
     }
 
-    qDebug() << "C++: data called with model row" << index.row() << "and role" << role;
+    // qDebug() << "C++: data called with model row" << index.row() << "and role" << role;
 
     const auto& piece = piecesManager_.getPieces().at(index.row());
 
-    qDebug() << "C++: piece" << piece->getId() << "at model row" << index.row();
+    // qDebug() << "C++: piece" << piece->getId() << "at model row" << index.row();
 
     switch (role)
     {
