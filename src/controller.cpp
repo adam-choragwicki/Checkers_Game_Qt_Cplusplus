@@ -28,7 +28,7 @@ void Controller::onQmlEngineFullyInitialized()
     // Now that QML is loaded, provide QmlHelper to GameCoordinator
     // gameCoordinator_->setQmlHelper(&qmlHelper_);
 
-    qInfo() << "Game started";
+    qInfo() << "=========================Game started=========================";
     // setGameState(GameStateType::ReadyToStart);
 }
 

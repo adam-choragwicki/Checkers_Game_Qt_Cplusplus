@@ -4,6 +4,8 @@ PiecesModel::PiecesModel(const PiecesManager& piecesManager) : piecesManager_(pi
 
 void PiecesModel::refresh()
 {
+    qDebug() << "Refreshing model";
+
     beginResetModel();
     endResetModel();
 }
@@ -64,5 +66,6 @@ void PiecesModel::pieceClicked(const int pieceId)
         }
     }
 
-    refresh(); // TODO this is quick hack ?, model should not be fully updated when only one piece is updated, or should it?
+    const QModelIndex index = createIndex(pieceId, 0);
+    emit dataChanged(index, index, {StateRole});
 }
