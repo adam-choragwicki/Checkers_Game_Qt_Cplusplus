@@ -59,15 +59,7 @@ private slots:
     void processApplicationTerminationRequest();
 
 private:
-    void disableAllPieces();
-    void movePiece(Piece& piece, const Coordinates& targetTileCoordinates);
-    void capturePiece(Piece& piece, const Coordinates& targetTileCoordinates);
-    void endTurn();
-    void endGame(Player losingPlayer, GameEndReason gameEndReason);
-
-    void processPieceMove(Piece& piece, const Coordinates& targetTileCoordinates);
-    void checkAndMarkPlayerMoveOptions(Player player);
-    bool checkEligibilityAndPromotePiece(Piece& piece);
+    void gameEnded(Player losingPlayer, GameEndReason gameEndReason);
 
     Model& model_;
     QQmlApplicationEngine& view_;

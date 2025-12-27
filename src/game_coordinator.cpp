@@ -2,7 +2,9 @@
 
 // GameCoordinator::GameCoordinator(Model& model, GameLoop& gameLoop) : model_(model), gameLoop_(gameLoop)
 GameCoordinator::GameCoordinator(Model& model) : model_(model)
-{}
+{
+    checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+}
 
 void GameCoordinator::setQmlHelper(QmlHelper* qmlHelper)
 {
@@ -30,4 +32,6 @@ void GameCoordinator::restartGame()
     }
 
     model_.reset();
+
+    checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
 }

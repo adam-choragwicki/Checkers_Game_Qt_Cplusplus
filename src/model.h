@@ -45,16 +45,6 @@ public:
         moveInProgress_ = moveInProgress;
     }
 
-    [[nodiscard]] bool isGameBeforeFirstRun() const
-    {
-        return gameBeforeFirstRun_;
-    }
-
-    void setGameBeforeFirstRun(bool beforeFirstRun)
-    {
-        gameBeforeFirstRun_ = beforeFirstRun;
-    }
-
     PiecesManager& getPiecesManager() { return *piecesManager_; }
 
     Q_PROPERTY(QObject* piecesModel READ getPiecesModel CONSTANT)
@@ -70,7 +60,6 @@ private:
     std::unique_ptr<MultiCaptureManager> multiCaptureManager_;
     std::unique_ptr<PlayerManager> playerManager_;
     bool moveInProgress_{};
-    bool gameBeforeFirstRun_ = true;
 
     std::unique_ptr<PiecesManager> piecesManager_;
     std::unique_ptr<PiecesModel> piecesModel_;

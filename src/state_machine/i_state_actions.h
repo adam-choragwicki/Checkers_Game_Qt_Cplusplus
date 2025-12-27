@@ -1,6 +1,7 @@
 #pragma once
 
 #include "game_state_type.h"
+#include "game_result.h"
 
 class IStateActions
 {
