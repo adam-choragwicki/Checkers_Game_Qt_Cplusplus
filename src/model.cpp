@@ -2,8 +2,6 @@
 
 Model::Model(const GameConfig& gameConfig)
 {
-    checkerboard_ = std::make_unique<Checkerboard>();
-
     piecesManager_ = std::make_unique<PiecesManager>();
     piecesModel_ = std::make_unique<PiecesModel>(*piecesManager_);
 

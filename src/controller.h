@@ -12,6 +12,7 @@
 #include "window_manager.h"
 #include "state_machine/i_state_actions.h"
 #include "state_machine/game_state_manager.h"
+#include "game_end_reason.h"
 #include <QQmlApplicationEngine>
 
 class Controller : public QObject, public IStateActions

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "common.h"
+#include "game_end_reason.h"
 #include "coordinates.h"
 #include "player_manager.h"
 #include <set>

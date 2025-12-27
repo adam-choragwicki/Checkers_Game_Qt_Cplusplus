@@ -1,12 +1,10 @@
 set(SOURCE_FILES
-        main.cpp
         game.cpp game.h
         controller.cpp controller.h
         log_manager.cpp log_manager.h)
 
 set(BACKEND_SOURCE_FILES
         model.cpp model.h
-        common.h
         piece.h piece.cpp
         selected_piece_manager.h
         multi_capture_manager.h
@@ -48,25 +46,7 @@ set(BACKEND_SOURCE_FILES
 
 add_library(lib${PROJECT_NAME}Backend ${BACKEND_SOURCE_FILES})
 target_include_directories(lib${PROJECT_NAME}Backend PUBLIC .)
-target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt6::Core Qt6::Quick Qt6::Widgets) # TODO remove widgets
-
-
-set(UI_FORMS_DIR ../ui_forms)
-set(CMAKE_AUTOUIC_SEARCH_PATHS ${UI_FORMS_DIR})
-
-set(FRONTEND_SOURCE_FILES
-        main_window.cpp main_window.h ${UI_FORMS_DIR}/main_window.ui
-        checkerboard.cpp checkerboard.h
-        drawer.cpp drawer.h
-        tile.cpp tile.h
-        piece_frontend.cpp piece_frontend.h
-        crown.cpp crown.h
-        gui_config.h)
-
-add_library(lib${PROJECT_NAME}Frontend ${FRONTEND_SOURCE_FILES})
-target_include_directories(lib${PROJECT_NAME}Frontend PUBLIC ${BACKEND_DIR})
-target_link_libraries(lib${PROJECT_NAME}Frontend PUBLIC Qt6::Widgets Qt6::Quick)
-
+target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt6::Core Qt6::Quick)
 
 # Create the main executable
 qt_add_executable(${PROJECT_NAME} main.cpp ${SOURCE_FILES})
@@ -76,4 +56,4 @@ if (WIN32)
 endif ()
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${BACKEND_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME}Backend lib${PROJECT_NAME}Frontend CheckersQmlLibplugin)
+target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME}Backend CheckersQmlLibplugin)

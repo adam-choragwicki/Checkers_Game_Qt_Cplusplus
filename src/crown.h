@@ -1,9 +1,9 @@
-#pragma once
-
-#include <QGraphicsPolygonItem>
-
-class Crown : public QGraphicsPolygonItem
-{
-public:
-    explicit Crown(QGraphicsItem* parent);
-};
+// #pragma once
+//
+// #include <QGraphicsPolygonItem>
+//
+// class Crown : public QGraphicsPolygonItem
+// {
+// public:
+//     explicit Crown(QGraphicsItem* parent);
+// };

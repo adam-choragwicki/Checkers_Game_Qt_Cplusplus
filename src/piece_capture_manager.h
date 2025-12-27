@@ -1,7 +1,7 @@
 #pragma once
 
 #include "piece.h"
-#include "common.h"
+#include "game_end_reason.h"
 #include "pieces_manager.h"
 #include <set>
 

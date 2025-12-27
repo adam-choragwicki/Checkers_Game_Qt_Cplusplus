@@ -61,10 +61,10 @@ public:
     [[nodiscard]] PiecesModel& getPiecesModel() const { return *piecesModel_; }
     // [[nodiscard]] StandardPelletsManager& getStandardPelletsManager() const { return *standardPelletsManager_; }
 
-    Checkerboard& getCheckerboard() const { return *checkerboard_; }
+    // Checkerboard& getCheckerboard() const { return *checkerboard_; } // TODO remove because it was part of frontend
 
 private:
-    std::unique_ptr<Checkerboard> checkerboard_;
+    // std::unique_ptr<Checkerboard> checkerboard_; // TODO remove because it was part of frontend
 
     // std::unique_ptr<PiecesPlacement> piecesPlacement_;
     std::unique_ptr<MultiCaptureManager> multiCaptureManager_;
