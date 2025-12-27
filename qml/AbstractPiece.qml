@@ -18,9 +18,22 @@ Rectangle {
     border.width: uiScaler.px(5) // outline width
 
     Crown {
-        id: crown
         anchors.centerIn: parent
         visible: isPromoted
+
+        // opacity: isPromoted ? 1 : 0
+        // scale: isPromoted ? 1 : 0.6
+
+        // Behavior on opacity { // TODO optional animation
+        //     NumberAnimation {
+        //         duration: 1500
+        //     }
+        // }
+        // Behavior on scale {
+        //     NumberAnimation {
+        //         duration: 1500
+        //     }
+        // }
     }
 
     Text {
