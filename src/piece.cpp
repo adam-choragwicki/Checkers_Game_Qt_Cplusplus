@@ -87,7 +87,7 @@ void Piece::setState(const State newState)
 
     qDebug() << "C++: Piece" << id_ << "state changed to" << static_cast<int>(state_);
 
-    qDebug() << "C++: Piece" << id_ << " Emitting pieceChanged signal";
+    // qDebug() << "C++: Piece" << id_ << " Emitting pieceChanged signal";
 
     emit pieceChanged(id_);
 //    emit stateChanged();

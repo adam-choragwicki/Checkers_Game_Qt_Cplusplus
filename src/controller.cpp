@@ -5,7 +5,6 @@
 #include "piece_movement_manager.h"
 #include "piece_promotion_manager.h"
 #include "piece_state_manager.h"
-// #include <QCoreApplication>
 
 Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : model_(model), view_(view), gameStateManager_(this)
 {
@@ -291,11 +290,24 @@ bool Controller::checkEligibilityAndPromotePiece(Piece& piece)
     return false;
 }
 
-void Controller::endGame(const Player losingPlayer, GameEndReason gameEndReason) // TODO add support for end game reason
+void Controller::endGame(const Player losingPlayer, const GameEndReason gameEndReason) // TODO add support for end game reason
 {
     // NOTE the function accepts LOSING player as a parameter
 
     qInfo() << "Ending game";
+
+    if (gameEndReason == GameEndReason::NO_MOVES_LEFT)
+    {
+        qDebug() << "Player" << static_cast<int>(losingPlayer) << "has no moves left";
+    }
+    else if (gameEndReason == GameEndReason::NO_PIECES_LEFT)
+    {
+        qDebug() << "Player" << static_cast<int>(losingPlayer) << "has no pieces left";
+    }
+    else
+    {
+        Q_UNREACHABLE();
+    }
 
     if (losingPlayer == Player::LOWER)
     {

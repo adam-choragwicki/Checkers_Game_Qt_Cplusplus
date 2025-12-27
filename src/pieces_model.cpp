@@ -45,8 +45,8 @@ QHash<int, QByteArray> PiecesModel::roleNames() const
 
 void PiecesModel::pieceChanged(const int index)
 {
-    qDebug() << "C++: Processing piece changed for piece: " << index;
-    qDebug() << "C++: Emitting dataChanged for piece: " << index;
+    // qDebug() << "C++: Processing piece changed for piece: " << index;
+    // qDebug() << "C++: Emitting dataChanged for piece: " << index;
 
     const QModelIndex idx = createIndex(index, 0);
     emit dataChanged(idx, idx);
