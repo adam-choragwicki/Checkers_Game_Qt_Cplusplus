@@ -349,3 +349,13 @@ void Controller::onPlayAgainClicked()
     gameCoordinator_->restartGame();
     gameStateManager_.setGameState(GameStateType::ReadyToStart);
 }
+
+void Controller::enablePiecesAnimation()
+{
+    model_.getPiecesManager().enablePiecesAnimations();
+}
+
+void Controller::disablePiecesAnimation()
+{
+    model_.getPiecesManager().disablePiecesAnimations();
+}

@@ -10,7 +10,13 @@ public:
 
     void entered() override
     {
+        stateActions_->enablePiecesAnimation();
         stateActions_->startGameLoop();
+    }
+
+    void exited() override
+    {
+        stateActions_->disablePiecesAnimation();
     }
 
     void transitionTo(AbstractState* newState) override

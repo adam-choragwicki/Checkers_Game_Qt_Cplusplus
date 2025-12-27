@@ -34,13 +34,14 @@ QVariant PiecesModel::data(const QModelIndex& index, const int role) const
         case AliveRole: return piece->isAlive();
         case IdRole: return piece->getId();
         case StateRole: return piece->getState();
+        case AnimationEnabledRole: return piece->isAnimationEnabled();
         default: qFatal("Unknown role");
     }
 }
 
 QHash<int, QByteArray> PiecesModel::roleNames() const
 {
-    return {{XRole, "xRole"}, {YRole, "yRole"}, {PlayerRole, "playerRole"}, {AliveRole, "aliveRole"}, {IdRole, "idRole"}, {StateRole, "stateRole"}};
+    return {{XRole, "xRole"}, {YRole, "yRole"}, {PlayerRole, "playerRole"}, {AliveRole, "aliveRole"}, {IdRole, "idRole"}, {StateRole, "stateRole"}, {AnimationEnabledRole, "animationEnabledRole"}};
 }
 
 void PiecesModel::pieceChanged(const int index)

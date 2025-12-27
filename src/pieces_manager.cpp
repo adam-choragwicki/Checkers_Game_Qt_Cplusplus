@@ -6,8 +6,13 @@
 
 PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPositions) : AbstractPelletsManager(standardPelletPositions)
 {
-    createPiece(Coordinates{5, 4}, Player::LOWER);
-    createPiece(Coordinates{4, 5}, Player::UPPER);
+    // Movement and capture testing
+    // createPiece(Coordinates{6, 3}, Player::LOWER);
+    // createPiece(Coordinates{4, 5}, Player::UPPER);
+
+    // Promotion testing
+    createPiece(Coordinates{2, 5}, Player::LOWER);
+    createPiece(Coordinates{7, 6}, Player::UPPER);
 
     // createPieces();
 
@@ -35,6 +40,22 @@ void PiecesManager::reset()
     // AbstractPelletsManager::reset();
 
     // emit resetRequested();
+}
+
+void PiecesManager::enablePiecesAnimations()
+{
+    for (auto& piece: pieces_)
+    {
+        piece->setAnimationEnabled(true);
+    }
+}
+
+void PiecesManager::disablePiecesAnimations()
+{
+    for (auto& piece: pieces_)
+    {
+        piece->setAnimationEnabled(false);
+    }
 }
 
 void PiecesManager::createPiece(const Coordinates& coordinates, Player player)

@@ -25,13 +25,24 @@ Item {
             x: (xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
             y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
 
+            property bool pieceAnimationsEnabled: animationEnabledRole
             property int pieceMovementAnimationDurationMs: 100 // TODO ( take it from C++ context property)
 
             Behavior on x {
-                NumberAnimation { duration: pieceMovementAnimationDurationMs } // or a constant
+                enabled: loader.pieceAnimationsEnabled
+
+                NumberAnimation {
+                    duration: pieceMovementAnimationDurationMs
+                    easing.type: Easing.Linear
+                }
             }
             Behavior on y {
-                NumberAnimation { duration: pieceMovementAnimationDurationMs }
+                enabled: loader.pieceAnimationsEnabled
+
+                NumberAnimation {
+                    duration: pieceMovementAnimationDurationMs
+                    easing.type: Easing.Linear
+                }
             }
 
             visible: aliveRole

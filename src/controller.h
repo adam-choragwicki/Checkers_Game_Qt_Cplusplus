@@ -41,6 +41,9 @@ public:
     void startGameLoop() override;
     void stopGameLoop() override;
 
+    void enablePiecesAnimation() override;
+    void disablePiecesAnimation() override;
+
     void showEscapeMenuOverlay() override;
     void hideEscapeMenuOverlay() override;
     void showEndGameOverlay(GameResult gameResult) override;
