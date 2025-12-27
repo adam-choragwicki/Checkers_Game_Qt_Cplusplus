@@ -15,36 +15,9 @@ signals:
     void resetRequested();
 
 public:
-    explicit PiecesManager() //const std::set<Coordinates>& standardPelletPositions) : AbstractPelletsManager(standardPelletPositions)
-    {
-        createPieces();
+    explicit PiecesManager();
 
-        qDebug() << "Created" << pieces_.size() << "pieces";
-
-
-        // const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
-        //pieces_.emplace_back(std::make_unique<Piece>(Coordinates{0, 0}, Player::LOWER));
-
-        // pieces_.emplace_back(Coordinates{0, 0}, Player::LOWER);
-
-        // for (const auto& coordinates: pelletPositions)
-        // {
-        //     pellets_.emplace_back(coordinates);
-        // }
-    }
-
-    void reset() // override
-    {
-        for (auto& piece: pieces_)
-        {
-            qDebug() << "Resetting piece" << piece->getId();
-            piece->reset();
-        }
-
-        // AbstractPelletsManager::reset();
-
-        // emit resetRequested();
-    }
+    void reset();
 
     // const std::vector<Piece>& getPieces() const
     // {

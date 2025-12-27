@@ -4,6 +4,39 @@
 #include "coordinates_database.h"
 #include "piece_state_manager.h"
 
+PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPositions) : AbstractPelletsManager(standardPelletPositions)
+{
+    createPiece(Coordinates{5, 4}, Player::LOWER);
+    createPiece(Coordinates{4, 5}, Player::UPPER);
+
+    // createPieces();
+
+    qDebug() << "Created" << pieces_.size() << "pieces";
+
+    // const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
+    //pieces_.emplace_back(std::make_unique<Piece>(Coordinates{0, 0}, Player::LOWER));
+
+    // pieces_.emplace_back(Coordinates{0, 0}, Player::LOWER);
+
+    // for (const auto& coordinates: pelletPositions)
+    // {
+    //     pellets_.emplace_back(coordinates);
+    // }
+}
+
+void PiecesManager::reset()
+{
+    for (auto& piece: pieces_)
+    {
+        qDebug() << "Resetting piece" << piece->getId();
+        piece->reset();
+    }
+
+    // AbstractPelletsManager::reset();
+
+    // emit resetRequested();
+}
+
 void PiecesManager::createPiece(const Coordinates& coordinates, Player player)
 {
     if (!isPieceAtCoordinates(coordinates))

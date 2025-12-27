@@ -38,6 +38,8 @@ void Controller::onQmlEngineFullyInitialized()
 
     qInfo() << "=========================Game started=========================";
     setGameState(GameStateType::ReadyToStart);
+
+    setGameState(GameStateType::Running); // TODO start game immediately, ready to start may not be needed in this game
 }
 
 void Controller::startGameLoop()
