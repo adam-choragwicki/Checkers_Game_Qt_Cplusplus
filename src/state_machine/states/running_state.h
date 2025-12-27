@@ -19,8 +19,8 @@ public:
         {
             case GameStateType::EscapeMenu:
             case GameStateType::PausedForDebug:
-            case GameStateType::EndedVictory:
-            case GameStateType::EndedDefeat:
+            case GameStateType::EndedVictoryPlayerUpper:
+            case GameStateType::EndedVictoryPlayerLower:
                 break;
 
             default:

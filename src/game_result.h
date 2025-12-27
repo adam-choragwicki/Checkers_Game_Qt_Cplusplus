@@ -2,5 +2,5 @@
 
 enum class GameResult
 {
-    DEFEAT, VICTORY
+    UPPER_PLAYER_VICTORY, LOWER_PLAYER_VICTORY,
 };

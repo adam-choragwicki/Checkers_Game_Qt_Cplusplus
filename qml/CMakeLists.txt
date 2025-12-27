@@ -36,8 +36,6 @@ qt_add_qml_module(${LIB_NAME}
 #        pellets/StandardPellet.qml
 #        pellets/PowerPellet.qml
 #
-#        Score.qml
-#
         overlays/EndGameOverlay.qml
         overlays/EscapeMenuOverlay.qml
 )

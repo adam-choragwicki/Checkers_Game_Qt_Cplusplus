@@ -54,7 +54,6 @@ void Game::printAppInfo()
 void Game::exposeDataToQml() const
 {
     view_->rootContext()->setContextProperty("Controller", controller_.get());
-    // view_->rootContext()->setContextProperty("ScoreManager", &model_->getScoreManager()); // TODO remove
 
     view_->rootContext()->setContextProperty("piecesModel", &model_->getPiecesModel()); // TODO remove
     // view_->rootContext()->setContextProperty("powerPelletsModel", &model_->getPowerPelletsModel()); // TODO remove

@@ -5,8 +5,8 @@
 #include "states/ready_to_start_state.h"
 #include "states/running_state.h"
 #include "states/escape_menu_state.h"
-#include "states/ended_victory_state.h"
-#include "states/ended_defeat_state.h"
+#include "states/ended_victory_player_upper.h"
+#include "states/ended_victory_player_lower.h"
 #include "states/paused_for_debug_state.h"
 #include <ranges>
 #include <stdexcept>
@@ -19,8 +19,8 @@ public:
         {GameStateType::ReadyToStart, &readyToStartState_},
         {GameStateType::Running, &runningState_},
         {GameStateType::EscapeMenu, &escapeMenuState_},
-        {GameStateType::EndedVictory, &endedVictoryState_},
-        {GameStateType::EndedDefeat, &endedDefeatState_},
+        {GameStateType::EndedVictoryPlayerUpper, &endedVictoryPlayerUpperState_},
+        {GameStateType::EndedVictoryPlayerLower, &endedVictoryPlayerLowerState_},
         {GameStateType::PausedForDebug, &pausedForDebugState_}
     }
     {
@@ -96,9 +96,8 @@ private:
     ReadyToStartState readyToStartState_;
     RunningState runningState_;
     EscapeMenuState escapeMenuState_;
-    EndedVictoryState endedVictoryState_;
-    EndedDefeatState endedDefeatState_;
-
+    EndedVictoryPlayerUpperState endedVictoryPlayerUpperState_;
+    EndedVictoryPlayerLowerState endedVictoryPlayerLowerState_;
     PausedForDebugState pausedForDebugState_;
 
     AbstractState* currentGameState_{};

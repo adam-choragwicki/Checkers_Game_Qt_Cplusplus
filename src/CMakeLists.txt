@@ -30,8 +30,8 @@ set(BACKEND_SOURCE_FILES
         state_machine/game_state_manager.h
         state_machine/game_state_type.h
         state_machine/i_state_actions.h
-        state_machine/states/ended_defeat_state.h
-        state_machine/states/ended_victory_state.h
+        state_machine/states/ended_victory_player_upper.h
+        state_machine/states/ended_victory_player_lower.h
         state_machine/states/escape_menu_state.h
         state_machine/states/initialization_state.h
         state_machine/states/paused_for_debug_state.h

@@ -4,13 +4,12 @@
 
 enum class GameStateType
 {
-    Initialization, // App just started — loading assets, creating an arena, pacman, ghosts, pellets, etc.
-    ReadyToStart, // Everything ready, waiting for the player's input to start. The text overlay is displayed.
+    Initialization, // App just started — loading assets, creating checkerboard, pieces etc.
+    ReadyToStart, // Everything ready, waiting for the player's input to start.
     Running, // Main game loop active.
     EscapeMenu, // Escape menu overlay is displayed.
-    EndedVictory, // Game stopped because pacman ate all standard pellets. The end game overlay is displayed.
-    EndedDefeat, // Game stopped because pacman collided with any ghost. The end game overlay is displayed.
-
+    EndedVictoryPlayerUpper, // Game stopped because win conditions have been satisfied for player upper. The end game overlay is displayed.
+    EndedVictoryPlayerLower, // Game stopped because win conditions have been satisfied for player lower. The end game overlay is displayed.
     PausedForDebug, // Game loop stopped; only for debug.
 };
 
@@ -25,8 +24,8 @@ inline QDebug operator<<(QDebug debug, GameStateType state)
         case GameStateType::ReadyToStart: return debug << "ReadyToStart";
         case GameStateType::Running: return debug << "Running";
         case GameStateType::EscapeMenu: return debug << "EscapeMenu";
-        case GameStateType::EndedVictory: return debug << "EndedVictory";
-        case GameStateType::EndedDefeat: return debug << "EndedDefeat";
+        case GameStateType::EndedVictoryPlayerUpper: return debug << "EndedVictoryPlayerUpper";
+        case GameStateType::EndedVictoryPlayerLower: return debug << "EndedVictoryPlayerLower";
         case GameStateType::PausedForDebug: return debug << "Paused (debug)";
 
         default:
@@ -34,9 +33,9 @@ inline QDebug operator<<(QDebug debug, GameStateType state)
     }
 }
 
-// | From               | Action/Event                  | To                 | Notes                           |
+// | From               | Action/Event                  | To                 | Notes                           | // TODO update this
 // | :---------------   | :--------------------------   | :---------------   | :------------------------------ |
-// | **Initialization** | load complete                 | **ReadyToStart**   | Start screen ready.             |
+// | **Initialization** | load complete                 | **ReadyToStart**   | Checkerboard and pieces ready.  |
 // | **ReadyToStart**   | Player presses arrow/WSAD key | **Running**        | Begin game loop.                |
 // | **Running**        | Player presses *Esc*          | **EscapeMenu**     | Open escape menu.               |
 // | **EscapeMenu**     | Select “RESUME”               | **Running**        | Return to play.                 |

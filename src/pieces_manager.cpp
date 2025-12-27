@@ -121,13 +121,19 @@ size_t PiecesManager::countPlayerPieces(Player player) const
 {
     return std::ranges::count_if(pieces_, [&player](const auto& piece)
     {
-        return piece->getPlayer() == player;
+        return piece->getPlayer() == player && piece->isAlive();
     });
 }
 
 bool PiecesManager::didAnyPlayerRunOutOfPieces() const
 {
-    return (countPlayerPieces(Player::LOWER) == 0) || (countPlayerPieces(Player::UPPER) == 0);
+    const size_t upperPlayerPiecesCount = countPlayerPieces(Player::UPPER);
+    const size_t lowerPlayerPiecesCount = countPlayerPieces(Player::LOWER);
+
+    qDebug() << "Upper player has" << upperPlayerPiecesCount << "pieces left";
+    qDebug() << "Lower player has" << lowerPlayerPiecesCount << "pieces left";
+
+    return upperPlayerPiecesCount == 0 || lowerPlayerPiecesCount == 0;
 }
 
 Player PiecesManager::getPlayerWithNoPiecesLeft() const

@@ -20,10 +20,10 @@ void OverlayManager::hideEscapeMenuOverlay()
 
 void OverlayManager::showEndGameOverlay(const GameResult gameResult)
 {
-    const bool victory = gameResult == GameResult::VICTORY;
+    const bool upperPlayerVictory = gameResult == GameResult::UPPER_PLAYER_VICTORY;
 
     endGameOverlay_->setProperty("visible", true);
-    endGameOverlay_->setProperty("message", victory ? "YOU WIN!" : "GAME OVER");
+    endGameOverlay_->setProperty("message", upperPlayerVictory ? "UPPER PLAYER WINS!" : "LOWER PLAYER WINS!");
 }
 
 void OverlayManager::hideEndGameOverlay()

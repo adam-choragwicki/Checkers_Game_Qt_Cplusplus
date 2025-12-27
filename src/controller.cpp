@@ -72,7 +72,7 @@ void Controller::hideEndGameOverlay()
     overlayManager_->hideEndGameOverlay();
 }
 
-void Controller::setGameState(GameStateType newGameState)
+void Controller::setGameState(const GameStateType newGameState)
 {
     gameStateManager_.setGameState(newGameState);
 }
@@ -216,7 +216,7 @@ void Controller::processPieceMove(Piece& piece, const Coordinates& targetTileCoo
         }
         else
         {
-            /*Capture was possible but player chose other tile so no move was taken and selected piece is reset*/
+            /*Capture was possible but player chose another tile, so no move was taken and a selected piece is reset*/
             PieceStateManager::deselectPiece(piece);
         }
     }
@@ -266,7 +266,11 @@ void Controller::endTurn()
     qDebug() << "============================================= END TURN =============================================";
     if (model_.getPiecesManager().didAnyPlayerRunOutOfPieces())
     {
-        endGame(model_.getPiecesManager().getPlayerWithNoPiecesLeft(), GameEndReason::NO_PIECES_LEFT);
+        const Player playerWithNoPiecesLeft = model_.getPiecesManager().getPlayerWithNoPiecesLeft();
+
+        qDebug() << "Player" << static_cast<int>(playerWithNoPiecesLeft) << "has no pieces left";
+
+        endGame(playerWithNoPiecesLeft, GameEndReason::NO_PIECES_LEFT);
     }
 
     disableAllPieces();
@@ -285,8 +289,25 @@ bool Controller::checkEligibilityAndPromotePiece(Piece& piece)
     return false;
 }
 
-void Controller::endGame(Player losingPlayer, GameEndReason gameEndReason)
+void Controller::endGame(const Player losingPlayer, GameEndReason gameEndReason) // TODO add support for end game reason
 {
+    // NOTE the function accepts LOSING player as a parameter
+
+    qInfo() << "Ending game";
+
+    if (losingPlayer == Player::LOWER)
+    {
+        setGameState(GameStateType::EndedVictoryPlayerUpper);
+    }
+    else if (losingPlayer == Player::UPPER)
+    {
+        setGameState(GameStateType::EndedVictoryPlayerLower);
+    }
+    else
+    {
+        Q_UNREACHABLE();
+    }
+
     // view_.showEndGameDialog(losingPlayer, gameEndReason);
 }
 

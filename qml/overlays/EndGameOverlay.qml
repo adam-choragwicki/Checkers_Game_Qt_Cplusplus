@@ -6,7 +6,6 @@ Item {
     property int currentIndex: 0
 
     property string message: "NULL" // to be filled from C++ dynamically
-    property string score: "NULL" // to be filled from C++ dynamically
 
     signal playAgainClicked()
     signal quitClicked()
@@ -34,7 +33,7 @@ Item {
         }
 
         Text {
-            text: "SCORE\n" + endGameOverlayRoot.score
+            text: "END GAME REASON"
             color: "white"
             font.pixelSize: uiScaler.px(40)
             horizontalAlignment: Text.AlignHCenter

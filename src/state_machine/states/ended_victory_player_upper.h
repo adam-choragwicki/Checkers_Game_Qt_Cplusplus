@@ -1,23 +1,24 @@
 #pragma once
 
 #include "../abstract_state.h"
+#include "game_result.h"
 
-class EndedDefeatState : public AbstractState
+class EndedVictoryPlayerUpperState : public AbstractState
 {
 public:
-    EndedDefeatState() : AbstractState("EndedDefeatState", GameStateType::EndedDefeat)
+    EndedVictoryPlayerUpperState() : AbstractState("EndedVictoryPlayerUpperState", GameStateType::EndedVictoryPlayerUpper)
     {}
 
     void entered() override
     {
-        qDebug() << "Entered state: EndedDefeat";
-        stateActions_->showEndGameOverlay(GameResult::DEFEAT);
+        qDebug() << "Entered state: EndedVictoryPlayerUpper";
+        stateActions_->showEndGameOverlay(GameResult::UPPER_PLAYER_VICTORY);
         stateActions_->stopGameLoop();
     }
 
     void exited() override
     {
-        qDebug() << "Exited state: EndedDefeat";
+        qDebug() << "Exited state: EndedVictoryPlayerUpper";
         stateActions_->hideEndGameOverlay();
     }
 
