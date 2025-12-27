@@ -3,7 +3,10 @@ import QtQuick
 Rectangle {
     id: abstractPiece
 
-    property int number: -1     // TODO default value, should be set by concrete piece
+    required property string player
+    required property color disabledPieceOutlineColor
+
+    property int idNumber: -1     // TODO default value, should be set by concrete piece
     property int pieceState: -1 // TODO default value, should be set by concrete piece
     property bool isPromoted: false
 
@@ -16,6 +19,27 @@ Rectangle {
     radius: 50 // circle
 
     border.width: uiScaler.px(5) // outline width
+
+    onPieceStateChanged: {
+        console.log("QML: Player " + player + " piece " + idNumber + " piece state changed to " + pieceState)
+
+        if (pieceState === 1) {
+            border.color = disabledPieceOutlineColor
+        } else if (pieceState === 2) {
+            border.color = activePieceOutlineColor
+        } else if (pieceState === 3) {
+            border.color = selectedPieceOutlineColor
+        } else {
+            console.error("QML: Invalid piece state " + pieceState + " of player " + player + " piece")
+        }
+    }
+
+    MouseArea {
+        anchors.fill: parent
+        onClicked: {
+            piecesModel.pieceClicked(idNumber)
+        }
+    }
 
     Crown {
         anchors.centerIn: parent
@@ -38,7 +62,7 @@ Rectangle {
 
     Text {
         anchors.centerIn: parent
-        text: number
+        text: idNumber
         font.bold: true
         font.pixelSize: uiScaler.px(30)
         color: "white"

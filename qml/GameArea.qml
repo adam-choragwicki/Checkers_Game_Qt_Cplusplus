@@ -54,7 +54,7 @@ Item {
 
             Binding {
                 target: loader.item
-                property: "number"
+                property: "idNumber"
                 value: idRole
             }
 
