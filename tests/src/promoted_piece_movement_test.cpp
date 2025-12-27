@@ -15,7 +15,7 @@ TEST_F(PromotedPieceMovementTest, CheckIfPieceCanMovePositive_PiecesInTheirFirst
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesManager_));
     }
 }
 
@@ -30,7 +30,7 @@ TEST_F(PromotedPieceMovementTest, CheckIfPieceCanMovePositive_PiecesInMiddleRows
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesManager_));
     }
 }
 
@@ -45,7 +45,7 @@ TEST_F(PromotedPieceMovementTest, CheckIfPieceCanMovePositive_PiecesInSideColumn
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesManager_));
     }
 }
 
@@ -64,7 +64,7 @@ TEST_F(PromotedPieceMovementTest, CheckIfPieceCanMovePositive_PiecesHalfBlockedB
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesManager_));
     }
 }
 
@@ -83,7 +83,7 @@ TEST_F(PromotedPieceMovementTest, CheckIfPieceCanMovePositive_PiecesHalfBlockedB
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesManager_));
     }
 }
 
@@ -98,7 +98,7 @@ TEST_F(PromotedPieceMovementTest, CheckIfPiecesCanMovePositive_PiecesInTheirLast
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesManager_));
     }
 }
 
@@ -117,7 +117,7 @@ TEST_F(PromotedPieceMovementTest, CheckIfPieceCanMovePositive_PiecesBlockedInFro
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceMovementManager::checkIfPieceCanMove(*piece, piecesManager_));
     }
 }
 
@@ -128,31 +128,31 @@ TEST_F(PromotedPieceMovementTest, CheckMovePossibility1)
 
     placePiecesOnCheckerboard();
 
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(4, 3)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(4, 5)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(2, 3)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(2, 5)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(1, 2)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(1, 6)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(5, 2)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(5, 6)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(3, 2)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(3, 6)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(1, 4)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(5, 4)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(4, 3)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(4, 5)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(2, 3)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(2, 5)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(1, 2)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(1, 6)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(5, 2)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(5, 6)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(3, 2)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(3, 6)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(1, 4)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(5, 4)));
 
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(5, 4)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(5, 6)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(7, 4)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(7, 6)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(4, 3)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(4, 7)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(8, 3)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(8, 7)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(4, 5)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(8, 5)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(6, 3)));
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(6, 7)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(5, 4)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(5, 6)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(7, 4)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(7, 6)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(4, 3)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(4, 7)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(8, 3)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(8, 7)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(4, 5)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(8, 5)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(6, 3)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(6, 7)));
 }
 
 TEST_F(PromotedPieceMovementTest, CheckMovePossibility2)
@@ -162,15 +162,15 @@ TEST_F(PromotedPieceMovementTest, CheckMovePossibility2)
 
     placePiecesOnCheckerboard();
 
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(5, 4)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(5, 6)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(3, 4)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(3, 6)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(5, 4)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(5, 6)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(3, 4)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(3, 6)));
 
-    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(4, 5)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(4, 3)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(6, 3)));
-    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(6, 5)));
+    EXPECT_FALSE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(4, 5)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(4, 3)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(6, 3)));
+    EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(6, 5)));
 }
 
 TEST_F(PromotedPieceMovementTest, WhichPiecesCanMove)
@@ -184,8 +184,8 @@ TEST_F(PromotedPieceMovementTest, WhichPiecesCanMove)
 
     placePiecesOnCheckerboard();
 
-    std::vector<Piece*> piecesWhichCanMovePlayerUp = PieceMovementManager::whichPiecesCanMove(Player::UPPER, piecesPlacement_);
-    std::vector<Piece*> piecesWhichCanMovePlayerDown = PieceMovementManager::whichPiecesCanMove(Player::LOWER, piecesPlacement_);
+    std::vector<Piece*> piecesWhichCanMovePlayerUp = PieceMovementManager::whichPiecesCanMove(Player::UPPER, piecesManager_);
+    std::vector<Piece*> piecesWhichCanMovePlayerDown = PieceMovementManager::whichPiecesCanMove(Player::LOWER, piecesManager_);
 
     EXPECT_EQ(piecesWhichCanMovePlayerUp.size(), 2);
     EXPECT_EQ(piecesWhichCanMovePlayerDown.size(), 4);

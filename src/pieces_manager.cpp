@@ -6,6 +6,8 @@
 
 PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPositions) : AbstractPelletsManager(standardPelletPositions)
 {
+    // TODO eventually the PiecesManager cannot create pieces in constructor (tests require piece manager to be empty)
+
     // Movement and capture testing
     // createPiece(Coordinates{6, 3}, Player::LOWER);
     // createPiece(Coordinates{4, 5}, Player::UPPER);
@@ -15,10 +17,10 @@ PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPosi
     // createPiece(Coordinates{7, 6}, Player::UPPER);
 
     // Multi pieces testing
-    createPiece(Coordinates{6, 3}, Player::LOWER);
-    createPiece(Coordinates{6, 1}, Player::LOWER);
-    createPiece(Coordinates{4, 5}, Player::UPPER);
-    createPiece(Coordinates{4, 3}, Player::UPPER);
+    // createPiece(Coordinates{6, 3}, Player::LOWER);
+    // createPiece(Coordinates{6, 1}, Player::LOWER);
+    // createPiece(Coordinates{4, 5}, Player::UPPER);
+    // createPiece(Coordinates{4, 3}, Player::UPPER);
 
     // createPieces();
 
@@ -76,7 +78,7 @@ void PiecesManager::createPiece(const Coordinates& coordinates, Player player)
     }
     else
     {
-        throw std::runtime_error("Error, piece is already present on given coorrHdinates");
+        throw std::runtime_error("Error, piece is already present on given coordinates");
     }
 }
 

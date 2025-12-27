@@ -13,7 +13,7 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSide)
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesManager_));
     }
 }
 
@@ -28,7 +28,7 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSideOtherSid
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesManager_));
     }
 }
 
@@ -43,7 +43,7 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnBothSides)
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_TRUE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesPlacement_));
+        EXPECT_TRUE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesManager_));
     }
 }
 
@@ -57,7 +57,7 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_SideWallBehindPiece)
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_FALSE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesPlacement_));
+        EXPECT_FALSE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesManager_));
     }
 }
 
@@ -72,7 +72,7 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_TopBottomAndSideWallBehi
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_FALSE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesPlacement_));
+        EXPECT_FALSE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesManager_));
     }
 }
 
@@ -87,7 +87,7 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_FriendlyPieceBehindPiece
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_FALSE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesPlacement_));
+        EXPECT_FALSE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesManager_));
     }
 }
 
@@ -102,7 +102,7 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_EnemyPieceBehindPiece)
 
     for(auto& piece : piecesOnCheckerboard_)
     {
-        EXPECT_FALSE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesPlacement_));
+        EXPECT_FALSE(PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesManager_));
     }
 }
 
@@ -113,16 +113,16 @@ TEST_F(PieceCaptureTest, CheckCapturePossibility)
 
     placePiecesOnCheckerboard();
 
-    EXPECT_TRUE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(5, 4)));
-    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(4, 1)));
-    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(2, 1)));
-    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesPlacement_, Coordinates(2, 3)));
+    EXPECT_TRUE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(5, 4)));
+    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(4, 1)));
+    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(2, 1)));
+    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(2, 3)));
 
-    EXPECT_TRUE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(2, 1)));
-    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(2, 3)));
-    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(3, 4)));
-    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(5, 2)));
-    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesPlacement_, Coordinates(5, 4)));
+    EXPECT_TRUE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(2, 1)));
+    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(2, 3)));
+    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(3, 4)));
+    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(5, 2)));
+    EXPECT_FALSE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(1), piecesManager_, Coordinates(5, 4)));
 }
 
 TEST_F(PieceCaptureTest, WhichPiecesCanCapture)
@@ -137,8 +137,8 @@ TEST_F(PieceCaptureTest, WhichPiecesCanCapture)
 
     placePiecesOnCheckerboard();
 
-    std::vector<Piece*> piecesWhichCanCapturePlayerUp = PieceCaptureManager::whichPiecesCanCapture(Player::UPPER, piecesPlacement_);
-    std::vector<Piece*> piecesWhichCanCapturePlayerDown = PieceCaptureManager::whichPiecesCanCapture(Player::LOWER, piecesPlacement_);
+    std::vector<Piece*> piecesWhichCanCapturePlayerUp = PieceCaptureManager::whichPiecesCanCapture(Player::UPPER, piecesManager_);
+    std::vector<Piece*> piecesWhichCanCapturePlayerDown = PieceCaptureManager::whichPiecesCanCapture(Player::LOWER, piecesManager_);
 
     EXPECT_EQ(piecesWhichCanCapturePlayerUp.size(), 2);
     EXPECT_EQ(piecesWhichCanCapturePlayerDown.size(), 3);

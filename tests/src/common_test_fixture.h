@@ -2,6 +2,9 @@
 
 #include "gtest/gtest.h"
 #include "pieces_placement.h"
+#include "coordinates.h"
+#include "pieces_manager.h"
+#include "player_manager.h"
 
 class CommonTestFixture : public ::testing ::Test
 {
@@ -16,14 +19,14 @@ protected:
     {
         for(const auto& piece: piecesParameters_)
         {
-            piecesPlacement_.createPiece(piece.coordinates, piece.player);
+            piecesManager_.createPiece(piece.coordinates, piece.player);
 
             if(piece.isPromoted)
             {
-                piecesPlacement_.getPieceAtCoordinates(piece.coordinates).promote();
+                piecesManager_.getPieceAtCoordinates(piece.coordinates).promote();
             }
 
-            piecesOnCheckerboard_.push_back(&piecesPlacement_.getPieceAtCoordinates(piece.coordinates));
+            piecesOnCheckerboard_.push_back(&piecesManager_.getPieceAtCoordinates(piece.coordinates));
         }
     }
 
@@ -34,7 +37,7 @@ protected:
         bool isPromoted = false;
     };
 
-    PiecesPlacement piecesPlacement_;
+    PiecesManager piecesManager_;
     std::vector<PieceParameters> piecesParameters_;
     std::vector<Piece*> piecesOnCheckerboard_;
 };
