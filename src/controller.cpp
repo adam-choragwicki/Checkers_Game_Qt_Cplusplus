@@ -284,6 +284,7 @@ bool Controller::checkEligibilityAndPromotePiece(Piece& piece)
     if (PiecePromotionManager::checkPromotionEligibility(piece))
     {
         piece.promote();
+        qDebug() << "Piece" << piece.getId() << "has been promoted";
         return true;
     }
 
