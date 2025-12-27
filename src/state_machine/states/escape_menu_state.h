@@ -27,7 +27,6 @@ public:
         {
             case GameStateType::ReadyToStart:
             case GameStateType::Running:
-            case GameStateType::PausedForDebug:
                 break;
 
             default:

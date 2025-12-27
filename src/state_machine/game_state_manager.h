@@ -7,7 +7,6 @@
 #include "states/escape_menu_state.h"
 #include "states/ended_victory_player_upper.h"
 #include "states/ended_victory_player_lower.h"
-#include "states/paused_for_debug_state.h"
 #include <ranges>
 #include <stdexcept>
 
@@ -21,7 +20,6 @@ public:
         {GameStateType::EscapeMenu, &escapeMenuState_},
         {GameStateType::EndedVictoryPlayerUpper, &endedVictoryPlayerUpperState_},
         {GameStateType::EndedVictoryPlayerLower, &endedVictoryPlayerLowerState_},
-        {GameStateType::PausedForDebug, &pausedForDebugState_}
     }
     {
         for (auto& state: states_ | std::views::values)
@@ -98,7 +96,6 @@ private:
     EscapeMenuState escapeMenuState_;
     EndedVictoryPlayerUpperState endedVictoryPlayerUpperState_;
     EndedVictoryPlayerLowerState endedVictoryPlayerLowerState_;
-    PausedForDebugState pausedForDebugState_;
 
     AbstractState* currentGameState_{};
     AbstractState* previousState_{};

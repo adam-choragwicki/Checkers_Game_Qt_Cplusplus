@@ -32,7 +32,6 @@ set(BACKEND_SOURCE_FILES
         state_machine/states/ended_victory_player_lower.h
         state_machine/states/escape_menu_state.h
         state_machine/states/initialization_state.h
-        state_machine/states/paused_for_debug_state.h
         state_machine/states/ready_to_start_state.h
         state_machine/states/running_state.h
 

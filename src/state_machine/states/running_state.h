@@ -18,7 +18,6 @@ public:
         switch (newState->type())
         {
             case GameStateType::EscapeMenu:
-            case GameStateType::PausedForDebug:
             case GameStateType::EndedVictoryPlayerUpper:
             case GameStateType::EndedVictoryPlayerLower:
                 break;
@@ -52,10 +51,6 @@ public:
             case Qt::Key_Down:
             case Qt::Key_S:
                 // stateActions_->processPacmanDirectionKeyPress(Direction::DOWN);
-                break;
-
-            case Qt::Key_P:
-                stateActions_->setGameState(GameStateType::PausedForDebug);
                 break;
 
             case Qt::Key_Escape:

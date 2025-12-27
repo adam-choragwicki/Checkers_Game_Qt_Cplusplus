@@ -10,7 +10,6 @@ enum class GameStateType
     EscapeMenu, // Escape menu overlay is displayed.
     EndedVictoryPlayerUpper, // Game stopped because win conditions have been satisfied for player upper. The end game overlay is displayed.
     EndedVictoryPlayerLower, // Game stopped because win conditions have been satisfied for player lower. The end game overlay is displayed.
-    PausedForDebug, // Game loop stopped; only for debug.
 };
 
 inline QDebug operator<<(QDebug debug, GameStateType state)
@@ -26,7 +25,6 @@ inline QDebug operator<<(QDebug debug, GameStateType state)
         case GameStateType::EscapeMenu: return debug << "EscapeMenu";
         case GameStateType::EndedVictoryPlayerUpper: return debug << "EndedVictoryPlayerUpper";
         case GameStateType::EndedVictoryPlayerLower: return debug << "EndedVictoryPlayerLower";
-        case GameStateType::PausedForDebug: return debug << "Paused (debug)";
 
         default:
             throw std::runtime_error("Unknown game state");
