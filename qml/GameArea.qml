@@ -63,6 +63,12 @@ Item {
                 property: "pieceState"
                 value: stateRole
             }
+
+            Binding {
+                target: loader.item
+                property: "isPromoted"
+                value: promotedRole
+            }
         }
     }
 

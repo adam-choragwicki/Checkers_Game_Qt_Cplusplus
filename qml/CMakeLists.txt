@@ -19,6 +19,7 @@ qt_add_qml_module(${LIB_NAME}
         AbstractPiece.qml
         BlackPiece.qml
         RedPiece.qml
+        Crown.qml
 
         AbstractTile.qml
         PlayableTile.qml

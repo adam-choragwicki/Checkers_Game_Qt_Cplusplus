@@ -106,7 +106,8 @@ void Piece::moveToTile(const Coordinates& newCoordinates)
 void Piece::promote()
 {
     promoted_ = true;
-    emit promoted();
+    emit pieceChanged(id_);
+    // emit promoted();
 }
 
 std::ostream& operator<<(std::ostream& os, const Piece& piece)
