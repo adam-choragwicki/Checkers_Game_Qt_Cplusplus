@@ -11,9 +11,9 @@ public:
     virtual void startGameLoop() = 0;
     virtual void stopGameLoop() = 0;
 
-    // Pacman
-    // virtual void processPacmanDirectionKeyPress(const Direction& nextDirection) = 0;
-
+    // Piece
+    virtual void enablePiecesAnimation() = 0;
+    virtual void disablePiecesAnimation() = 0;
     // Overlays
     virtual void showEscapeMenuOverlay() = 0;
     virtual void hideEscapeMenuOverlay() = 0;

@@ -64,6 +64,14 @@ public:
 
     void setState(State newState);
 
+    [[nodiscard]] bool isAnimationEnabled() const { return animationEnabled_; }
+
+    void setAnimationEnabled(const bool enabled)
+    {
+        animationEnabled_ = enabled;
+        emit pieceChanged(id_);
+    }
+
 private:
     const Coordinates STARTING_COORDINATES_;
     Coordinates coordinates_;
@@ -75,4 +83,6 @@ private:
 
     inline static int counter_{};
     int id_{};
+
+    bool animationEnabled_{}; // TODO should it be in backend?
 };

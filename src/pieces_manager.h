@@ -29,6 +29,9 @@ public:
     //     return pieces_;
     // }
 
+    void enablePiecesAnimations();
+    void disablePiecesAnimations();
+
     const std::vector<std::unique_ptr<Piece>>& getPieces() const
     {
         return pieces_;
