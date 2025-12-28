@@ -22,7 +22,7 @@ PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPosi
     // createPiece(Coordinates{4, 5}, Player::UPPER);
     // createPiece(Coordinates{4, 3}, Player::UPPER);
 
-    // createPieces();
+    createPieces();
 
     qDebug() << "Created" << pieces_.size() << "pieces";
 
@@ -117,8 +117,6 @@ void PiecesManager::createPieces()
             {
                 throw std::runtime_error("Error, cannot place piece on non-playable tile");
             }
-
-            return; // TODO temporary to just create one piece per player
         }
     };
 
@@ -192,8 +190,8 @@ bool PiecesManager::didAnyPlayerRunOutOfPieces() const
     const size_t upperPlayerPiecesCount = countPlayerPieces(Player::UPPER);
     const size_t lowerPlayerPiecesCount = countPlayerPieces(Player::LOWER);
 
-    qDebug() << "Upper player has" << upperPlayerPiecesCount << "pieces left";
-    qDebug() << "Lower player has" << lowerPlayerPiecesCount << "pieces left";
+    qDebug() << "NORTH player has" << upperPlayerPiecesCount << "pieces left";
+    qDebug() << "SOUTH player has" << lowerPlayerPiecesCount << "pieces left";
 
     return upperPlayerPiecesCount == 0 || lowerPlayerPiecesCount == 0;
 }
@@ -204,12 +202,11 @@ Player PiecesManager::getPlayerWithNoPiecesLeft() const
     {
         return Player::LOWER;
     }
-    else if (countPlayerPieces(Player::UPPER) == 0)
+
+    if (countPlayerPieces(Player::UPPER) == 0)
     {
         return Player::UPPER;
     }
-    else
-    {
-        throw std::runtime_error("Error, both players have pieces left");
-    }
+
+    throw std::runtime_error("Error, both players have pieces left");
 }
