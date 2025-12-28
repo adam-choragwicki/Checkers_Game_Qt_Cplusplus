@@ -1,7 +1,7 @@
 #include "game_coordinator.h"
 
-// GameCoordinator::GameCoordinator(Model& model, GameLoop& gameLoop) : model_(model), gameLoop_(gameLoop)
-GameCoordinator::GameCoordinator(Model& model) : model_(model)
+// GameCoordinator::GameCoordinator(Model& model, GameLoop& gameLoop) : model_(model), gameLoop_(gameLoop) // TODO loop or not?
+GameCoordinator::GameCoordinator(Model& model, IStateActions* stateActions) : model_(model), stateActions_(stateActions)
 {
     checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
 }

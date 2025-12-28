@@ -19,7 +19,7 @@ signals:
 
 public:
     // explicit GameCoordinator(Model& model, GameLoop& gameLoop);
-    explicit GameCoordinator(Model& model); // TODO game loop or not?
+    explicit GameCoordinator(Model& model, IStateActions* stateActions); // TODO game loop or not?
 
     void setQmlHelper(QmlHelper* qmlHelper);
 
@@ -177,8 +177,45 @@ public:
         return false;
     }
 
+    void gameEnded(const Player losingPlayer, const GameEndReason gameEndReason) // TODO add support for end game reason
+    {
+        // NOTE the function accepts LOSING player as a parameter
+
+        qInfo() << "Ending game";
+
+        if (gameEndReason == GameEndReason::NO_MOVES_LEFT)
+        {
+            qDebug() << "Player" << static_cast<int>(losingPlayer) << "has no moves left";
+        }
+        else if (gameEndReason == GameEndReason::NO_PIECES_LEFT)
+        {
+            qDebug() << "Player" << static_cast<int>(losingPlayer) << "has no pieces left";
+        }
+        else
+        {
+            Q_UNREACHABLE();
+        }
+
+        if (losingPlayer == Player::SOUTH)
+        {
+            stateActions_->setGameState(GameStateType::EndedVictoryNorthPlayer);
+        }
+        else if (losingPlayer == Player::NORTH)
+        {
+            stateActions_->setGameState(GameStateType::EndedVictorySouthPlayer);
+        }
+        else
+        {
+            Q_UNREACHABLE();
+        }
+
+        // view_.showEndGameDialog(losingPlayer, gameEndReason);
+    }
+
 private:
     Model& model_;
     // GameLoop& gameLoop_;
     QmlHelper* qmlHelper_{};
+
+    IStateActions* stateActions_{};
 };

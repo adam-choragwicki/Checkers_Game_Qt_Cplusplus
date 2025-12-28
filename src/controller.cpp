@@ -7,12 +7,10 @@ Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicati
     qInfo() << "Initializing controller";
 
     // gameCoordinator_ = std::make_unique<GameCoordinator>(model_, *gameLoop_); // TODO game loop or not?
-    gameCoordinator_ = std::make_unique<GameCoordinator>(model_);
+    gameCoordinator_ = std::make_unique<GameCoordinator>(model_, this);
     inputHandler_ = std::make_unique<InputHandler>(this, &windowManager_);
 
     // connect(gameLoop_.get(), &GameLoop::endGame, this, &Controller::gameEnded);
-
-    connect(gameCoordinator_.get(), &GameCoordinator::endGame, this, &Controller::gameEnded);
 }
 
 void Controller::onQmlEngineFullyInitialized()
@@ -98,41 +96,6 @@ void Controller::processTileClicked(const int row, const int column) // TODO sen
 
         model_.setMoveInProgress(false);
     }
-}
-
-void Controller::gameEnded(const Player losingPlayer, const GameEndReason gameEndReason) // TODO add support for end game reason
-{
-    // NOTE the function accepts LOSING player as a parameter
-
-    qInfo() << "Ending game";
-
-    if (gameEndReason == GameEndReason::NO_MOVES_LEFT)
-    {
-        qDebug() << "Player" << static_cast<int>(losingPlayer) << "has no moves left";
-    }
-    else if (gameEndReason == GameEndReason::NO_PIECES_LEFT)
-    {
-        qDebug() << "Player" << static_cast<int>(losingPlayer) << "has no pieces left";
-    }
-    else
-    {
-        Q_UNREACHABLE();
-    }
-
-    if (losingPlayer == Player::SOUTH)
-    {
-        setGameState(GameStateType::EndedVictoryNorthPlayer);
-    }
-    else if (losingPlayer == Player::NORTH)
-    {
-        setGameState(GameStateType::EndedVictorySouthPlayer);
-    }
-    else
-    {
-        Q_UNREACHABLE();
-    }
-
-    // view_.showEndGameDialog(losingPlayer, gameEndReason);
 }
 
 void Controller::onResumeClicked()
