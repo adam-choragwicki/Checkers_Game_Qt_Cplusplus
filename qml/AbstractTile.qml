@@ -13,7 +13,7 @@ Rectangle {
     TapHandler {
         onTapped: {
             console.log("QML: Tile clicked at (" + (gridY + 1) + "," + (gridY + 1) + ")")
-            Controller.processTileClicked(gridY + 1, gridX + 1)
+            Controller.onTileClicked(gridY + 1, gridX + 1)
         }
     }
 }

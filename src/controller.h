@@ -18,8 +18,8 @@ signals:
     void applicationShutdownRequested();
 
 public slots:
-    void processTileClicked(int row, int column);
-    // void processTileClicked(const Coordinates& targetTileCoordinates); // TODO restore int,int version?
+    void onTileClicked(int row, int column);
+    // void onTileClicked(const Coordinates& targetTileCoordinates); // TODO restore int,int version?
     void onQmlEngineFullyInitialized();
     void processKeyPress(int key);
     void onResumeClicked();

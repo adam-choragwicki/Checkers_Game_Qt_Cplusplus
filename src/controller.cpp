@@ -74,8 +74,8 @@ void Controller::processKeyPress(const int key)
     inputHandler_->processKeyPress(key);
 }
 
-// void Controller::processTileClicked(const Coordinates& targetTileCoordinates)
-void Controller::processTileClicked(const int row, const int column) // TODO send coordinates from QML directly?
+// void Controller::onTileClicked(const Coordinates& targetTileCoordinates)
+void Controller::onTileClicked(const int row, const int column) // TODO send coordinates from QML directly?
 {
     const Coordinates targetTileCoordinates(row, column);
 
