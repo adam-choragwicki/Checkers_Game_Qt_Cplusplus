@@ -53,21 +53,3 @@ void PiecesModel::pieceChanged(const int index)
     const QModelIndex idx = createIndex(index, 0);
     emit dataChanged(idx, idx);
 }
-
-void PiecesModel::pieceClicked(const int pieceId)
-{
-    if (auto* piece = piecesManager_.findPieceById(pieceId))
-    {
-        Q_ASSERT(pieceId == piece->getId());
-
-        qDebug() << "C++: Piece" << pieceId << "clicked";
-
-        if (piece->isActive())
-        {
-            qDebug() << "C++: Setting piece" << pieceId << "as selected";
-            piece->setState(Piece::State::SELECTED);
-        }
-    }
-
-    pieceChanged(pieceId); // TODO only state is changed here
-}

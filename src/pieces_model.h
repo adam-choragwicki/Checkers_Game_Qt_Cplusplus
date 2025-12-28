@@ -7,9 +7,6 @@ class PiecesModel : public QAbstractListModel
 {
     Q_OBJECT
 
-public slots:
-    void pieceClicked(int pieceId);
-
 public:
     enum Roles { XRole = Qt::UserRole + 1, YRole, PlayerRole, AliveRole, IdRole, StateRole, AnimationEnabledRole, PromotedRole };
 

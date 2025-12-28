@@ -37,7 +37,7 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         onClicked: {
-            piecesModel.pieceClicked(idNumber)
+            Controller.onPieceClicked(idNumber)
         }
     }
 

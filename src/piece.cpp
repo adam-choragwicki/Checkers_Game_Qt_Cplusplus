@@ -89,7 +89,7 @@ void Piece::setState(const State newState)
 
     // qDebug() << "C++: Piece" << id_ << " Emitting pieceChanged signal";
 
-    emit pieceChanged(id_);
+    emit pieceChanged(id_); // TODO only state changes here
 }
 
 void Piece::moveToTile(const Coordinates& newCoordinates)

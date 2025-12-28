@@ -18,6 +18,7 @@ signals:
     void applicationShutdownRequested();
 
 public slots:
+    void onPieceClicked(int pieceId);
     void onTileClicked(int row, int column);
     // void onTileClicked(const Coordinates& targetTileCoordinates); // TODO restore int,int version?
     void onQmlEngineFullyInitialized();

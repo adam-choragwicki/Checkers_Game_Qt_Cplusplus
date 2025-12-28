@@ -74,6 +74,26 @@ void Controller::processKeyPress(const int key)
     inputHandler_->processKeyPress(key);
 }
 
+void Controller::onPieceClicked(const int pieceId)
+{
+    if (auto* piece = model_.getPiecesManager().findPieceById(pieceId))
+    {
+        Q_ASSERT(pieceId == piece->getId());
+
+        qDebug() << "C++: Piece" << pieceId << "clicked";
+
+        if (piece->isActive())
+        {
+            qDebug() << "C++: Setting piece" << pieceId << "as selected";
+            piece->setState(Piece::State::SELECTED);
+        }
+    }
+    else
+    {
+        qFatal("Piece with id %d not found", pieceId);
+    }
+}
+
 // void Controller::onTileClicked(const Coordinates& targetTileCoordinates)
 void Controller::onTileClicked(const int row, const int column) // TODO send coordinates from QML directly?
 {
