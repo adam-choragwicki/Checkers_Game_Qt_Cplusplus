@@ -3,12 +3,11 @@ import QtQuick
 Rectangle {
     id: abstractPiece
 
-    required property string player
-    required property color disabledPieceOutlineColor
-
-    property int idNumber: -1     // TODO default value, should be set by concrete piece
-    property int pieceState: -1 // TODO default value, should be set by concrete piece
-    property bool isPromoted: false
+    property int idNumber
+    property int pieceState
+    property bool isPromoted
+    property string player
+    property color disabledPieceOutlineColor
 
     readonly property color activePieceOutlineColor: Qt.rgba(255 / 255, 255 / 255, 0, 1) // 255, 255, 0
     readonly property color selectedPieceOutlineColor: "white"

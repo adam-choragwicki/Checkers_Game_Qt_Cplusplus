@@ -20,67 +20,46 @@ Item {
     Repeater {
         model: piecesModel
 
-        delegate: Loader {
-            id: loader
+        delegate: AbstractPiece {
+            id: piece
+
+            idNumber: idRole
+            pieceState: stateRole
+            isPromoted: promotedRole
+
+            readonly property bool isPlayerOne: playerRole === 1
+
+            player: isPlayerOne ? "SOUTH" : "NORTH"
+
+            color: isPlayerOne ? Qt.rgba(50 / 255, 50 / 255, 50 / 255, 1) : Qt.rgba(220 / 255, 0, 0, 1)
+
+            disabledPieceOutlineColor: isPlayerOne ? "black" : Qt.rgba(170 / 255, 0, 0, 1)
+
             x: (xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
-            y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
+            y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
 
             property bool pieceAnimationsEnabled: animationEnabledRole
             property int pieceMovementAnimationDurationMs: 100 // TODO ( take it from C++ context property)
 
             Behavior on x {
-                enabled: loader.pieceAnimationsEnabled
+                enabled: piece.pieceAnimationsEnabled
 
                 NumberAnimation {
-                    duration: pieceMovementAnimationDurationMs
+                    duration: piece.pieceMovementAnimationDurationMs
                     easing.type: Easing.Linear
                 }
             }
+
             Behavior on y {
-                enabled: loader.pieceAnimationsEnabled
+                enabled: piece.pieceAnimationsEnabled
 
                 NumberAnimation {
-                    duration: pieceMovementAnimationDurationMs
+                    duration: piece.pieceMovementAnimationDurationMs
                     easing.type: Easing.Linear
                 }
             }
 
             visible: aliveRole
-            sourceComponent: playerRole === 1 ? redPieceComponent : blackPieceComponent
-
-            onLoaded: {
-                console.log("QML: Loader loaded piece " + idRole)
-            }
-
-            Binding {
-                target: loader.item
-                property: "idNumber"
-                value: idRole
-            }
-
-            Binding {
-                target: loader.item
-                property: "pieceState"
-                value: stateRole
-            }
-
-            Binding {
-                target: loader.item
-                property: "isPromoted"
-                value: promotedRole
-            }
-        }
-    }
-
-    Component {
-        id: redPieceComponent
-        RedPiece {
-        }
-    }
-
-    Component {
-        id: blackPieceComponent
-        BlackPiece {
         }
     }
 
