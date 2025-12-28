@@ -76,45 +76,57 @@ void Controller::processKeyPress(const int key)
 
 void Controller::onPieceClicked(const int pieceId)
 {
-    if (auto* piece = model_.getPiecesManager().findPieceById(pieceId))
+    if (gameStateManager_.getCurrentGameStateType() == GameStateType::Running) // TODO quick hack, optimize or not worth it?
     {
-        Q_ASSERT(pieceId == piece->getId());
-
-        qDebug() << "C++: Piece" << pieceId << "clicked";
-
-        if (piece->isActive())
+        if (Piece* piece = model_.getPiecesManager().findPieceById(pieceId))
         {
-            qDebug() << "C++: Setting piece" << pieceId << "as selected";
-            piece->setState(Piece::State::SELECTED);
+            Q_ASSERT(pieceId == piece->getId());
+
+            qDebug() << "C++: Piece" << pieceId << "clicked";
+
+            if (piece->isActive())
+            {
+                qDebug() << "C++: Setting piece" << pieceId << "as selected";
+                piece->setState(Piece::State::SELECTED);
+            }
+        }
+        else
+        {
+            qFatal("Piece with id %d not found", pieceId);
         }
     }
     else
     {
-        qFatal("Piece with id %d not found", pieceId);
+        qDebug().noquote() << "C++: Ignoring piece click in state" << gameStateManager_.getCurrentGameState()->getName();
     }
 }
 
 // void Controller::onTileClicked(const Coordinates& targetTileCoordinates)
 void Controller::onTileClicked(const int row, const int column) // TODO send coordinates from QML directly?
 {
-    const Coordinates targetTileCoordinates(row, column);
-
-    qDebug() << "C++: Tile clicked at coordinates" << targetTileCoordinates;
-
-    if (!model_.isMoveInProgress())
+    if (gameStateManager_.getCurrentGameStateType() == GameStateType::Running) // TODO quick hack, optimize or not worth it?
     {
-        model_.setMoveInProgress(true);
+        const Coordinates targetTileCoordinates(row, column);
 
-        /*Ignore clicking on tile unless any piece is selected*/
-        if (SelectedPieceManager::isAnyPieceSelected())
+        qDebug() << "C++: Tile clicked at coordinates" << targetTileCoordinates;
+
+        if (!model_.isMoveInProgress())
         {
-            Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
-            gameCoordinator_->processPieceMove(selectedPiece, targetTileCoordinates);
+            model_.setMoveInProgress(true);
+
+            /*Ignore clicking on a tile unless any piece is selected*/
+            if (SelectedPieceManager::isAnyPieceSelected())
+            {
+                Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
+                gameCoordinator_->processPieceMove(selectedPiece, targetTileCoordinates);
+            }
+
+            model_.setMoveInProgress(false);
         }
-
-        // emit sceneUpdateSignal();
-
-        model_.setMoveInProgress(false);
+    }
+    else
+    {
+        qDebug().noquote() << "C++: Ignoring tile click in state" << gameStateManager_.getCurrentGameState()->getName();
     }
 }
 

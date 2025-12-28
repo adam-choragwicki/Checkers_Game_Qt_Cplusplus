@@ -12,8 +12,6 @@ public:
     {
         stateActions_->enablePiecesAnimation();
         stateActions_->startGameLoop();
-
-        qInfo() << "=========================Game started=========================";
     }
 
     void exited() override
