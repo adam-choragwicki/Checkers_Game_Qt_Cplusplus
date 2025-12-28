@@ -6,11 +6,11 @@ class PromotedPieceCaptureTest : public CommonTestFixture
 
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_PlayerUpCaptureAllDirections)
 {
-    piecesParameters_ = {{{4, 3}, Player::UPPER, true},
-                         {{3, 2}, Player::LOWER, true},
-                         {{3, 4}, Player::LOWER, true},
-                         {{5, 2}, Player::LOWER, true},
-                         {{5, 4}, Player::LOWER, true}};
+    piecesParameters_ = {{{4, 3}, Player::NORTH, true},
+                         {{3, 2}, Player::SOUTH, true},
+                         {{3, 4}, Player::SOUTH, true},
+                         {{5, 2}, Player::SOUTH, true},
+                         {{5, 4}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -23,11 +23,11 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_PlayerUpCaptureA
 
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_PlayerDownCaptureAllDirections)
 {
-    piecesParameters_ = {{{5, 6}, Player::UPPER, true},
-                         {{4, 5}, Player::LOWER, true},
-                         {{4, 7}, Player::LOWER, true},
-                         {{6, 5}, Player::LOWER, true},
-                         {{6, 7}, Player::LOWER, true}};
+    piecesParameters_ = {{{5, 6}, Player::NORTH, true},
+                         {{4, 5}, Player::SOUTH, true},
+                         {{4, 7}, Player::SOUTH, true},
+                         {{6, 5}, Player::SOUTH, true},
+                         {{6, 7}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -40,10 +40,10 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_PlayerDownCaptur
 
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSideOtherSideWall)
 {
-    piecesParameters_ = {{{3, 2}, Player::UPPER, true},
-                         {{3, 6}, Player::UPPER, true},
-                         {{4, 3}, Player::LOWER, true},
-                         {{4, 7}, Player::LOWER, true}};
+    piecesParameters_ = {{{3, 2}, Player::NORTH, true},
+                         {{3, 6}, Player::NORTH, true},
+                         {{4, 3}, Player::SOUTH, true},
+                         {{4, 7}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -55,10 +55,10 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSide
 
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnBothSides)
 {
-    piecesParameters_ = {{{4, 3}, Player::UPPER, true},
-                         {{4, 5}, Player::UPPER, true},
-                         {{5, 4}, Player::LOWER, true},
-                         {{5, 2}, Player::LOWER, true}};
+    piecesParameters_ = {{{4, 3}, Player::NORTH, true},
+                         {{4, 5}, Player::NORTH, true},
+                         {{5, 4}, Player::SOUTH, true},
+                         {{5, 2}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -70,9 +70,9 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnBothSid
 
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_SideWallBehindPiece)
 {
-    piecesParameters_ = {{{2, 1}, Player::UPPER, true},
-                         {{3, 2}, Player::LOWER, true},
-                         {{4, 3}, Player::LOWER, true}};
+    piecesParameters_ = {{{2, 1}, Player::NORTH, true},
+                         {{3, 2}, Player::SOUTH, true},
+                         {{4, 3}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -84,10 +84,10 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_SideWallBehindPi
 
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_TopBottomAndSideWallBehindPiece)
 {
-    piecesParameters_ = {{{1, 2}, Player::UPPER, true},
-                         {{7, 8}, Player::UPPER, true},
-                         {{2, 1}, Player::LOWER, true},
-                         {{8, 7}, Player::LOWER, true}};
+    piecesParameters_ = {{{1, 2}, Player::NORTH, true},
+                         {{7, 8}, Player::NORTH, true},
+                         {{2, 1}, Player::SOUTH, true},
+                         {{8, 7}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -99,10 +99,10 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_TopBottomAndSide
 
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_FriendlyPieceBehindPiece)
 {
-    piecesParameters_ = {{{3, 6}, Player::UPPER, true},
-                         {{4, 5}, Player::UPPER, true},
-                         {{5, 4}, Player::LOWER, true},
-                         {{6, 3}, Player::LOWER, true}};
+    piecesParameters_ = {{{3, 6}, Player::NORTH, true},
+                         {{4, 5}, Player::NORTH, true},
+                         {{5, 4}, Player::SOUTH, true},
+                         {{6, 3}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -114,11 +114,11 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_FriendlyPieceBeh
 
 TEST_F(PromotedPieceCaptureTest, CheckCapturePossibilityPlayerUp)
 {
-    piecesParameters_ = {{{5, 4}, Player::UPPER, true},
-                         {{4, 3}, Player::LOWER, true},
-                         {{4, 5}, Player::LOWER, true},
-                         {{6, 3}, Player::LOWER, true},
-                         {{6, 5}, Player::LOWER, true}};
+    piecesParameters_ = {{{5, 4}, Player::NORTH, true},
+                         {{4, 3}, Player::SOUTH, true},
+                         {{4, 5}, Player::SOUTH, true},
+                         {{6, 3}, Player::SOUTH, true},
+                         {{6, 5}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -143,11 +143,11 @@ TEST_F(PromotedPieceCaptureTest, CheckCapturePossibilityPlayerUp)
 
 TEST_F(PromotedPieceCaptureTest, CheckCapturePossibilityPlayerDown)
 {
-    piecesParameters_ = {{{5, 4}, Player::LOWER, true},
-                         {{4, 3}, Player::UPPER, true},
-                         {{4, 5}, Player::UPPER, true},
-                         {{6, 3}, Player::UPPER, true},
-                         {{6, 5}, Player::UPPER, true}};
+    piecesParameters_ = {{{5, 4}, Player::SOUTH, true},
+                         {{4, 3}, Player::NORTH, true},
+                         {{4, 5}, Player::NORTH, true},
+                         {{6, 3}, Player::NORTH, true},
+                         {{6, 5}, Player::NORTH, true}};
 
     placePiecesOnCheckerboard();
 
@@ -172,18 +172,18 @@ TEST_F(PromotedPieceCaptureTest, CheckCapturePossibilityPlayerDown)
 
 TEST_F(PromotedPieceCaptureTest, WhichPiecesCanCapture)
 {
-    piecesParameters_ = {{{3, 4}, Player::UPPER, true},
-                         {{3, 6}, Player::UPPER, true},
-                         {{8, 3}, Player::UPPER, true},
-                         {{4, 3}, Player::LOWER, true},
-                         {{4, 5}, Player::LOWER, true},
-                         {{4, 7}, Player::LOWER, true},
-                         {{7, 2}, Player::LOWER, true}};
+    piecesParameters_ = {{{3, 4}, Player::NORTH, true},
+                         {{3, 6}, Player::NORTH, true},
+                         {{8, 3}, Player::NORTH, true},
+                         {{4, 3}, Player::SOUTH, true},
+                         {{4, 5}, Player::SOUTH, true},
+                         {{4, 7}, Player::SOUTH, true},
+                         {{7, 2}, Player::SOUTH, true}};
 
     placePiecesOnCheckerboard();
 
-    std::vector<Piece*> piecesWhichCanCapturePlayerUp = PieceCaptureManager::whichPiecesCanCapture(Player::UPPER, piecesManager_);
-    std::vector<Piece*> piecesWhichCanCapturePlayerDown = PieceCaptureManager::whichPiecesCanCapture(Player::LOWER, piecesManager_);
+    std::vector<Piece*> piecesWhichCanCapturePlayerUp = PieceCaptureManager::whichPiecesCanCapture(Player::NORTH, piecesManager_);
+    std::vector<Piece*> piecesWhichCanCapturePlayerDown = PieceCaptureManager::whichPiecesCanCapture(Player::SOUTH, piecesManager_);
 
     EXPECT_EQ(piecesWhichCanCapturePlayerUp.size(), 3);
     EXPECT_EQ(piecesWhichCanCapturePlayerDown.size(), 3);

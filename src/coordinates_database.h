@@ -28,18 +28,18 @@ public:
     [[nodiscard]] const std::set<Coordinates>& getNonPlayableCoordinates() const
     { return nonPlayableCoordinates_; }
 
-    [[nodiscard]] const std::set<Coordinates>& getStartingPieceCoordinatesPlayerUpper() const
+    [[nodiscard]] const std::set<Coordinates>& getStartingPieceCoordinatesOfNorthPlayer() const
     { return startingPieceCoordinatesPlayerUp_; }
 
-    [[nodiscard]] const std::set<Coordinates>& getStartingPieceCoordinatesPlayerLower() const
+    [[nodiscard]] const std::set<Coordinates>& getStartingPieceCoordinatesOfSouthPlayer() const
     { return startingPieceCoordinatesPlayerDown_; }
 
 private:
     CoordinatesDatabase() :
             playableCoordinates_(CoordinatesGenerator::generatePlayableTilesCoordinates()),
             nonPlayableCoordinates_(CoordinatesGenerator::generateNonPlayableTilesCoordinates()),
-            startingPieceCoordinatesPlayerUp_(CoordinatesGenerator::generateStartingPiecesCoordinates(Player::UPPER)),
-            startingPieceCoordinatesPlayerDown_(CoordinatesGenerator::generateStartingPiecesCoordinates(Player::LOWER))
+            startingPieceCoordinatesPlayerUp_(CoordinatesGenerator::generateStartingPiecesCoordinates(Player::NORTH)),
+            startingPieceCoordinatesPlayerDown_(CoordinatesGenerator::generateStartingPiecesCoordinates(Player::SOUTH))
     {}
 
     const std::set<Coordinates> playableCoordinates_;

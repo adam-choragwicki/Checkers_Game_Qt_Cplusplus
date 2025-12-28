@@ -152,13 +152,13 @@ void Controller::gameEnded(const Player losingPlayer, const GameEndReason gameEn
         Q_UNREACHABLE();
     }
 
-    if (losingPlayer == Player::LOWER)
+    if (losingPlayer == Player::SOUTH)
     {
-        setGameState(GameStateType::EndedVictoryPlayerUpper);
+        setGameState(GameStateType::EndedVictoryNorthPlayer);
     }
-    else if (losingPlayer == Player::UPPER)
+    else if (losingPlayer == Player::NORTH)
     {
-        setGameState(GameStateType::EndedVictoryPlayerLower);
+        setGameState(GameStateType::EndedVictorySouthPlayer);
     }
     else
     {

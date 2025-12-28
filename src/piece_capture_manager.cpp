@@ -63,13 +63,13 @@ std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCo
     }
     else
     {
-        if(piecePlayer == Player::LOWER)
+        if(piecePlayer == Player::SOUTH)
         {
             /*Movement UP is permitted*/
             validRowColumnCaptureOffsets = {{-2, -2},
                                             {-2, +2}};
         }
-        else if(piecePlayer == Player::UPPER)
+        else if(piecePlayer == Player::NORTH)
         {
             /*Movement DOWN is permitted*/
             validRowColumnCaptureOffsets = {{+2, -2},

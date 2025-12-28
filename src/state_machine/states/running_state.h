@@ -26,8 +26,8 @@ public:
         switch (newState->type())
         {
             case GameStateType::EscapeMenu:
-            case GameStateType::EndedVictoryPlayerUpper:
-            case GameStateType::EndedVictoryPlayerLower:
+            case GameStateType::EndedVictoryNorthPlayer:
+            case GameStateType::EndedVictorySouthPlayer:
                 break;
 
             default:

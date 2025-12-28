@@ -8,8 +8,8 @@ enum class GameStateType
     ReadyToStart, // Everything ready, waiting for the player's input to start.
     Running, // Main game loop active.
     EscapeMenu, // Escape menu overlay is displayed.
-    EndedVictoryPlayerUpper, // Game stopped because win conditions have been satisfied for player upper. The end game overlay is displayed.
-    EndedVictoryPlayerLower, // Game stopped because win conditions have been satisfied for player lower. The end game overlay is displayed.
+    EndedVictoryNorthPlayer, // Game stopped because win conditions have been satisfied for northern player. The end game overlay is displayed.
+    EndedVictorySouthPlayer, // Game stopped because win conditions have been satisfied for southern player. The end game overlay is displayed.
 };
 
 inline QDebug operator<<(QDebug debug, GameStateType state)
@@ -23,8 +23,8 @@ inline QDebug operator<<(QDebug debug, GameStateType state)
         case GameStateType::ReadyToStart: return debug << "ReadyToStart";
         case GameStateType::Running: return debug << "Running";
         case GameStateType::EscapeMenu: return debug << "EscapeMenu";
-        case GameStateType::EndedVictoryPlayerUpper: return debug << "EndedVictoryPlayerUpper";
-        case GameStateType::EndedVictoryPlayerLower: return debug << "EndedVictoryPlayerLower";
+        case GameStateType::EndedVictoryNorthPlayer: return debug << "EndedVictoryNorthPlayer";
+        case GameStateType::EndedVictorySouthPlayer: return debug << "EndedVictorySouthPlayer";
 
         default:
             throw std::runtime_error("Unknown game state");

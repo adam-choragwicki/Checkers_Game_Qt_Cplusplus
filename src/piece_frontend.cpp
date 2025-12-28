@@ -81,7 +81,7 @@
 //
 //     if(piece_.isDisabled())
 //     {
-//         if(piece_.getPlayer() == Player::LOWER)
+//         if(piece_.getPlayer() == Player::SOUTH)
 //         {
 //             pen.setBrush(GuiConfig::Colors::DISABLED_BLACK_PIECE_OUTLINE);
 //         }
@@ -103,7 +103,7 @@
 //         throw std::runtime_error("Error, piece is in unsupported state");
 //     }
 //
-//     if(piece_.getPlayer() == Player::LOWER)
+//     if(piece_.getPlayer() == Player::SOUTH)
 //     {
 //         setBrush(GuiConfig::Colors::BLACK_PIECE);
 //     }

@@ -6,8 +6,8 @@ class PieceCaptureTest : public CommonTestFixture
 
 TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSide)
 {
-    piecesParameters_ = {{{4, 5}, Player::UPPER},
-                         {{5, 4}, Player::LOWER}};
+    piecesParameters_ = {{{4, 5}, Player::NORTH},
+                         {{5, 4}, Player::SOUTH}};
 
     placePiecesOnCheckerboard();
 
@@ -19,10 +19,10 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSide)
 
 TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSideOtherSideWall)
 {
-    piecesParameters_ = {{{3, 2}, Player::UPPER},
-                         {{3, 6}, Player::UPPER},
-                         {{4, 3}, Player::LOWER},
-                         {{4, 7}, Player::LOWER}};
+    piecesParameters_ = {{{3, 2}, Player::NORTH},
+                         {{3, 6}, Player::NORTH},
+                         {{4, 3}, Player::SOUTH},
+                         {{4, 7}, Player::SOUTH}};
 
     placePiecesOnCheckerboard();
 
@@ -34,10 +34,10 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSideOtherSid
 
 TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnBothSides)
 {
-    piecesParameters_ = {{{4, 3}, Player::UPPER},
-                         {{4, 5}, Player::UPPER},
-                         {{5, 4}, Player::LOWER},
-                         {{5, 2}, Player::LOWER}};
+    piecesParameters_ = {{{4, 3}, Player::NORTH},
+                         {{4, 5}, Player::NORTH},
+                         {{5, 4}, Player::SOUTH},
+                         {{5, 2}, Player::SOUTH}};
 
     placePiecesOnCheckerboard();
 
@@ -49,9 +49,9 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnBothSides)
 
 TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_SideWallBehindPiece)
 {
-    piecesParameters_ = {{{2, 1}, Player::UPPER},
-                         {{3, 2}, Player::LOWER},
-                         {{4, 3}, Player::LOWER}}; /*This piece artificially blocks Player::UPPER piece from capturing*/
+    piecesParameters_ = {{{2, 1}, Player::NORTH},
+                         {{3, 2}, Player::SOUTH},
+                         {{4, 3}, Player::SOUTH}}; /*This piece artificially blocks Player::NORTH piece from capturing*/
 
     placePiecesOnCheckerboard();
 
@@ -63,10 +63,10 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_SideWallBehindPiece)
 
 TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_TopBottomAndSideWallBehindPiece)
 {
-    piecesParameters_ = {{{1, 2}, Player::UPPER},
-                         {{2, 1}, Player::LOWER},
-                         {{7, 8}, Player::UPPER},
-                         {{8, 7}, Player::LOWER}};
+    piecesParameters_ = {{{1, 2}, Player::NORTH},
+                         {{2, 1}, Player::SOUTH},
+                         {{7, 8}, Player::NORTH},
+                         {{8, 7}, Player::SOUTH}};
 
     placePiecesOnCheckerboard();
 
@@ -78,10 +78,10 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_TopBottomAndSideWallBehi
 
 TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_FriendlyPieceBehindPiece)
 {
-    piecesParameters_ = {{{3, 6}, Player::UPPER},
-                         {{4, 5}, Player::UPPER},
-                         {{5, 4}, Player::LOWER},
-                         {{6, 3}, Player::LOWER}};
+    piecesParameters_ = {{{3, 6}, Player::NORTH},
+                         {{4, 5}, Player::NORTH},
+                         {{5, 4}, Player::SOUTH},
+                         {{6, 3}, Player::SOUTH}};
 
     placePiecesOnCheckerboard();
 
@@ -93,10 +93,10 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_FriendlyPieceBehindPiece
 
 TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_EnemyPieceBehindPiece)
 {
-    piecesParameters_ = {{{4, 5}, Player::UPPER},
-                         {{6, 3}, Player::UPPER},
-                         {{3, 6}, Player::LOWER},
-                         {{5, 4}, Player::LOWER}};
+    piecesParameters_ = {{{4, 5}, Player::NORTH},
+                         {{6, 3}, Player::NORTH},
+                         {{3, 6}, Player::SOUTH},
+                         {{5, 4}, Player::SOUTH}};
 
     placePiecesOnCheckerboard();
 
@@ -108,8 +108,8 @@ TEST_F(PieceCaptureTest, CheckIfPieceCanCaptureNegative_EnemyPieceBehindPiece)
 
 TEST_F(PieceCaptureTest, CheckCapturePossibility)
 {
-    piecesParameters_ = {{{3, 2}, Player::UPPER},
-                         {{4, 3}, Player::LOWER}};
+    piecesParameters_ = {{{3, 2}, Player::NORTH},
+                         {{4, 3}, Player::SOUTH}};
 
     placePiecesOnCheckerboard();
 
@@ -127,18 +127,18 @@ TEST_F(PieceCaptureTest, CheckCapturePossibility)
 
 TEST_F(PieceCaptureTest, WhichPiecesCanCapture)
 {
-    piecesParameters_ = {{{3, 4}, Player::UPPER},
-                         {{3, 6}, Player::UPPER},
-                         {{7, 2}, Player::UPPER},
-                         {{8, 3}, Player::UPPER},
-                         {{4, 3}, Player::LOWER},
-                         {{4, 5}, Player::LOWER},
-                         {{4, 7}, Player::LOWER}};
+    piecesParameters_ = {{{3, 4}, Player::NORTH},
+                         {{3, 6}, Player::NORTH},
+                         {{7, 2}, Player::NORTH},
+                         {{8, 3}, Player::NORTH},
+                         {{4, 3}, Player::SOUTH},
+                         {{4, 5}, Player::SOUTH},
+                         {{4, 7}, Player::SOUTH}};
 
     placePiecesOnCheckerboard();
 
-    std::vector<Piece*> piecesWhichCanCapturePlayerUp = PieceCaptureManager::whichPiecesCanCapture(Player::UPPER, piecesManager_);
-    std::vector<Piece*> piecesWhichCanCapturePlayerDown = PieceCaptureManager::whichPiecesCanCapture(Player::LOWER, piecesManager_);
+    std::vector<Piece*> piecesWhichCanCapturePlayerUp = PieceCaptureManager::whichPiecesCanCapture(Player::NORTH, piecesManager_);
+    std::vector<Piece*> piecesWhichCanCapturePlayerDown = PieceCaptureManager::whichPiecesCanCapture(Player::SOUTH, piecesManager_);
 
     EXPECT_EQ(piecesWhichCanCapturePlayerUp.size(), 2);
     EXPECT_EQ(piecesWhichCanCapturePlayerDown.size(), 3);

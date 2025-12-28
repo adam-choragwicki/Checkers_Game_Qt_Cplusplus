@@ -17,8 +17,8 @@
 //
 // void PiecesPlacement::createPieces()
 // {
-//     std::set<Coordinates> playerLowerStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesPlayerLower();
-//     std::set<Coordinates> playerUpperStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesPlayerUpper();
+//     std::set<Coordinates> southPlayerStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesOfSouthPlayer();
+//     std::set<Coordinates> northPlayerStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesOfNorthPlayer();
 //
 //     std::set<Coordinates> playableTilesCoordinates = CoordinatesDatabase::getInstance().getPlayableCoordinates();
 //
@@ -37,8 +37,8 @@
 //         }
 //     };
 //
-//     placePieces(playerLowerStartingPiecesCoordinates, Player::LOWER);
-//     placePieces(playerUpperStartingPiecesCoordinates, Player::UPPER);
+//     placePieces(southPlayerStartingPiecesCoordinates, Player::SOUTH);
+//     placePieces(northPlayerStartingPiecesCoordinates, Player::NORTH);
 // }
 //
 // void PiecesPlacement::markPiecesWhichCanMove(const std::vector<Piece*>& pieces)
@@ -102,18 +102,18 @@
 //
 // bool PiecesPlacement::didAnyPlayerRunOutOfPieces() const
 // {
-//     return (countPlayerPieces(Player::LOWER) == 0) || (countPlayerPieces(Player::UPPER) == 0);
+//     return (countPlayerPieces(Player::SOUTH) == 0) || (countPlayerPieces(Player::NORTH) == 0);
 // }
 //
 // Player PiecesPlacement::getPlayerWithNoPiecesLeft() const
 // {
-//     if (countPlayerPieces(Player::LOWER) == 0)
+//     if (countPlayerPieces(Player::SOUTH) == 0)
 //     {
-//         return Player::LOWER;
+//         return Player::SOUTH;
 //     }
-//     else if (countPlayerPieces(Player::UPPER) == 0)
+//     else if (countPlayerPieces(Player::NORTH) == 0)
 //     {
-//         return Player::UPPER;
+//         return Player::NORTH;
 //     }
 //     else
 //     {

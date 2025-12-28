@@ -28,8 +28,8 @@ set(BACKEND_SOURCE_FILES
         state_machine/game_state_manager.h
         state_machine/game_state_type.h
         state_machine/i_state_actions.h
-        state_machine/states/ended_victory_player_upper.h
-        state_machine/states/ended_victory_player_lower.h
+        state_machine/states/ended_victory_north_player.h
+        state_machine/states/ended_victory_south_player.h
         state_machine/states/escape_menu_state.h
         state_machine/states/initialization_state.h
         state_machine/states/ready_to_start_state.h

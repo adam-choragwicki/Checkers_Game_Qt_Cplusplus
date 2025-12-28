@@ -77,7 +77,7 @@
 //
 // void MainWindow::showEndGameDialog(Player losingPlayer, GameEndReason reason)
 // {
-//     QString losingPlayerString = (losingPlayer == Player::LOWER) ? "Black" : "Red";
+//     QString losingPlayerString = (losingPlayer == Player::SOUTH) ? "Black" : "Red";
 //     QString message;
 //
 //     if(reason == GameEndReason::NO_PIECES_LEFT)

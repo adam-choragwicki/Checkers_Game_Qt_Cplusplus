@@ -5,8 +5,8 @@
 #include "states/ready_to_start_state.h"
 #include "states/running_state.h"
 #include "states/escape_menu_state.h"
-#include "states/ended_victory_player_upper.h"
-#include "states/ended_victory_player_lower.h"
+#include "states/ended_victory_north_player.h"
+#include "states/ended_victory_south_player.h"
 #include <ranges>
 #include <stdexcept>
 
@@ -18,8 +18,8 @@ public:
         {GameStateType::ReadyToStart, &readyToStartState_},
         {GameStateType::Running, &runningState_},
         {GameStateType::EscapeMenu, &escapeMenuState_},
-        {GameStateType::EndedVictoryPlayerUpper, &endedVictoryPlayerUpperState_},
-        {GameStateType::EndedVictoryPlayerLower, &endedVictoryPlayerLowerState_},
+        {GameStateType::EndedVictoryNorthPlayer, &endedVictoryNorthPlayerState_},
+        {GameStateType::EndedVictorySouthPlayer, &endedVictorySouthPlayerState_},
     }
     {
         for (auto& state: states_ | std::views::values)
@@ -94,8 +94,8 @@ private:
     ReadyToStartState readyToStartState_;
     RunningState runningState_;
     EscapeMenuState escapeMenuState_;
-    EndedVictoryPlayerUpperState endedVictoryPlayerUpperState_;
-    EndedVictoryPlayerLowerState endedVictoryPlayerLowerState_;
+    EndedVictoryNorthPlayerState endedVictoryNorthPlayerState_;
+    EndedVictorySouthPlayerState endedVictorySouthPlayerState_;
 
     AbstractState* currentGameState_{};
     AbstractState* previousState_{};

@@ -3,22 +3,22 @@
 #include "../abstract_state.h"
 #include "game_result.h"
 
-class EndedVictoryPlayerUpperState : public AbstractState
+class EndedVictorySouthPlayerState : public AbstractState
 {
 public:
-    EndedVictoryPlayerUpperState() : AbstractState("EndedVictoryPlayerUpperState", GameStateType::EndedVictoryPlayerUpper)
+    EndedVictorySouthPlayerState() : AbstractState("EndedVictorySouthPlayerState", GameStateType::EndedVictorySouthPlayer)
     {}
 
     void entered() override
     {
-        qDebug() << "Entered state: EndedVictoryPlayerUpper";
-        stateActions_->showEndGameOverlay(GameResult::UPPER_PLAYER_VICTORY);
+        qDebug() << "Entered state: EndedVictorySouthPlayer";
+        stateActions_->showEndGameOverlay(GameResult::SOUTH_PLAYER_VICTORY);
         stateActions_->stopGameLoop();
     }
 
     void exited() override
     {
-        qDebug() << "Exited state: EndedVictoryPlayerUpper";
+        qDebug() << "Exited state: EndedVictorySouthPlayer";
         stateActions_->hideEndGameOverlay();
     }
 

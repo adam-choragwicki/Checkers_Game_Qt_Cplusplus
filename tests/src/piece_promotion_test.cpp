@@ -6,11 +6,11 @@ class PiecePromotionTest : public CommonTestFixture
 
 TEST_F(PiecePromotionTest, CheckPromotionEligibilityPositive)
 {
-    const Piece playerUpPiece1(Coordinates(8, 3), Player::UPPER);
-    const Piece playerUpPiece2(Coordinates(8, 7), Player::UPPER);
+    const Piece playerUpPiece1(Coordinates(8, 3), Player::NORTH);
+    const Piece playerUpPiece2(Coordinates(8, 7), Player::NORTH);
 
-    const Piece playerDownPiece1(Coordinates(1, 4), Player::LOWER);
-    const Piece playerDownPiece2(Coordinates(1, 8), Player::LOWER);
+    const Piece playerDownPiece1(Coordinates(1, 4), Player::SOUTH);
+    const Piece playerDownPiece2(Coordinates(1, 8), Player::SOUTH);
 
     EXPECT_TRUE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece1));
     EXPECT_TRUE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece2));
@@ -21,15 +21,15 @@ TEST_F(PiecePromotionTest, CheckPromotionEligibilityPositive)
 
 TEST_F(PiecePromotionTest, CheckPromotionEligibilityNegative)
 {
-    const Piece playerUpPiece1(Coordinates(1, 2), Player::UPPER);
-    const Piece playerUpPiece2(Coordinates(1, 6), Player::UPPER);
-    const Piece playerUpPiece3(Coordinates(4, 3), Player::UPPER);
-    const Piece playerUpPiece4(Coordinates(5, 8), Player::UPPER);
+    const Piece playerUpPiece1(Coordinates(1, 2), Player::NORTH);
+    const Piece playerUpPiece2(Coordinates(1, 6), Player::NORTH);
+    const Piece playerUpPiece3(Coordinates(4, 3), Player::NORTH);
+    const Piece playerUpPiece4(Coordinates(5, 8), Player::NORTH);
 
-    const Piece playerDownPiece1(Coordinates(8, 3), Player::LOWER);
-    const Piece playerDownPiece2(Coordinates(8, 7), Player::LOWER);
-    const Piece playerDownPiece3(Coordinates(4, 3), Player::LOWER);
-    const Piece playerDownPiece4(Coordinates(5, 6), Player::LOWER);
+    const Piece playerDownPiece1(Coordinates(8, 3), Player::SOUTH);
+    const Piece playerDownPiece2(Coordinates(8, 7), Player::SOUTH);
+    const Piece playerDownPiece3(Coordinates(4, 3), Player::SOUTH);
+    const Piece playerDownPiece4(Coordinates(5, 6), Player::SOUTH);
 
     EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece1));
     EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece2));
@@ -44,8 +44,8 @@ TEST_F(PiecePromotionTest, CheckPromotionEligibilityNegative)
 
 TEST_F(PiecePromotionTest, DoublePromotionNotAllowed)
 {
-    Piece playerUpPiece1(Coordinates(8, 3), Player::UPPER, true);
-    Piece playerDownPiece1(Coordinates(1, 4), Player::LOWER, true);
+    Piece playerUpPiece1(Coordinates(8, 3), Player::NORTH, true);
+    Piece playerDownPiece1(Coordinates(1, 4), Player::SOUTH, true);
 
     EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece1));
 

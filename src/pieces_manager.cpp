@@ -9,27 +9,27 @@ PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPosi
     // TODO eventually the PiecesManager cannot create pieces in constructor (tests require piece manager to be empty)
 
     // Movement and capture testing
-    // createPiece(Coordinates{6, 3}, Player::LOWER);
-    // createPiece(Coordinates{4, 5}, Player::UPPER);
+    // createPiece(Coordinates{6, 3}, Player::SOUTH);
+    // createPiece(Coordinates{4, 5}, Player::NORTH);
 
     // Promotion testing
-    // createPiece(Coordinates{2, 5}, Player::LOWER);
-    // createPiece(Coordinates{7, 6}, Player::UPPER);
+    // createPiece(Coordinates{2, 5}, Player::SOUTH);
+    // createPiece(Coordinates{7, 6}, Player::NORTH);
 
     // Multi pieces testing
-    // createPiece(Coordinates{6, 3}, Player::LOWER);
-    // createPiece(Coordinates{6, 1}, Player::LOWER);
-    // createPiece(Coordinates{4, 5}, Player::UPPER);
-    // createPiece(Coordinates{4, 3}, Player::UPPER);
+    // createPiece(Coordinates{6, 3}, Player::SOUTH);
+    // createPiece(Coordinates{6, 1}, Player::SOUTH);
+    // createPiece(Coordinates{4, 5}, Player::NORTH);
+    // createPiece(Coordinates{4, 3}, Player::NORTH);
 
     createPieces();
 
     qDebug() << "Created" << pieces_.size() << "pieces";
 
     // const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
-    //pieces_.emplace_back(std::make_unique<Piece>(Coordinates{0, 0}, Player::LOWER));
+    //pieces_.emplace_back(std::make_unique<Piece>(Coordinates{0, 0}, Player::SOUTH));
 
-    // pieces_.emplace_back(Coordinates{0, 0}, Player::LOWER);
+    // pieces_.emplace_back(Coordinates{0, 0}, Player::SOUTH);
 
     // for (const auto& coordinates: pelletPositions)
     // {
@@ -100,8 +100,8 @@ void PiecesManager::createPieces()
 {
     pieces_.reserve(24); // 24 pieces in total
 
-    std::set<Coordinates> playerLowerStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesPlayerLower();
-    std::set<Coordinates> playerUpperStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesPlayerUpper();
+    const std::set<Coordinates> southPlayerStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesOfSouthPlayer();
+    const std::set<Coordinates> northPlayerStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesOfNorthPlayer();
 
     std::set<Coordinates> playableTilesCoordinates = CoordinatesDatabase::getInstance().getPlayableCoordinates();
 
@@ -120,8 +120,8 @@ void PiecesManager::createPieces()
         }
     };
 
-    placePieces(playerLowerStartingPiecesCoordinates, Player::LOWER);
-    placePieces(playerUpperStartingPiecesCoordinates, Player::UPPER);
+    placePieces(southPlayerStartingPiecesCoordinates, Player::SOUTH);
+    placePieces(northPlayerStartingPiecesCoordinates, Player::NORTH);
 }
 
 void PiecesManager::markPiecesWhichCanMove(const std::vector<Piece*>& pieces)
@@ -187,25 +187,25 @@ size_t PiecesManager::countPlayerPieces(Player player) const
 
 bool PiecesManager::didAnyPlayerRunOutOfPieces() const
 {
-    const size_t upperPlayerPiecesCount = countPlayerPieces(Player::UPPER);
-    const size_t lowerPlayerPiecesCount = countPlayerPieces(Player::LOWER);
+    const size_t northPlayerPiecesCount = countPlayerPieces(Player::NORTH);
+    const size_t southPlayerPiecesCount = countPlayerPieces(Player::SOUTH);
 
-    qDebug() << "NORTH player has" << upperPlayerPiecesCount << "pieces left";
-    qDebug() << "SOUTH player has" << lowerPlayerPiecesCount << "pieces left";
+    qDebug() << "NORTH player has" << northPlayerPiecesCount << "pieces left";
+    qDebug() << "SOUTH player has" << southPlayerPiecesCount << "pieces left";
 
-    return upperPlayerPiecesCount == 0 || lowerPlayerPiecesCount == 0;
+    return northPlayerPiecesCount == 0 || southPlayerPiecesCount == 0;
 }
 
 Player PiecesManager::getPlayerWithNoPiecesLeft() const
 {
-    if (countPlayerPieces(Player::LOWER) == 0)
+    if (countPlayerPieces(Player::SOUTH) == 0)
     {
-        return Player::LOWER;
+        return Player::SOUTH;
     }
 
-    if (countPlayerPieces(Player::UPPER) == 0)
+    if (countPlayerPieces(Player::NORTH) == 0)
     {
-        return Player::UPPER;
+        return Player::NORTH;
     }
 
     throw std::runtime_error("Error, both players have pieces left");

@@ -46,13 +46,13 @@ std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptions
     }
     else
     {
-        if(piecePlayer == Player::LOWER)
+        if(piecePlayer == Player::SOUTH)
         {
             /*Movement UP is permitted*/
             validRowColumnMovementOffsets = {{-1, -1},
                                              {-1, +1}};
         }
-        else if(piecePlayer == Player::UPPER)
+        else if(piecePlayer == Player::NORTH)
         {
             /*Movement DOWN is permitted*/
             validRowColumnMovementOffsets = {{+1, -1},

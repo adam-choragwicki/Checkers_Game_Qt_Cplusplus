@@ -60,7 +60,7 @@ std::set<Coordinates> CoordinatesDatabase::CoordinatesGenerator::generateStartin
 {
     std::set<Coordinates> startingPiecesCoordinates;
 
-    if(player == Player::LOWER)
+    if(player == Player::SOUTH)
     {
         for(int row = 6; row <= 8; row++)
         {
@@ -83,7 +83,7 @@ std::set<Coordinates> CoordinatesDatabase::CoordinatesGenerator::generateStartin
             }
         }
     }
-    else if(player == Player::UPPER)
+    else if(player == Player::NORTH)
     {
         for(int row = 1; row <= 3; row++)
         {
