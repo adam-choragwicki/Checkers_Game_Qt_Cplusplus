@@ -20,7 +20,7 @@ Item {
     Repeater {
         model: piecesModel
 
-        delegate: AbstractPiece {
+        delegate: Piece {
         }
     }
 

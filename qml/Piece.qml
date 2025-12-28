@@ -1,11 +1,6 @@
 import QtQuick
 
 Rectangle {
-    id: abstractPiece
-
-    // Config
-    readonly property bool showId: true
-
     required property int xRole
     required property int yRole
     required property int playerRole
@@ -14,6 +9,15 @@ Rectangle {
     required property int stateRole
     required property bool animationEnabledRole
     required property bool promotedRole
+
+    // Config
+    readonly property bool showId: true
+
+    readonly property color northPlayerMainColor: Qt.rgba(220 / 255, 0, 0, 1) // red
+    readonly property color northPlayerDisabledPieceOutlineColor: Qt.rgba(170 / 255, 0, 0, 1)
+
+    readonly property color southPlayerMainColor: Qt.rgba(50 / 255, 50 / 255, 50 / 255, 1)
+    readonly property color southPlayerDisabledPieceOutlineColor: "black"
 
     x: (xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
     y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
@@ -27,12 +31,12 @@ Rectangle {
 
     visible: aliveRole
 
-    color: isPlayerNorth ? Qt.rgba(220 / 255, 0, 0, 1) : Qt.rgba(50 / 255, 50 / 255, 50 / 255, 1)
+    color: isPlayerNorth ? northPlayerMainColor : southPlayerMainColor
 
     //Outline (border)
-    readonly property color activePieceOutlineColor: Qt.rgba(255 / 255, 255 / 255, 0, 1) // 255, 255, 0
+    readonly property color activePieceOutlineColor: Qt.rgba(255 / 255, 255 / 255, 0, 1)
     readonly property color selectedPieceOutlineColor: "white"
-    readonly property color disabledPieceOutlineColor: isPlayerNorth ? Qt.rgba(170 / 255, 0, 0, 1) : "black"
+    readonly property color disabledPieceOutlineColor: isPlayerNorth ? northPlayerDisabledPieceOutlineColor : southPlayerDisabledPieceOutlineColor
     border.width: uiScaler.px(5) // outline width
 
     border.color: {
@@ -42,7 +46,7 @@ Rectangle {
     }
 
     // Animation
-    readonly property int pieceMovementAnimationDurationMs: 200 // TODO ( take it from C++ context property)
+    readonly property int pieceMovementAnimationDurationMs: 200
 
     Behavior on x {
         enabled: animationEnabledRole
