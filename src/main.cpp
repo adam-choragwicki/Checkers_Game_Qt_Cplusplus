@@ -1,6 +1,5 @@
 #include "game.h"
 #include "log_manager.h"
-#include <QGuiApplication> // TODO remove, should not be needed
 
 int main(int argc, char* argv[])
 {

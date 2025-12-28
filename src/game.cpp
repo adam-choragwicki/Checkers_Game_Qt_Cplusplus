@@ -1,6 +1,5 @@
 #include "game.h"
 #include <QQmlContext>
-#include <QCoreApplication> // TODO remove, should not be needed
 
 Game::Game()
 {
@@ -55,7 +54,7 @@ void Game::exposeDataToQml() const
 {
     view_->rootContext()->setContextProperty("Controller", controller_.get());
 
-    view_->rootContext()->setContextProperty("piecesModel", &model_->getPiecesModel()); // TODO remove
+    view_->rootContext()->setContextProperty("piecesModel", &model_->getPiecesModel());
     // view_->rootContext()->setContextProperty("powerPelletsModel", &model_->getPowerPelletsModel()); // TODO remove
 
     // view_->rootContext()->setContextProperty("pacman", &model_->getPacman()); // TODO remove

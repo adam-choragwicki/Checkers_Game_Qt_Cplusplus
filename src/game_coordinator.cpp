@@ -11,12 +11,12 @@ void GameCoordinator::setQmlHelper(QmlHelper* qmlHelper)
     qmlHelper_ = qmlHelper;
 }
 
-void GameCoordinator::startGameLoop()
+void GameCoordinator::startGameLoop() // TODO remove or not?
 {
     // gameLoop_.start();
 }
 
-void GameCoordinator::stopGameLoop()
+void GameCoordinator::stopGameLoop() // TODO remove or not?
 {
     // gameLoop_.stop();
 }

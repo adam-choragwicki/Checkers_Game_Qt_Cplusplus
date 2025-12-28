@@ -13,14 +13,6 @@ Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicati
     // connect(gameLoop_.get(), &GameLoop::endGame, this, &Controller::gameEnded);
 
     connect(gameCoordinator_.get(), &GameCoordinator::endGame, this, &Controller::gameEnded);
-
-    // connect(this, &Controller::sceneUpdateSignal, &view_, &MainWindow::sceneUpdateSlot);
-    // connect(&view_, &MainWindow::newGameRequest, this, &Controller::processNewGameRequest);
-    // connect(&view_, &MainWindow::applicationTerminationRequest, this, &Controller::processApplicationTerminationRequest);
-
-    // processNewGameRequest();
-
-    // checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
 }
 
 void Controller::onQmlEngineFullyInitialized()
@@ -36,13 +28,13 @@ void Controller::onQmlEngineFullyInitialized()
     setGameState(GameStateType::ReadyToStart);
 }
 
-void Controller::startGameLoop()
+void Controller::startGameLoop() // TODO remove or not?
 {
     qDebug() << "Controller::startGameLoop()";
     gameCoordinator_->startGameLoop();
 }
 
-void Controller::stopGameLoop()
+void Controller::stopGameLoop() // TODO remove or not?
 {
     qDebug() << "Controller::stopGameLoop()";
     gameCoordinator_->stopGameLoop();
@@ -83,31 +75,6 @@ void Controller::processKeyPress(const int key)
     // qDebug() << "Key pressed:" << key;
     inputHandler_->processKeyPress(key);
 }
-
-void Controller::processNewGameRequest()
-{
-    // for (PlayableTile* playableTile: model_.getCheckerboard().getPlayableTiles())
-    // {
-    //     connect(playableTile, &PlayableTile::clickedSignal, this, &Controller::processTileClicked);
-    // }
-
-    // for(PieceFrontend* pieceFrontend : view_.getPiecesFrontends())
-    // {
-    //     connect(&pieceFrontend->getPiece(), &Piece::stateChanged, &view_, &MainWindow::sceneUpdateSlot);
-    //     connect(&pieceFrontend->getPiece(), &Piece::startAnimatedMovement, pieceFrontend, &PieceFrontend::animateMovementToNewCoordinates);
-    //     connect(&pieceFrontend->getPiece(), &Piece::promoted, pieceFrontend, &PieceFrontend::addCrown);
-    //     connect(pieceFrontend, &PieceFrontend::endMovement, &pieceFrontend->getPiece(), &Piece::processEndMovement);
-    // }
-
-    gameCoordinator_->checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
-}
-
-void Controller::processApplicationTerminationRequest()
-{
-    // QCoreApplication::exit(0);
-}
-
-
 
 // void Controller::processTileClicked(const Coordinates& targetTileCoordinates)
 void Controller::processTileClicked(const int row, const int column) // TODO send coordinates from QML directly?

@@ -76,12 +76,6 @@ void InputHandler::processKeyPress(const int key)
             windowManager_->toggleFullScreen();
             break;
 
-        // case Qt::Key_P:
-        //     if (logKeyPressed)
-        //         qDebug() << "P key pressed";
-        //     controller_->getStateManager().handleKeyPress(key);
-        //     break;
-
         default:
             if (logKeyPressed) qDebug() << "Unsupported key pressed";
             break;

@@ -23,8 +23,8 @@ public:
 
     void setQmlHelper(QmlHelper* qmlHelper);
 
-    void startGameLoop();
-    void stopGameLoop();
+    void startGameLoop(); // TODO remove or not?
+    void stopGameLoop(); // TODO remove or not?
 
     void restartGame();
 
