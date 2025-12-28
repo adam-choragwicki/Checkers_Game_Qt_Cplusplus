@@ -17,7 +17,6 @@ set(BACKEND_SOURCE_FILES
         pieces_placement.h pieces_placement.cpp
         piece_state_manager.h piece_state_manager.cpp
         game_config.cpp game_config.h
-        piece_model.cpp piece_model.h
         pieces_model.cpp pieces_model.h
         pieces_manager.cpp pieces_manager.h
 
