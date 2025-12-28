@@ -35,6 +35,7 @@ Rectangle {
     }
 
     MouseArea {
+        enabled: Controller.gameRunning
         anchors.fill: parent
         onClicked: {
             Controller.onPieceClicked(idNumber)

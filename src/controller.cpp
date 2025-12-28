@@ -78,28 +78,21 @@ void Controller::processKeyPress(const int key)
 
 void Controller::onPieceClicked(const int pieceId)
 {
-    if (gameStateManager_.getCurrentGameStateType() == GameStateType::Running) // TODO quick hack, optimize or not worth it?
+    if (Piece* piece = model_.getPiecesManager().findPieceById(pieceId))
     {
-        if (Piece* piece = model_.getPiecesManager().findPieceById(pieceId))
-        {
-            Q_ASSERT(pieceId == piece->getId());
+        Q_ASSERT(pieceId == piece->getId());
 
-            qDebug() << "C++: Piece" << pieceId << "clicked";
+        qDebug() << "C++: Piece" << pieceId << "clicked";
 
-            if (piece->isActive())
-            {
-                qDebug() << "C++: Setting piece" << pieceId << "as selected";
-                piece->setState(Piece::State::SELECTED);
-            }
-        }
-        else
+        if (piece->isActive())
         {
-            qFatal("Piece with id %d not found", pieceId);
+            qDebug() << "C++: Setting piece" << pieceId << "as selected";
+            piece->setState(Piece::State::SELECTED);
         }
     }
     else
     {
-        qDebug().noquote() << "C++: Ignoring piece click in state" << gameStateManager_.getCurrentGameState()->getName();
+        qFatal("Piece with id %d not found", pieceId);
     }
 }
 
