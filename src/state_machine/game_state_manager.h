@@ -10,8 +10,13 @@
 #include <ranges>
 #include <stdexcept>
 
-class GameStateManager
+class GameStateManager : public QObject
 {
+    Q_OBJECT
+
+signals:
+    void gameStateChanged();
+
 public:
     explicit GameStateManager(IStateActions* stateActions) : states_{
         {GameStateType::Initialization, &initializationState_},
@@ -47,6 +52,8 @@ public:
 
         // enter a new state
         currentGameState_->entered();
+
+        emit gameStateChanged();
     }
 
     [[nodiscard]] AbstractState* getCurrentGameState() const { return currentGameState_; }

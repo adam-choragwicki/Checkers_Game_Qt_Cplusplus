@@ -16,6 +16,7 @@ class Controller : public QObject, public IStateActions
 
 signals:
     void applicationShutdownRequested();
+    void gameStateChanged();
 
 public slots:
     void onPieceClicked(int pieceId);
@@ -47,6 +48,9 @@ public:
     void restorePreviousState() override;
 
     [[nodiscard]] GameStateManager& getStateManager() { return gameStateManager_; }
+
+    Q_PROPERTY(bool gameRunning READ isGameRunning NOTIFY gameStateChanged)
+    bool isGameRunning() const { return gameStateManager_.getCurrentGameStateType() == GameStateType::Running; }
 
 private:
     Model& model_;

@@ -11,6 +11,8 @@ Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicati
     inputHandler_ = std::make_unique<InputHandler>(this, &windowManager_);
 
     // connect(gameLoop_.get(), &GameLoop::endGame, this, &Controller::gameEnded);
+
+    connect(&gameStateManager_, &GameStateManager::gameStateChanged, this, &Controller::gameStateChanged, Qt::UniqueConnection);
 }
 
 void Controller::onQmlEngineFullyInitialized()
@@ -104,29 +106,22 @@ void Controller::onPieceClicked(const int pieceId)
 // void Controller::onTileClicked(const Coordinates& targetTileCoordinates)
 void Controller::onTileClicked(const int row, const int column) // TODO send coordinates from QML directly?
 {
-    if (gameStateManager_.getCurrentGameStateType() == GameStateType::Running) // TODO quick hack, optimize or not worth it?
+    const Coordinates targetTileCoordinates(row, column);
+
+    qDebug() << "C++: Tile clicked at coordinates" << targetTileCoordinates;
+
+    if (!model_.isMoveInProgress())
     {
-        const Coordinates targetTileCoordinates(row, column);
+        model_.setMoveInProgress(true);
 
-        qDebug() << "C++: Tile clicked at coordinates" << targetTileCoordinates;
-
-        if (!model_.isMoveInProgress())
+        /*Ignore clicking on a tile unless any piece is selected*/
+        if (SelectedPieceManager::isAnyPieceSelected())
         {
-            model_.setMoveInProgress(true);
-
-            /*Ignore clicking on a tile unless any piece is selected*/
-            if (SelectedPieceManager::isAnyPieceSelected())
-            {
-                Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
-                gameCoordinator_->processPieceMove(selectedPiece, targetTileCoordinates);
-            }
-
-            model_.setMoveInProgress(false);
+            Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
+            gameCoordinator_->processPieceMove(selectedPiece, targetTileCoordinates);
         }
-    }
-    else
-    {
-        qDebug().noquote() << "C++: Ignoring tile click in state" << gameStateManager_.getCurrentGameState()->getName();
+
+        model_.setMoveInProgress(false);
     }
 }
 
