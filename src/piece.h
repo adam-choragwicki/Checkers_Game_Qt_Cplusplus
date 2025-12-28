@@ -51,7 +51,7 @@ public:
     void setSelected();
 
     [[nodiscard]] bool isAlive() const { return alive_; }
-    void setAlive(const bool alive) { alive_ = alive; }
+    void setAlive(bool alive);
 
     int getId() const { return id_; }
 
@@ -60,7 +60,7 @@ public:
     enum class State // TODO expose to QML
     {
         DISABLED = 1, ACTIVE = 2, SELECTED = 3
-    } state_ = State::DISABLED;
+    };
 
     void setState(State newState);
 
@@ -85,4 +85,6 @@ private:
     int id_{};
 
     bool animationEnabled_{}; // TODO should it be in backend?
+
+    State state_{State::DISABLED};
 };

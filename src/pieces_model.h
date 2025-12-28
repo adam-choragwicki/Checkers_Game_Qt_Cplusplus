@@ -7,19 +7,20 @@ class PiecesModel : public QAbstractListModel
 {
     Q_OBJECT
 
+public slots:
+    void pieceClicked(int pieceId);
+
 public:
-    enum Roles { XRole = Qt::UserRole + 1, YRole, PlayerRole, AliveRole, IdRole, StateRole, AnimationEnabledRole, PromotedRole};
+    enum Roles { XRole = Qt::UserRole + 1, YRole, PlayerRole, AliveRole, IdRole, StateRole, AnimationEnabledRole, PromotedRole };
 
     explicit PiecesModel(const PiecesManager& piecesManager);
 
     // QAbstractItemModel interface
-    int rowCount(const QModelIndex& parent) const override;
-    QVariant data(const QModelIndex& index, int role) const override;
-    QHash<int, QByteArray> roleNames() const override;
+    [[nodiscard]] int rowCount(const QModelIndex& parent) const override;
+    [[nodiscard]] QVariant data(const QModelIndex& index, int role) const override;
+    [[nodiscard]] QHash<int, QByteArray> roleNames() const override;
 
     void pieceChanged(int index);
-
-    Q_INVOKABLE void pieceClicked(int pieceId);
 
 private:
     const PiecesManager& piecesManager_;

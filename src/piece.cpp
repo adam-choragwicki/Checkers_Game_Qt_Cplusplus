@@ -90,7 +90,6 @@ void Piece::setState(const State newState)
     // qDebug() << "C++: Piece" << id_ << " Emitting pieceChanged signal";
 
     emit pieceChanged(id_);
-//    emit stateChanged();
 }
 
 void Piece::moveToTile(const Coordinates& newCoordinates)
@@ -149,4 +148,10 @@ void Piece::setActive()
 void Piece::setSelected()
 {
     setState(State::SELECTED);
+}
+
+void Piece::setAlive(const bool alive)
+{
+    alive_ = alive;
+    emit pieceChanged(id_);
 }
