@@ -33,7 +33,7 @@ QVariant PiecesModel::data(const QModelIndex& index, const int role) const
         case PlayerRole: return piece->getPlayerAsInt();
         case AliveRole: return piece->isAlive();
         case IdRole: return piece->getId();
-        case StateRole: return piece->getState();
+        case StateRole: return piece->getStateAsInt();
         case AnimationEnabledRole: return piece->isAnimationEnabled();
         case PromotedRole: return piece->isPromoted();
         default: qFatal("Unknown role");

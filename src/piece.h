@@ -11,21 +11,13 @@ class Piece : public QObject
     friend std::ostream& operator<<(std::ostream& os, const Piece& piece);
 
 signals:
-    void startAnimatedMovement(const Coordinates& currentCoordinates, const Coordinates& newCoordinates);
-    void promoted();
-
     void pieceChanged(int id);
-
-public slots:
-    void processEndMovement(const Coordinates& newCoordinates);
 
 public:
     Piece(const Coordinates& coordinates, Player player, bool promoted = false);
-
     void reset();
 
     [[nodiscard]] int getColumn() const { return coordinates_.getColumn(); }
-
     [[nodiscard]] int getRow() const { return coordinates_.getRow(); }
 
     [[nodiscard]] const Coordinates& getCoordinates() const { return coordinates_; }
@@ -55,22 +47,16 @@ public:
 
     int getId() const { return id_; }
 
-    int getState() { return static_cast<int>(state_); }
-
     enum class State // TODO expose to QML
     {
         DISABLED = 1, ACTIVE = 2, SELECTED = 3
     };
 
+    int getStateAsInt() { return static_cast<int>(state_); } // TODO expose state to QML?
     void setState(State newState);
 
     [[nodiscard]] bool isAnimationEnabled() const { return animationEnabled_; }
-
-    void setAnimationEnabled(const bool enabled)
-    {
-        animationEnabled_ = enabled;
-        emit pieceChanged(id_);
-    }
+    void setAnimationEnabled(bool enabled);
 
 private:
     const Coordinates STARTING_COORDINATES_;
@@ -81,7 +67,7 @@ private:
 
     bool alive_ = true;
 
-    inline static int counter_{};
+    inline static int instanceCounter_{};
     int id_{};
 
     bool animationEnabled_{}; // TODO should it be in backend?

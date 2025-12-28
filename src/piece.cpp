@@ -11,7 +11,7 @@ Piece::Piece(const Coordinates& coordinates, const Player player, const bool pro
         promote();
     }
 
-    id_ = counter_++;
+    id_ = instanceCounter_++;
 
     // qDebug() << "Piece created:" << id_;
 }
@@ -28,6 +28,11 @@ void Piece::reset()
 
 void Piece::setState(const State newState)
 {
+    auto handleIllegalStateTransition = [this, newState]()
+    {
+        throw std::runtime_error("Error, unsupported piece state transition from state " + std::to_string(static_cast<int>(state_)) + " to state " + std::to_string(static_cast<int>(newState)) + "");
+    };
+
     if (state_ == State::DISABLED)
     {
         if (newState == State::ACTIVE)
@@ -40,7 +45,7 @@ void Piece::setState(const State newState)
         }
         else
         {
-            throw std::runtime_error("Error, unsupported piece state transition");
+            handleIllegalStateTransition();
         }
     }
     else if (state_ == State::ACTIVE)
@@ -59,7 +64,7 @@ void Piece::setState(const State newState)
         }
         else
         {
-            throw std::runtime_error("Error, unsupported piece state transition");
+            handleIllegalStateTransition();
         }
     }
     else if (state_ == State::SELECTED)
@@ -75,12 +80,12 @@ void Piece::setState(const State newState)
         }
         else
         {
-            throw std::runtime_error("Error, unsupported piece state transition");
+            handleIllegalStateTransition();
         }
     }
     else
     {
-        throw std::runtime_error("Error, piece is in unsupported state");
+        Q_UNREACHABLE();
     }
 
     state_ = newState;
@@ -92,6 +97,12 @@ void Piece::setState(const State newState)
     emit pieceChanged(id_); // TODO only state changes here
 }
 
+void Piece::setAnimationEnabled(const bool enabled)
+{
+    animationEnabled_ = enabled;
+    emit pieceChanged(id_);
+}
+
 void Piece::moveToTile(const Coordinates& newCoordinates)
 {
     qDebug() << "C++: Moving piece" << id_ << "to coordinates" << newCoordinates;
@@ -99,25 +110,18 @@ void Piece::moveToTile(const Coordinates& newCoordinates)
     coordinates_ = newCoordinates;
 
     emit pieceChanged(id_);
-    // emit startAnimatedMovement(coordinates_, newCoordinates);
 }
 
 void Piece::promote()
 {
     promoted_ = true;
     emit pieceChanged(id_);
-    // emit promoted();
 }
 
 std::ostream& operator<<(std::ostream& os, const Piece& piece)
 {
     os << "(" << piece.getRow() << "," << piece.getColumn() << ")";
     return os;
-}
-
-void Piece::processEndMovement(const Coordinates& newCoordinates)
-{
-    coordinates_ = newCoordinates;
 }
 
 bool Piece::isDisabled() const
