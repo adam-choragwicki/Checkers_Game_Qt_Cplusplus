@@ -36,28 +36,21 @@ public:
 
             if (PieceCaptureManager::checkIfPieceCanCapture(*model_.getMultiCaptureManager().getMulticapturingPiece(), model_.getPiecesManager()))
             {
-                std::vector<Piece*> piecesWhichCanCapture{model_.getMultiCaptureManager().getMulticapturingPiece()};
+                const std::vector piecesWhichCanCapture{model_.getMultiCaptureManager().getMulticapturingPiece()};
                 model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanCapture);
                 return;
             }
-            else
-            {
-                model_.getMultiCaptureManager().endMultiCapture();
-            }
+
+            model_.getMultiCaptureManager().endMultiCapture();
         }
 
-        std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, model_.getPiecesManager());
-
-        if (piecesWhichCanCapture.empty())
+        if (const std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, model_.getPiecesManager()); piecesWhichCanCapture.empty())
         {
             qDebug() << "Player" << static_cast<int>(player) << "has no pieces which can capture";
 
-            std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, model_.getPiecesManager());
-
-            if (piecesWhichCanMove.empty())
+            if (const std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, model_.getPiecesManager()); piecesWhichCanMove.empty())
             {
                 qInfo() << "Player" << static_cast<int>(player) << "has no pieces which can move, game over";
-                // endGame(model_.getPlayerManager().getActivePlayer(), GameEndReason::NO_MOVES_LEFT);
                 emit endGame(model_.getPlayerManager().getActivePlayer(), GameEndReason::NO_MOVES_LEFT);
             }
             else
@@ -133,7 +126,6 @@ public:
         movePiece(piece, targetTileCoordinates);
 
         model_.getPiecesManager().killPieceAtCoordinates(coordinatesOfPieceBetween); // TODO add delay, piece should be removed after animation is finished
-        // view_.removePieceFrontendAtCoordinates(coordinatesOfPieceBetween);
     }
 
     void endTurn()
@@ -145,7 +137,6 @@ public:
 
             qDebug() << "Player" << static_cast<int>(playerWithNoPiecesLeft) << "has no pieces left";
 
-            // endGame(playerWithNoPiecesLeft, GameEndReason::NO_PIECES_LEFT);
             emit endGame(playerWithNoPiecesLeft, GameEndReason::NO_PIECES_LEFT);
         }
 

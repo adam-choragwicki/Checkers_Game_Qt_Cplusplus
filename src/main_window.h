@@ -35,8 +35,6 @@
 //     // [[nodiscard]] std::vector<PieceFrontend*> getPiecesFrontends() const;
 //
 //     // void updatePiecesFrontends();
-//     void removePieceFrontendAtCoordinates(const Coordinates& coordinates);
-//
 //     void showEndGameDialog(Player losingPlayer, GameEndReason gameEndReason);
 //
 // private:

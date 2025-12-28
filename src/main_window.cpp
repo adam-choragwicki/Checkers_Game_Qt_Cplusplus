@@ -131,20 +131,3 @@
 // //         elem->updateColours();
 // //     }
 // // }
-//
-// // void MainWindow::removePieceFrontendAtCoordinates(const Coordinates& coordinates)
-// // {
-// //     auto iter = std::ranges::find_if(piecesFrontends_, [coordinates](const auto& pieceFrontend)
-// //     {
-// //         return pieceFrontend->getPiece().getCoordinates() == coordinates;
-// //     });
-// //
-// //     if(iter != piecesFrontends_.end())
-// //     {
-// //         piecesFrontends_.erase(iter);
-// //     }
-// //     else
-// //     {
-// //         throw std::runtime_error("Error, trying to remove piece frontend which is not present in pieces frontends");
-// //     }
-// // }

@@ -75,23 +75,6 @@
 //     }
 // }
 //
-// void PiecesPlacement::removePieceAtCoordinates(const Coordinates& coordinates)
-// {
-//     auto iter = std::ranges::find_if(pieces_, [coordinates](const auto& piece)
-//     {
-//         return piece->getCoordinates() == coordinates;
-//     });
-//
-//     if (iter != pieces_.end())
-//     {
-//         pieces_.erase(iter);
-//     }
-//     else
-//     {
-//         throw std::runtime_error("Error, trying to remove piece which is not present in pieces placement");
-//     }
-// }
-//
 // size_t PiecesPlacement::countPlayerPieces(Player player) const
 // {
 //     return std::ranges::count_if(pieces_, [&player](const auto& piece)
