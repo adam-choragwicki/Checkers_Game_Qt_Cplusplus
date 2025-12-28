@@ -3,50 +3,83 @@ import QtQuick
 Rectangle {
     id: abstractPiece
 
-    property int idNumber
-    property int pieceState
-    property bool isPromoted
-    property string player
-    property color disabledPieceOutlineColor
+    // Config
+    readonly property bool showId: true
 
-    readonly property color activePieceOutlineColor: Qt.rgba(255 / 255, 255 / 255, 0, 1) // 255, 255, 0
-    readonly property color selectedPieceOutlineColor: "white"
+    required property int xRole
+    required property int yRole
+    required property int playerRole
+    required property int aliveRole
+    required property int idRole
+    required property int stateRole
+    required property bool animationEnabledRole
+    required property bool promotedRole
+
+    x: (xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
+    y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
 
     width: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
     height: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
-
     radius: 50 // circle
 
+    readonly property bool isPlayerNorth: playerRole === 1
+    readonly property string player: isPlayerNorth ? "NORTH" : "SOUTH"
+
+    visible: aliveRole
+
+    color: isPlayerNorth ? Qt.rgba(220 / 255, 0, 0, 1) : Qt.rgba(50 / 255, 50 / 255, 50 / 255, 1)
+
+    //Outline (border)
+    readonly property color activePieceOutlineColor: Qt.rgba(255 / 255, 255 / 255, 0, 1) // 255, 255, 0
+    readonly property color selectedPieceOutlineColor: "white"
+    readonly property color disabledPieceOutlineColor: isPlayerNorth ? Qt.rgba(170 / 255, 0, 0, 1) : "black"
     border.width: uiScaler.px(5) // outline width
 
-    onPieceStateChanged: {
-        console.log("QML: Player " + player + " piece " + idNumber + " piece state changed to " + pieceState)
+    border.color: {
+        if (stateRole === 2) return activePieceOutlineColor;
+        if (stateRole === 3) return selectedPieceOutlineColor;
+        return disabledPieceOutlineColor; // Default / State 1
+    }
 
-        if (pieceState === 1) {
-            border.color = disabledPieceOutlineColor
-        } else if (pieceState === 2) {
-            border.color = activePieceOutlineColor
-        } else if (pieceState === 3) {
-            border.color = selectedPieceOutlineColor
-        } else {
-            console.error("QML: Invalid piece state " + pieceState + " of player " + player + " piece")
+    // Animation
+    readonly property int pieceMovementAnimationDurationMs: 200 // TODO ( take it from C++ context property)
+
+    Behavior on x {
+        enabled: animationEnabledRole
+
+        NumberAnimation {
+            duration: pieceMovementAnimationDurationMs
+            easing.type: Easing.Linear
         }
+    }
+
+    Behavior on y {
+        enabled: animationEnabledRole
+
+        NumberAnimation {
+            duration: pieceMovementAnimationDurationMs
+            easing.type: Easing.Linear
+        }
+    }
+
+    onStateRoleChanged: {
+        console.log("QML: Player " + player + " piece " + idRole + " piece state changed to " + stateRole)
     }
 
     MouseArea {
         enabled: Controller.gameRunning
         anchors.fill: parent
         onClicked: {
-            Controller.onPieceClicked(idNumber)
+            Controller.onPieceClicked(idRole)
         }
     }
 
     Crown {
         anchors.centerIn: parent
-        visible: isPromoted
+        visible: promotedRole
 
-        // opacity: isPromoted ? 1 : 0
-        // scale: isPromoted ? 1 : 0.6
+        // opacity: promotedRole ? 1 : 0
+        // scale: promotedRole ? 1 : 0.6
 
         // Behavior on opacity { // TODO optional animation
         //     NumberAnimation {
@@ -61,8 +94,9 @@ Rectangle {
     }
 
     Text {
+        visible: showId
         anchors.centerIn: parent
-        text: idNumber
+        text: idRole
         font.bold: true
         font.pixelSize: uiScaler.px(30)
         color: "white"
