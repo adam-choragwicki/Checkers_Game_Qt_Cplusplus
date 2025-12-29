@@ -139,7 +139,8 @@ bool PiecesManager::isPieceAtCoordinates(const Coordinates& coordinates) const
 {
     return std::ranges::find_if(pieces_, [&coordinates](const auto& piece)
     {
-        return piece->getCoordinates() == coordinates;
+        // Consider a piece present at coordinates only if it is alive // TODO maybe go back to removing dead pieces?
+        return piece->isAlive() && piece->getCoordinates() == coordinates;
     }) != pieces_.end();
 }
 
@@ -149,15 +150,14 @@ Piece& PiecesManager::getPieceAtCoordinates(const Coordinates& coordinates) cons
     {
         auto iter = std::find_if(pieces_.begin(), pieces_.end(), [coordinates](const std::unique_ptr<Piece>& piece)
         {
-            return piece->getCoordinates() == coordinates;
+            // Only return alive piece
+            return piece->isAlive() && piece->getCoordinates() == coordinates; // TODO maybe go back to removing dead pieces?
         });
 
-        return *(iter->get());
+        return *iter->get();
     }
-    else
-    {
-        throw std::runtime_error("Error, no piece at given coordinates");
-    }
+
+    throw std::runtime_error("Error, no (alive) piece at given coordinates");
 }
 
 void PiecesManager::killPieceAtCoordinates(const Coordinates& coordinates)
