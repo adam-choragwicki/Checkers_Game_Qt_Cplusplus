@@ -58,7 +58,7 @@ void Piece::setState(const State newState)
         {
             /* End turn */
         }
-        else if (state_ == State::ACTIVE)
+        else if (newState == State::ACTIVE)
         {
             /* Do nothing */
         }
