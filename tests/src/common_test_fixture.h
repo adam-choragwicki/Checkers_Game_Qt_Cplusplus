@@ -6,7 +6,7 @@
 #include "pieces_manager.h"
 #include "player_manager.h"
 
-class CommonTestFixture : public ::testing ::Test
+class CommonTestFixture : public ::testing::Test
 {
 protected:
     void SetUp() override
@@ -15,13 +15,26 @@ protected:
     void TearDown() override
     {}
 
+    struct PieceParameters
+    {
+        Coordinates coordinates;
+        Player player;
+        bool isPromoted = false;
+    };
+
+    void setup(const std::initializer_list<PieceParameters> pieces)
+    {
+        piecesParameters_ = pieces;
+        placePiecesOnCheckerboard();
+    }
+
     void placePiecesOnCheckerboard()
     {
-        for(const auto& piece: piecesParameters_)
+        for (const auto& piece: piecesParameters_)
         {
             piecesManager_.createPiece(piece.coordinates, piece.player);
 
-            if(piece.isPromoted)
+            if (piece.isPromoted)
             {
                 piecesManager_.getPieceAtCoordinates(piece.coordinates).promote();
             }
@@ -29,13 +42,6 @@ protected:
             piecesOnCheckerboard_.push_back(&piecesManager_.getPieceAtCoordinates(piece.coordinates));
         }
     }
-
-    struct PieceParameters
-    {
-        Coordinates coordinates;
-        Player player;
-        bool isPromoted = false;
-    };
 
     PiecesManager piecesManager_;
     std::vector<PieceParameters> piecesParameters_;
