@@ -22,10 +22,6 @@ PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPosi
     // createPiece(Coordinates{4, 5}, Player::NORTH);
     // createPiece(Coordinates{4, 3}, Player::NORTH);
 
-    createPieces();
-
-    qDebug() << "Created" << pieces_.size() << "pieces";
-
     // const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
     //pieces_.emplace_back(std::make_unique<Piece>(Coordinates{0, 0}, Player::SOUTH));
 
@@ -122,6 +118,8 @@ void PiecesManager::createPieces()
 
     placePieces(southPlayerStartingPiecesCoordinates, Player::SOUTH);
     placePieces(northPlayerStartingPiecesCoordinates, Player::NORTH);
+
+    qDebug() << "Created" << pieces_.size() << "pieces";
 }
 
 void PiecesManager::markPiecesWhichCanMove(const std::vector<Piece*>& pieces)
