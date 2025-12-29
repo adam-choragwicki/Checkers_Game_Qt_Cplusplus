@@ -6,48 +6,47 @@ class PiecePromotionTest : public CommonTestFixture
 
 TEST_F(PiecePromotionTest, CheckPromotionEligibilityPositive)
 {
-    const Piece playerUpPiece1(Coordinates(8, 3), Player::NORTH);
-    const Piece playerUpPiece2(Coordinates(8, 7), Player::NORTH);
+    const std::initializer_list<Piece> promotablePieces = {
+        {{8, 3}, Player::NORTH},
+        {{8, 7}, Player::NORTH},
+        {{1, 4}, Player::SOUTH},
+        {{1, 8}, Player::SOUTH}
+    };
 
-    const Piece playerDownPiece1(Coordinates(1, 4), Player::SOUTH);
-    const Piece playerDownPiece2(Coordinates(1, 8), Player::SOUTH);
-
-    EXPECT_TRUE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece1));
-    EXPECT_TRUE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece2));
-
-    EXPECT_TRUE(PiecePromotionManager::checkPromotionEligibility(playerDownPiece1));
-    EXPECT_TRUE(PiecePromotionManager::checkPromotionEligibility(playerDownPiece2));
+    for (const auto& piece: promotablePieces)
+    {
+        EXPECT_TRUE(PiecePromotionManager::checkPromotionEligibility(piece));
+    }
 }
 
 TEST_F(PiecePromotionTest, CheckPromotionEligibilityNegative)
 {
-    const Piece playerUpPiece1(Coordinates(1, 2), Player::NORTH);
-    const Piece playerUpPiece2(Coordinates(1, 6), Player::NORTH);
-    const Piece playerUpPiece3(Coordinates(4, 3), Player::NORTH);
-    const Piece playerUpPiece4(Coordinates(5, 8), Player::NORTH);
+    const std::initializer_list<Piece> nonPromotablePieces = {
+        {{1, 2}, Player::NORTH},
+        {{1, 6}, Player::NORTH},
+        {{4, 3}, Player::NORTH},
+        {{5, 8}, Player::NORTH},
+        {{8, 3}, Player::SOUTH},
+        {{8, 7}, Player::SOUTH},
+        {{4, 3}, Player::SOUTH},
+        {{5, 6}, Player::SOUTH}
+    };
 
-    const Piece playerDownPiece1(Coordinates(8, 3), Player::SOUTH);
-    const Piece playerDownPiece2(Coordinates(8, 7), Player::SOUTH);
-    const Piece playerDownPiece3(Coordinates(4, 3), Player::SOUTH);
-    const Piece playerDownPiece4(Coordinates(5, 6), Player::SOUTH);
-
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece1));
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece2));
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece3));
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece4));
-
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerDownPiece1));
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerDownPiece2));
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerDownPiece3));
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerDownPiece4));
+    for (const auto& piece: nonPromotablePieces)
+    {
+        EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(piece));
+    }
 }
 
 TEST_F(PiecePromotionTest, DoublePromotionNotAllowed)
 {
-    Piece playerUpPiece1(Coordinates(8, 3), Player::NORTH, true);
-    Piece playerDownPiece1(Coordinates(1, 4), Player::SOUTH, true);
+    const std::initializer_list<Piece> alreadyPromotedPieces = {
+        {{8, 3}, Player::NORTH, true},
+        {{1, 4}, Player::SOUTH, true}
+    };
 
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerUpPiece1));
-
-    EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(playerDownPiece1));
+    for (const auto& piece: alreadyPromotedPieces)
+    {
+        EXPECT_FALSE(PiecePromotionManager::checkPromotionEligibility(piece));
+    }
 }
