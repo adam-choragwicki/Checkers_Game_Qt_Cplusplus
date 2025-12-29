@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gtest/gtest.h"
-#include "pieces_placement.h"
 #include "coordinates.h"
 #include "pieces_manager.h"
 #include "player_manager.h"
@@ -9,12 +8,6 @@
 class CommonTestFixture : public ::testing::Test
 {
 protected:
-    void SetUp() override
-    {}
-
-    void TearDown() override
-    {}
-
     struct PieceParameters
     {
         Coordinates coordinates;
@@ -24,26 +17,21 @@ protected:
 
     void setup(const std::initializer_list<PieceParameters> pieces)
     {
-        piecesParameters_ = pieces;
-        placePiecesOnCheckerboard();
-    }
-
-    void placePiecesOnCheckerboard()
-    {
-        for (const auto& piece: piecesParameters_)
+        for (const auto& [coordinates, player, isPromoted]: pieces)
         {
-            piecesManager_.createPiece(piece.coordinates, piece.player);
+            piecesManager_.createPiece(coordinates, player);
 
-            if (piece.isPromoted)
+            Piece& piece = piecesManager_.getPieceAtCoordinates(coordinates);
+
+            if (isPromoted)
             {
-                piecesManager_.getPieceAtCoordinates(piece.coordinates).promote();
+                piece.promote();
             }
 
-            piecesOnCheckerboard_.push_back(&piecesManager_.getPieceAtCoordinates(piece.coordinates));
+            piecesOnCheckerboard_.push_back(&piece);
         }
     }
 
     PiecesManager piecesManager_;
-    std::vector<PieceParameters> piecesParameters_;
     std::vector<Piece*> piecesOnCheckerboard_;
 };
