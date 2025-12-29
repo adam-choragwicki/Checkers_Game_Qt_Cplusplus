@@ -45,11 +45,20 @@ QHash<int, QByteArray> PiecesModel::roleNames() const
     return {{XRole, "xRole"}, {YRole, "yRole"}, {PlayerRole, "playerRole"}, {AliveRole, "aliveRole"}, {IdRole, "idRole"}, {StateRole, "stateRole"}, {AnimationEnabledRole, "animationEnabledRole"}, {PromotedRole, "promotedRole"}};
 }
 
-void PiecesModel::pieceChanged(const int index)
+void PiecesModel::pieceChanged(const int id)
 {
-    // qDebug() << "C++: Processing piece changed for piece: " << index;
-    // qDebug() << "C++: Emitting dataChanged for piece: " << index;
+    const auto& pieces = piecesManager_.getPieces();
+    auto it = std::find_if(pieces.begin(), pieces.end(), [id](const std::unique_ptr<Piece>& p)
+    {
+        return p->getId() == id;
+    });
 
-    const QModelIndex idx = createIndex(index, 0);
+    if (it == pieces.end())
+    {
+        qFatal() << "PiecesModel::pieceChanged: no piece with id" << id << "found";
+    }
+
+    const int row = static_cast<int>(std::distance(pieces.begin(), it));
+    const QModelIndex idx = createIndex(row, 0);
     emit dataChanged(idx, idx);
 }
