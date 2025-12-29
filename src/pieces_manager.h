@@ -32,7 +32,7 @@ public:
     void enablePiecesAnimations();
     void disablePiecesAnimations();
 
-    const std::vector<std::unique_ptr<Piece>>& getPieces() const
+    [[nodiscard]] const std::vector<std::unique_ptr<Piece>>& getPieces() const
     {
         return pieces_;
     }
@@ -60,7 +60,7 @@ public:
                                                       }));
     }
 
-    Piece* findPieceById(int id) const;
+    [[nodiscard]] Piece* findPieceById(int id) const;
 
     void createPieces();
     void createPiece(const Coordinates& coordinates, Player player);
