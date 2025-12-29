@@ -121,7 +121,7 @@ public:
 
     void capturePiece(Piece& piece, const Coordinates& targetTileCoordinates)
     {
-        Coordinates coordinatesOfPieceBetween((targetTileCoordinates.getRow() + piece.getRow()) / 2, (targetTileCoordinates.getColumn() + piece.getColumn()) / 2);
+        const Coordinates coordinatesOfPieceBetween((targetTileCoordinates.getRow() + piece.getRow()) / 2, (targetTileCoordinates.getColumn() + piece.getColumn()) / 2);
 
         movePiece(piece, targetTileCoordinates);
 
