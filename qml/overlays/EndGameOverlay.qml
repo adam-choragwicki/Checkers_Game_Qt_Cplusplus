@@ -33,9 +33,11 @@ Item {
         }
 
         Text {
-            text: "END GAME REASON"
+           // visible: gameModel.hasGameEndReasonText
+            text: gameModel.gameEndReasonText
             color: "white"
             font.pixelSize: uiScaler.px(40)
+            font.bold: true
             horizontalAlignment: Text.AlignHCenter
             anchors.horizontalCenter: parent.horizontalCenter
         }

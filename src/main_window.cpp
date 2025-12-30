@@ -75,38 +75,6 @@
 // //     updatePiecesFrontends();
 // // }
 //
-// void MainWindow::showEndGameDialog(Player losingPlayer, GameEndReason reason)
-// {
-//     QString losingPlayerString = (losingPlayer == Player::SOUTH) ? "Black" : "Red";
-//     QString message;
-//
-//     if(reason == GameEndReason::NO_PIECES_LEFT)
-//     {
-//         message = losingPlayerString + " are out of pieces";
-//     }
-//     else if(reason == GameEndReason::NO_MOVES_LEFT)
-//     {
-//         message = losingPlayerString + " are out of moves";
-//     }
-//     else
-//     {
-//         throw std::runtime_error("Error, unsupported src end reason");
-//     }
-//
-//     message += ", RESTART?";
-//
-//     int response = QMessageBox::question(this, "Game over", message, QMessageBox::StandardButton::Ok, QMessageBox::StandardButton::Cancel);
-//
-//     if(response == QMessageBox::Ok)
-//     {
-//         emit newGameRequest();
-//     }
-//     else
-//     {
-//         emit applicationTerminationRequest();
-//     }
-// }
-//
 // // std::vector<PlayableTile*> MainWindow::getPlayableTiles() const
 // // {
 // //     return checkerboard_->getPlayableTiles();

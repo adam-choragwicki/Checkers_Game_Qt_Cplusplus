@@ -35,7 +35,6 @@
 //     // [[nodiscard]] std::vector<PieceFrontend*> getPiecesFrontends() const;
 //
 //     // void updatePiecesFrontends();
-//     void showEndGameDialog(Player losingPlayer, GameEndReason gameEndReason);
 //
 // private:
 //     void closeEvent(QCloseEvent*) override;
