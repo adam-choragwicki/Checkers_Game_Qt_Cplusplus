@@ -20,37 +20,14 @@ public:
     explicit Model(const GameConfig& gameConfig);
     void reset();
 
-    // [[nodiscard]] const PiecesPlacement& getPiecesPlacement() const
-    // {
-    //     return *piecesPlacement_;
-    // }
-    //
-    // PiecesPlacement& getPiecesPlacement()
-    // {
-    //     return *piecesPlacement_;
-    // }
+    [[nodiscard]] MultiCaptureManager& getMultiCaptureManager() const { return *multiCaptureManager_; }
 
-    [[nodiscard]] MultiCaptureManager& getMultiCaptureManager()
-    {
-        return *multiCaptureManager_;
-    }
+    [[nodiscard]] PlayerManager& getPlayerManager() const { return *playerManager_; }
 
-    [[nodiscard]] PlayerManager& getPlayerManager()
-    {
-        return *playerManager_;
-    }
+    [[nodiscard]] bool isMoveInProgress() const { return moveInProgress_; }
+    void setMoveInProgress(const bool moveInProgress) { moveInProgress_ = moveInProgress; }
 
-    [[nodiscard]] bool isMoveInProgress() const
-    {
-        return moveInProgress_;
-    }
-
-    void setMoveInProgress(bool moveInProgress)
-    {
-        moveInProgress_ = moveInProgress;
-    }
-
-    PiecesManager& getPiecesManager() { return *piecesManager_; }
+    PiecesManager& getPiecesManager() const { return *piecesManager_; }
 
     Q_PROPERTY(QObject* piecesModel READ getPiecesModel CONSTANT)
     [[nodiscard]] QObject* getPiecesModel() const { return piecesModel_.get(); }
@@ -67,7 +44,6 @@ private:
 
     // std::unique_ptr<Checkerboard> checkerboard_; // TODO remove because it was part of frontend
 
-    // std::unique_ptr<PiecesPlacement> piecesPlacement_;
     std::unique_ptr<MultiCaptureManager> multiCaptureManager_;
     std::unique_ptr<PlayerManager> playerManager_;
     bool moveInProgress_{};

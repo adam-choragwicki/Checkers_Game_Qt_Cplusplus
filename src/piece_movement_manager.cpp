@@ -1,28 +1,26 @@
 #include "piece_movement_manager.h"
 
-bool PieceMovementManager::checkMovePossibility(const Piece& piece, const PiecesManager& piecesPlacement, const Coordinates& targetTileCoordinates)
+bool PieceMovementManager::checkMovePossibility(const Piece& piece, const PiecesManager& piecesManager, const Coordinates& targetTileCoordinates)
 {
-    if(!piecesPlacement.isPieceAtCoordinates(targetTileCoordinates))
+    if (!piecesManager.isPieceAtCoordinates(targetTileCoordinates))
     {
         /*Check if this movement is one of possible movements*/
-        std::set<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
+        const std::set<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
         return moveOptions.contains(targetTileCoordinates);
     }
-    else
-    {
-        return false;
-    }
+
+    return false;
 }
 
-std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(Player activePlayer, const PiecesManager& piecesPlacement)
+std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(const Player activePlayer, const PiecesManager& piecesManager)
 {
     std::vector<Piece*> piecesWhichCanMove;
 
-    for(const auto& piece : piecesPlacement.getPieces())
+    for (const auto& piece: piecesManager.getPieces())
     {
-        if(piece->getPlayer() == activePlayer)
+        if (piece->getPlayer() == activePlayer)
         {
-            if(checkIfPieceCanMove(*piece, piecesPlacement))
+            if (checkIfPieceCanMove(*piece, piecesManager))
             {
                 piecesWhichCanMove.push_back(piece.get());
             }
@@ -37,35 +35,41 @@ std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptions
     const Player piecePlayer = piece.getPlayer();
     std::vector<std::pair<int, int>> validRowColumnMovementOffsets;
 
-    if(piece.isPromoted())
+    if (piece.isPromoted())
     {
-        validRowColumnMovementOffsets = {{-1, -1},
-                                         {-1, +1},
-                                         {+1, -1},
-                                         {+1, +1}};
+        validRowColumnMovementOffsets = {
+            {-1, -1},
+            {-1, +1},
+            {+1, -1},
+            {+1, +1}
+        };
     }
     else
     {
-        if(piecePlayer == Player::SOUTH)
+        if (piecePlayer == Player::SOUTH)
         {
             /*Movement UP is permitted*/
-            validRowColumnMovementOffsets = {{-1, -1},
-                                             {-1, +1}};
+            validRowColumnMovementOffsets = {
+                {-1, -1},
+                {-1, +1}
+            };
         }
-        else if(piecePlayer == Player::NORTH)
+        else if (piecePlayer == Player::NORTH)
         {
             /*Movement DOWN is permitted*/
-            validRowColumnMovementOffsets = {{+1, -1},
-                                             {+1, +1}};
+            validRowColumnMovementOffsets = {
+                {+1, -1},
+                {+1, +1}
+            };
         }
     }
 
     const Coordinates pieceCoordinates = piece.getCoordinates();
     std::set<Coordinates> validMovementCoordinates;
 
-    for(auto& validRowColumnMovementOffset : validRowColumnMovementOffsets)
+    for (auto& validRowColumnMovementOffset: validRowColumnMovementOffsets)
     {
-        if(Coordinates::validateCoordinates(pieceCoordinates + validRowColumnMovementOffset))
+        if (Coordinates::validateCoordinates(pieceCoordinates + validRowColumnMovementOffset))
         {
             validMovementCoordinates.emplace(pieceCoordinates + validRowColumnMovementOffset);
         }
@@ -74,12 +78,12 @@ std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptions
     return validMovementCoordinates;
 }
 
-bool PieceMovementManager::checkIfPieceCanMove(const Piece& piece, const PiecesManager& piecesPlacement)
+bool PieceMovementManager::checkIfPieceCanMove(const Piece& piece, const PiecesManager& piecesManager)
 {
     std::set<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
 
-    return std::ranges::any_of(moveOptions, [&piece, &piecesPlacement](const Coordinates& moveOption)
+    return std::ranges::any_of(moveOptions, [&piece, &piecesManager](const Coordinates& moveOption)
     {
-        return checkMovePossibility(piece, piecesPlacement, moveOption);
+        return checkMovePossibility(piece, piecesManager, moveOption);
     });
 }

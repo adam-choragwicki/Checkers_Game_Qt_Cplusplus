@@ -3,7 +3,7 @@
 Model::Model(const GameConfig& gameConfig)
 {
     piecesManager_ = std::make_unique<PiecesManager>();
-    piecesManager_->createPieces();
+    // piecesManager_->createPieces();
 
     piecesModel_ = std::make_unique<PiecesModel>(*piecesManager_);
 

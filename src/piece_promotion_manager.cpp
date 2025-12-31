@@ -2,7 +2,7 @@
 
 bool PiecePromotionManager::checkPromotionEligibility(const Piece& piece)
 {
-    if(piece.isPromoted())
+    if (piece.isPromoted())
     {
         return false;
     }
@@ -10,22 +10,22 @@ bool PiecePromotionManager::checkPromotionEligibility(const Piece& piece)
     const Player piecePlayer = piece.getPlayer();
     const Coordinates pieceCoordinates(piece.getRow(), piece.getColumn());
 
-    if(piecePlayer == Player::SOUTH)
+    if (piecePlayer == Player::SOUTH)
     {
         /*Movement UP is permitted*/
-        if(pieceCoordinates.getRow() == 1)
+        if (pieceCoordinates.getRow() == 1)
         {
             return true;
         }
     }
-    else if(piecePlayer == Player::NORTH)
+    else if (piecePlayer == Player::NORTH)
+    {
+        /*Movement DOWN is permitted*/
+        if (pieceCoordinates.getRow() == 8)
         {
-            /*Movement DOWN is permitted*/
-            if(pieceCoordinates.getRow() == 8)
-            {
-                return true;
-            }
+            return true;
         }
+    }
 
     return false;
 }

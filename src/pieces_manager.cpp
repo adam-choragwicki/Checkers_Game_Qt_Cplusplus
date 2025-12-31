@@ -9,8 +9,8 @@ PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPosi
     // TODO eventually the PiecesManager cannot create pieces in constructor (tests require piece manager to be empty)
 
     // Movement and capture testing
-    // createPiece(Coordinates{6, 3}, Player::SOUTH);
-    // createPiece(Coordinates{4, 5}, Player::NORTH);
+    createPiece(Coordinates{6, 3}, Player::SOUTH);
+    createPiece(Coordinates{4, 5}, Player::NORTH);
 
     // Promotion testing
     // createPiece(Coordinates{2, 5}, Player::SOUTH);

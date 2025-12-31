@@ -7,8 +7,8 @@
 
 namespace PieceCaptureManager
 {
-    std::vector<Piece*> whichPiecesCanCapture(Player activePlayer, const PiecesManager& piecesPlacement);
-    bool checkCapturePossibility(const Piece& piece, const PiecesManager& piecesPlacement, const Coordinates& targetTileCoordinates);
-    bool checkIfPieceCanCapture(const Piece& piece, const PiecesManager& piecesPlacement);
+    std::vector<Piece*> whichPiecesCanCapture(Player activePlayer, const PiecesManager& piecesManager);
+    bool checkCapturePossibility(const Piece& piece, const PiecesManager& piecesManager, const Coordinates& targetTileCoordinates);
+    bool checkIfPieceCanCapture(const Piece& piece, const PiecesManager& piecesManager);
     std::set<Coordinates> generatePossiblePieceCaptureOptionsCoordinates(const Piece& piece);
 }

@@ -1,26 +1,22 @@
 #include <set>
 #include "piece_capture_manager.h"
 
-bool PieceCaptureManager::checkCapturePossibility(const Piece& piece, const PiecesManager& piecesPlacement, const Coordinates& targetTileCoordinates)
+bool PieceCaptureManager::checkCapturePossibility(const Piece& piece, const PiecesManager& piecesManager, const Coordinates& targetTileCoordinates)
 {
     const Coordinates pieceCoordinates = piece.getCoordinates();
 
-    if(!piecesPlacement.isPieceAtCoordinates(targetTileCoordinates))
+    if (!piecesManager.isPieceAtCoordinates(targetTileCoordinates))
     {
         /*Check if this capture is one of possible captures*/
-        std::set<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
 
-        if(captureOptions.contains(targetTileCoordinates))
+        if (const std::set<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece); captureOptions.contains(targetTileCoordinates))
         {
-            std::pair<int, int> targetRowColumnCaptureOffset(targetTileCoordinates - pieceCoordinates);
+            std::pair targetRowColumnCaptureOffset(targetTileCoordinates - pieceCoordinates);
 
-            const Coordinates& pieceBetweenThisPieceAndTargetTileCoordinates{pieceCoordinates.getRow() + targetRowColumnCaptureOffset.first / 2, pieceCoordinates.getColumn() + targetRowColumnCaptureOffset.second / 2};
-
-            if(piecesPlacement.isPieceAtCoordinates(pieceBetweenThisPieceAndTargetTileCoordinates))
+            if (const Coordinates& pieceBetweenThisPieceAndTargetTileCoordinates{pieceCoordinates.getRow() + targetRowColumnCaptureOffset.first / 2, pieceCoordinates.getColumn() + targetRowColumnCaptureOffset.second / 2}; piecesManager.
+                isPieceAtCoordinates(pieceBetweenThisPieceAndTargetTileCoordinates))
             {
-                Piece& pieceBetweenThisPieceAndTargetTile = piecesPlacement.getPieceAtCoordinates(pieceBetweenThisPieceAndTargetTileCoordinates);
-
-                if(piece.getPlayer() != pieceBetweenThisPieceAndTargetTile.getPlayer())
+                if (const Piece& pieceBetweenThisPieceAndTargetTile = piecesManager.getPieceAtCoordinates(pieceBetweenThisPieceAndTargetTileCoordinates); piece.getPlayer() != pieceBetweenThisPieceAndTargetTile.getPlayer())
                 {
                     return true;
                 }
@@ -31,15 +27,15 @@ bool PieceCaptureManager::checkCapturePossibility(const Piece& piece, const Piec
     return false;
 }
 
-std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(Player activePlayer, const PiecesManager& piecesPlacement)
+std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(const Player activePlayer, const PiecesManager& piecesManager)
 {
     std::vector<Piece*> piecesWhichCanCapture;
 
-    for(const auto& piece : piecesPlacement.getPieces())
+    for (const auto& piece: piecesManager.getPieces())
     {
-        if(piece->getPlayer() == activePlayer)
+        if (piece->getPlayer() == activePlayer)
         {
-            if(checkIfPieceCanCapture(*piece, piecesPlacement))
+            if (checkIfPieceCanCapture(*piece, piecesManager))
             {
                 piecesWhichCanCapture.push_back(piece.get());
             }
@@ -54,35 +50,41 @@ std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCo
     const Player piecePlayer = piece.getPlayer();
     std::vector<std::pair<int, int>> validRowColumnCaptureOffsets;
 
-    if(piece.isPromoted())
+    if (piece.isPromoted())
     {
-        validRowColumnCaptureOffsets = {{-2, -2},
-                                        {-2, +2},
-                                        {+2, -2},
-                                        {+2, +2}};
+        validRowColumnCaptureOffsets = {
+            {-2, -2},
+            {-2, +2},
+            {+2, -2},
+            {+2, +2}
+        };
     }
     else
     {
-        if(piecePlayer == Player::SOUTH)
+        if (piecePlayer == Player::SOUTH)
         {
             /*Movement UP is permitted*/
-            validRowColumnCaptureOffsets = {{-2, -2},
-                                            {-2, +2}};
+            validRowColumnCaptureOffsets = {
+                {-2, -2},
+                {-2, +2}
+            };
         }
-        else if(piecePlayer == Player::NORTH)
+        else if (piecePlayer == Player::NORTH)
         {
             /*Movement DOWN is permitted*/
-            validRowColumnCaptureOffsets = {{+2, -2},
-                                            {+2, +2}};
+            validRowColumnCaptureOffsets = {
+                {+2, -2},
+                {+2, +2}
+            };
         }
     }
 
     const Coordinates pieceCoordinates = piece.getCoordinates();
     std::set<Coordinates> validCaptureCoordinates;
 
-    for(const auto& validRowColumnCaptureOffset : validRowColumnCaptureOffsets)
+    for (const auto& validRowColumnCaptureOffset: validRowColumnCaptureOffsets)
     {
-        if(Coordinates::validateCoordinates(pieceCoordinates + validRowColumnCaptureOffset))
+        if (Coordinates::validateCoordinates(pieceCoordinates + validRowColumnCaptureOffset))
         {
             validCaptureCoordinates.emplace(pieceCoordinates + validRowColumnCaptureOffset);
         }
@@ -91,12 +93,12 @@ std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCo
     return validCaptureCoordinates;
 }
 
-bool PieceCaptureManager::checkIfPieceCanCapture(const Piece& piece, const PiecesManager& piecesPlacement)
+bool PieceCaptureManager::checkIfPieceCanCapture(const Piece& piece, const PiecesManager& piecesManager)
 {
     std::set<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
 
-    return std::ranges::any_of(captureOptions, [&piece, &piecesPlacement](const Coordinates& captureOption)
+    return std::ranges::any_of(captureOptions, [&piece, &piecesManager](const Coordinates& captureOption)
     {
-        return checkCapturePossibility(piece, piecesPlacement, captureOption);
+        return checkCapturePossibility(piece, piecesManager, captureOption);
     });
 }
