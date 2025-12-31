@@ -4,7 +4,7 @@
 #include "coordinates_database.h"
 #include "piece_state_manager.h"
 
-PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPositions) : AbstractPelletsManager(standardPelletPositions)
+PiecesManager::PiecesManager()
 {
     // TODO eventually the PiecesManager cannot create pieces in constructor (tests require piece manager to be empty)
 
@@ -21,34 +21,20 @@ PiecesManager::PiecesManager() //const std::set<Coordinates>& standardPelletPosi
     // createPiece(Coordinates{6, 1}, Player::SOUTH);
     // createPiece(Coordinates{4, 5}, Player::NORTH);
     // createPiece(Coordinates{4, 3}, Player::NORTH);
-
-    // const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
-    //pieces_.emplace_back(std::make_unique<Piece>(Coordinates{0, 0}, Player::SOUTH));
-
-    // pieces_.emplace_back(Coordinates{0, 0}, Player::SOUTH);
-
-    // for (const auto& coordinates: pelletPositions)
-    // {
-    //     pellets_.emplace_back(coordinates);
-    // }
 }
 
 void PiecesManager::reset()
 {
-    for (auto& piece: pieces_)
+    for (const auto& piece: pieces_)
     {
         qDebug() << "Resetting piece" << piece->getId();
         piece->reset();
     }
-
-    // AbstractPelletsManager::reset();
-
-    // emit resetRequested();
 }
 
 void PiecesManager::enablePiecesAnimations()
 {
-    for (auto& piece: pieces_)
+    for (const auto& piece: pieces_)
     {
         piece->setAnimationEnabled(true);
     }
@@ -157,7 +143,7 @@ Piece& PiecesManager::getPieceAtCoordinates(const Coordinates& coordinates) cons
 {
     if (isPieceAtCoordinates(coordinates))
     {
-        auto iter = std::find_if(pieces_.begin(), pieces_.end(), [coordinates](const std::unique_ptr<Piece>& piece)
+        const auto iter = std::ranges::find_if(pieces_, [coordinates](const std::unique_ptr<Piece>& piece)
         {
             // Only return alive piece
             return piece->isAlive() && piece->getCoordinates() == coordinates; // TODO maybe go back to removing dead pieces?
@@ -171,7 +157,7 @@ Piece& PiecesManager::getPieceAtCoordinates(const Coordinates& coordinates) cons
 
 void PiecesManager::killPieceAtCoordinates(const Coordinates& coordinates)
 {
-    auto iter = std::ranges::find_if(pieces_, [coordinates](const auto& piece)
+    const auto iter = std::ranges::find_if(pieces_, [coordinates](const auto& piece)
     {
         return piece->getCoordinates() == coordinates;
     });

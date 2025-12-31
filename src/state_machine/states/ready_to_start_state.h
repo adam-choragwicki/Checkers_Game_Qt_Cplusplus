@@ -59,7 +59,6 @@ public:
                 if (logKeyPressed)
                     qDebug() << "Left key pressed";
                 stateActions_->setGameState(GameStateType::Running);
-                // stateActions_->processPacmanDirectionKeyPress(Direction::LEFT);
                 break;
 
             case Qt::Key_Right:
@@ -67,7 +66,6 @@ public:
                 if (logKeyPressed)
                     qDebug() << "Right key pressed";
                 stateActions_->setGameState(GameStateType::Running);
-                // stateActions_->processPacmanDirectionKeyPress(Direction::RIGHT);
                 break;
 
             case Qt::Key_Up:
@@ -75,7 +73,6 @@ public:
                 if (logKeyPressed)
                     qDebug() << "Up key pressed";
                 stateActions_->setGameState(GameStateType::Running);
-                // stateActions_->processPacmanDirectionKeyPress(Direction::UP);
                 break;
 
             case Qt::Key_Down:
@@ -83,7 +80,6 @@ public:
                 if (logKeyPressed)
                     qDebug() << "Down key pressed";
                 stateActions_->setGameState(GameStateType::Running);
-                // stateActions_->processPacmanDirectionKeyPress(Direction::DOWN);
                 break;
 
             case Qt::Key_Escape:

@@ -56,13 +56,6 @@ void Game::exposeDataToQml() const
     view_->rootContext()->setContextProperty("Controller", controller_.get());
 
     view_->rootContext()->setContextProperty("piecesModel", model_->getPiecesModel());
-    // view_->rootContext()->setContextProperty("powerPelletsModel", &model_->getPowerPelletsModel()); // TODO remove
-
-    // view_->rootContext()->setContextProperty("pacman", &model_->getPacman()); // TODO remove
-    // view_->rootContext()->setContextProperty("blueGhost", &model_->getBlueGhost()); // TODO remove
-    // view_->rootContext()->setContextProperty("orangeGhost", &model_->getOrangeGhost()); // TODO remove
-    // view_->rootContext()->setContextProperty("purpleGhost", &model_->getPurpleGhost()); // TODO remove
-    // view_->rootContext()->setContextProperty("redGhost", &model_->getRedGhost()); // TODO remove
 }
 
 void Game::initializeQmlEngine()

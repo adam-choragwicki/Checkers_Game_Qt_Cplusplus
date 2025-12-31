@@ -1,18 +1,12 @@
 #pragma once
 
-// #include "abstract_pellets_manager.h"
-// #include "standard_pellet.h"
-#include <algorithm>
 #include "piece.h"
 #include <vector>
 #include <QDebug>
 
-class PiecesManager : public QObject //, public AbstractPelletsManager<StandardPellet>
+class PiecesManager : public QObject
 {
     Q_OBJECT
-
-signals:
-    void resetRequested();
 
 public:
     explicit PiecesManager();
@@ -36,15 +30,6 @@ public:
     std::vector<std::unique_ptr<Piece>>& getPieces(){return pieces_;}
 
     void disableAllPieces();
-
-    [[nodiscard]] int getAliveStandardPelletsCount() const
-    {
-        return static_cast<int>(std::ranges::count_if(getPieces(),
-                                                      [](const std::unique_ptr<Piece>& piece)
-                                                      {
-                                                          return piece->isAlive();
-                                                      }));
-    }
 
     [[nodiscard]] Piece* findPieceById(int id) const;
 

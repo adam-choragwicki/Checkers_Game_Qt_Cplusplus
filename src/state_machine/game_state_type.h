@@ -38,6 +38,6 @@ inline QDebug operator<<(QDebug debug, GameStateType state)
 // | **Running**        | Player presses *Esc*          | **EscapeMenu**     | Open escape menu.               |
 // | **EscapeMenu**     | Select “RESUME”               | **Running**        | Return to play.                 |
 // | **EscapeMenu**     | Select “QUIT”                 | **Exiting**        | Exit the game.                  |
-// | **Running**        | Pacman ate all pellets        | **EndedVictory**   | Show end game overlay.          |
-// | **Running**        | Pacman collided with ghost    | **EndedDefeat**    | Show end game overlay.          |
+// | **Running**        | ?                             | **EndedVictory**   | Show end game overlay.          |
+// | **Running**        | ?                             | **EndedDefeat**    | Show end game overlay.          |
 // | **Stopped**        | Player presses “PLAY AGAIN”   | **ReadyToStart**   | Restart game                    |

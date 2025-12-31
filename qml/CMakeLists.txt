@@ -23,18 +23,6 @@ qt_add_qml_module(${LIB_NAME}
         PlayableTile.qml
         NonPlayableTile.qml
 
-#        Arena.qml
-
-#        entities/Pacman.qml
-#        entities/ghosts/AbstractGhost.qml
-#        entities/ghosts/BlueGhost.qml
-#        entities/ghosts/OrangeGhost.qml
-#        entities/ghosts/PurpleGhost.qml
-#        entities/ghosts/RedGhost.qml
-#
-#        pellets/StandardPellet.qml
-#        pellets/PowerPellet.qml
-#
         overlays/EndGameOverlay.qml
         overlays/EscapeMenuOverlay.qml
 )
