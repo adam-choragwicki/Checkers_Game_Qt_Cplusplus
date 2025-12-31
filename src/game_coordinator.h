@@ -14,9 +14,6 @@ public:
     explicit GameCoordinator(Model& model, IStateActions* stateActions);
     void setQmlHelper(QmlHelper* qmlHelper);
 
-    void startGameLoop(); // TODO remove or not?
-    void stopGameLoop(); // TODO remove or not?
-
     void restartGame();
 
     void checkAndMarkPlayerMoveOptions(Player player);
@@ -33,11 +30,10 @@ public:
 
     bool checkEligibilityAndPromotePiece(Piece& piece);
 
-    void endGame(const Player losingPlayer, GameEndReason gameEndReason);
+    void endGame(Player losingPlayer, GameEndReason gameEndReason);
 
 private:
     Model& model_;
-    // GameLoop& gameLoop_;
     QmlHelper* qmlHelper_{};
 
     IStateActions* stateActions_{};

@@ -13,7 +13,6 @@ public:
     {
         qDebug() << "Entered state: EndedVictorySouthPlayer";
         stateActions_->showEndGameOverlay(GameResult::SOUTH_PLAYER_VICTORY);
-        stateActions_->stopGameLoop();
     }
 
     void exited() override

@@ -33,9 +33,6 @@ public:
     explicit Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view);
 
     // IStateActions implementation
-    void startGameLoop() override; // TODO remove or not?
-    void stopGameLoop() override; // TODO remove or not?
-
     void enablePiecesAnimation() override;
     void disablePiecesAnimation() override;
 
@@ -55,7 +52,6 @@ public:
 private:
     Model& model_;
     QQmlApplicationEngine& view_;
-    // std::unique_ptr<GameLoop> gameLoop_; // TODO game loop or not?
 
     QmlHelper qmlHelper_{view_};
     GameStateManager gameStateManager_;

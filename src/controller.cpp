@@ -6,11 +6,8 @@ Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicati
 {
     qInfo() << "Initializing controller";
 
-    // gameCoordinator_ = std::make_unique<GameCoordinator>(model_, *gameLoop_); // TODO game loop or not?
     gameCoordinator_ = std::make_unique<GameCoordinator>(model_, this);
     inputHandler_ = std::make_unique<InputHandler>(this, &windowManager_);
-
-    // connect(gameLoop_.get(), &GameLoop::endGame, this, &Controller::gameEnded);
 
     connect(&gameStateManager_, &GameStateManager::gameStateChanged, this, &Controller::gameStateChanged, Qt::UniqueConnection);
 }
@@ -26,18 +23,6 @@ void Controller::onQmlEngineFullyInitialized()
     gameCoordinator_->setQmlHelper(&qmlHelper_);
 
     setGameState(GameStateType::ReadyToStart);
-}
-
-void Controller::startGameLoop() // TODO remove or not?
-{
-    qDebug() << "Controller::startGameLoop()";
-    gameCoordinator_->startGameLoop();
-}
-
-void Controller::stopGameLoop() // TODO remove or not?
-{
-    qDebug() << "Controller::stopGameLoop()";
-    gameCoordinator_->stopGameLoop();
 }
 
 void Controller::showEscapeMenuOverlay()

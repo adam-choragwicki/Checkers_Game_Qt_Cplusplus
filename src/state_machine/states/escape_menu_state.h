@@ -12,7 +12,6 @@ public:
     {
         qDebug() << "Entered state: EscapeMenu";
         stateActions_->showEscapeMenuOverlay();
-        stateActions_->stopGameLoop();
     }
 
     void exited() override

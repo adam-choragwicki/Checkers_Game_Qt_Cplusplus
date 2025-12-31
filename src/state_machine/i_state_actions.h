@@ -8,10 +8,6 @@ class IStateActions
 public:
     virtual ~IStateActions() = default;
 
-    // Game loop control
-    virtual void startGameLoop() = 0;
-    virtual void stopGameLoop() = 0;
-
     // Piece
     virtual void enablePiecesAnimation() = 0;
     virtual void disablePiecesAnimation() = 0;

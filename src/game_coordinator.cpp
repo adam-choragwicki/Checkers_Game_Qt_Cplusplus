@@ -3,7 +3,6 @@
 #include "piece_state_manager.h"
 #include "piece_promotion_manager.h"
 
-// GameCoordinator::GameCoordinator(Model& model, GameLoop& gameLoop) : model_(model), gameLoop_(gameLoop) // TODO loop or not?
 GameCoordinator::GameCoordinator(Model& model, IStateActions* stateActions) : model_(model), stateActions_(stateActions)
 {
     checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
@@ -12,16 +11,6 @@ GameCoordinator::GameCoordinator(Model& model, IStateActions* stateActions) : mo
 void GameCoordinator::setQmlHelper(QmlHelper* qmlHelper)
 {
     qmlHelper_ = qmlHelper;
-}
-
-void GameCoordinator::startGameLoop() // TODO remove or not?
-{
-    // gameLoop_.start();
-}
-
-void GameCoordinator::stopGameLoop() // TODO remove or not?
-{
-    // gameLoop_.stop();
 }
 
 void GameCoordinator::restartGame()

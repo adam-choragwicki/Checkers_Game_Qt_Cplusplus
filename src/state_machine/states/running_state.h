@@ -11,7 +11,6 @@ public:
     void entered() override
     {
         stateActions_->enablePiecesAnimation();
-        stateActions_->startGameLoop();
     }
 
     void exited() override
