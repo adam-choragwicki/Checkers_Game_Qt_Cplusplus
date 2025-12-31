@@ -26,8 +26,6 @@ public:
 
     void endTurn();
 
-    void disableAllPieces();
-
     bool checkEligibilityAndPromotePiece(Piece& piece);
 
     void endGame(Player losingPlayer, GameEndReason gameEndReason);

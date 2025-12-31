@@ -32,24 +32,10 @@ public:
     void enablePiecesAnimations();
     void disablePiecesAnimations();
 
-    [[nodiscard]] const std::vector<std::unique_ptr<Piece>>& getPieces() const
-    {
-        return pieces_;
-    }
+    [[nodiscard]] const std::vector<std::unique_ptr<Piece>>& getPieces() const {return pieces_;}
+    std::vector<std::unique_ptr<Piece>>& getPieces(){return pieces_;}
 
-    std::vector<std::unique_ptr<Piece>>& getPieces()
-    {
-        return pieces_;
-    }
-
-    // [[nodiscard]] int getAliveStandardPelletsCount() const
-    // {
-    //     return static_cast<int>(std::ranges::count_if(getPieces(),
-    //                                                   [](const Piece& piece)
-    //                                                   {
-    //                                                       return piece.isAlive();
-    //                                                   }));
-    // }
+    void disableAllPieces();
 
     [[nodiscard]] int getAliveStandardPelletsCount() const
     {

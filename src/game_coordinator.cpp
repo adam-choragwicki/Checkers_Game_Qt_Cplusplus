@@ -85,7 +85,7 @@ void GameCoordinator::processPieceMove(Piece& piece, const Coordinates& targetTi
             else if (PieceCaptureManager::checkIfPieceCanCapture(piece, model_.getPiecesManager()))
             {
                 model_.getMultiCaptureManager().startMultiCapture(piece);
-                disableAllPieces();
+                model_.getPiecesManager().disableAllPieces();
                 checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
             }
             else
@@ -139,20 +139,9 @@ void GameCoordinator::endTurn()
         endGame(playerWithNoPiecesLeft, GameEndReason::NO_PIECES_LEFT);
     }
 
-    disableAllPieces();
+    model_.getPiecesManager().disableAllPieces();
     model_.getPlayerManager().switchPlayer();
     checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
-}
-
-void GameCoordinator::disableAllPieces()
-{
-    for (const auto& piece: model_.getPiecesManager().getPieces())
-    {
-        if (!piece->isDisabled())
-        {
-            PieceStateManager::disablePiece(*piece);
-        }
-    }
 }
 
 bool GameCoordinator::checkEligibilityAndPromotePiece(Piece& piece)

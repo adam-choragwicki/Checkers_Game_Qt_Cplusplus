@@ -78,6 +78,17 @@ void PiecesManager::createPiece(const Coordinates& coordinates, Player player)
     }
 }
 
+void PiecesManager::disableAllPieces()
+{
+    for (const auto& piece: pieces_)
+    {
+        if (!piece->isDisabled())
+        {
+            PieceStateManager::disablePiece(*piece);
+        }
+    }
+}
+
 Piece* PiecesManager::findPieceById(const int id) const
 {
     for (const auto& piece: pieces_)
