@@ -103,7 +103,7 @@ void GameCoordinator::processPieceMove(Piece& piece, const Coordinates& targetTi
     {
         if (PieceMovementManager::checkMovePossibility(piece, model_.getPiecesManager(), targetTileCoordinates))
         {
-            movePiece(piece, targetTileCoordinates);
+            movePieceToCoordinates(piece, targetTileCoordinates);
             checkEligibilityAndPromotePiece(piece);
             endTurn();
         }
@@ -114,16 +114,16 @@ void GameCoordinator::processPieceMove(Piece& piece, const Coordinates& targetTi
     }
 }
 
-void GameCoordinator::movePiece(Piece& piece, const Coordinates& targetTileCoordinates)
+void GameCoordinator::movePieceToCoordinates(Piece& piece, const Coordinates& targetTileCoordinates)
 {
-    piece.moveToTile(targetTileCoordinates);
+    piece.moveToCoordinates(targetTileCoordinates);
 }
 
 void GameCoordinator::capturePiece(Piece& piece, const Coordinates& targetTileCoordinates)
 {
     const Coordinates coordinatesOfPieceBetween((targetTileCoordinates.getRow() + piece.getRow()) / 2, (targetTileCoordinates.getColumn() + piece.getColumn()) / 2);
 
-    movePiece(piece, targetTileCoordinates);
+    movePieceToCoordinates(piece, targetTileCoordinates);
 
     model_.getPiecesManager().killPieceAtCoordinates(coordinatesOfPieceBetween); // TODO add delay, piece should be removed after animation is finished
 }

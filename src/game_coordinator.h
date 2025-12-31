@@ -20,7 +20,7 @@ public:
 
     void processPieceMove(Piece& piece, const Coordinates& targetTileCoordinates);
 
-    void movePiece(Piece& piece, const Coordinates& targetTileCoordinates);
+    void movePieceToCoordinates(Piece& piece, const Coordinates& targetTileCoordinates);
 
     void capturePiece(Piece& piece, const Coordinates& targetTileCoordinates);
 

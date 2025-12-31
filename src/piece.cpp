@@ -103,7 +103,7 @@ void Piece::setAnimationEnabled(const bool enabled)
     emit pieceChanged(id_);
 }
 
-void Piece::moveToTile(const Coordinates& newCoordinates)
+void Piece::moveToCoordinates(const Coordinates& newCoordinates)
 {
     qDebug() << "C++: Moving piece" << id_ << "to coordinates" << newCoordinates;
 
