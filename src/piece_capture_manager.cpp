@@ -1,5 +1,22 @@
-#include <set>
 #include "piece_capture_manager.h"
+
+std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(const Player activePlayer, const PiecesManager& piecesManager)
+{
+    std::vector<Piece*> piecesWhichCanCapture;
+
+    for (const auto& piece: piecesManager.getPieces())
+    {
+        if (piece->getPlayer() == activePlayer)
+        {
+            if (checkIfPieceCanCapture(*piece, piecesManager))
+            {
+                piecesWhichCanCapture.push_back(piece.get());
+            }
+        }
+    }
+
+    return piecesWhichCanCapture;
+}
 
 bool PieceCaptureManager::checkCapturePossibility(const Piece& piece, const PiecesManager& piecesManager, const Coordinates& targetTileCoordinates)
 {
@@ -27,22 +44,14 @@ bool PieceCaptureManager::checkCapturePossibility(const Piece& piece, const Piec
     return false;
 }
 
-std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(const Player activePlayer, const PiecesManager& piecesManager)
+bool PieceCaptureManager::checkIfPieceCanCapture(const Piece& piece, const PiecesManager& piecesManager)
 {
-    std::vector<Piece*> piecesWhichCanCapture;
+    std::set<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
 
-    for (const auto& piece: piecesManager.getPieces())
+    return std::ranges::any_of(captureOptions, [&piece, &piecesManager](const Coordinates& captureOption)
     {
-        if (piece->getPlayer() == activePlayer)
-        {
-            if (checkIfPieceCanCapture(*piece, piecesManager))
-            {
-                piecesWhichCanCapture.push_back(piece.get());
-            }
-        }
-    }
-
-    return piecesWhichCanCapture;
+        return checkCapturePossibility(piece, piecesManager, captureOption);
+    });
 }
 
 std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCoordinates(const Piece& piece)
@@ -91,14 +100,4 @@ std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCo
     }
 
     return validCaptureCoordinates;
-}
-
-bool PieceCaptureManager::checkIfPieceCanCapture(const Piece& piece, const PiecesManager& piecesManager)
-{
-    std::set<Coordinates> captureOptions = generatePossiblePieceCaptureOptionsCoordinates(piece);
-
-    return std::ranges::any_of(captureOptions, [&piece, &piecesManager](const Coordinates& captureOption)
-    {
-        return checkCapturePossibility(piece, piecesManager, captureOption);
-    });
 }

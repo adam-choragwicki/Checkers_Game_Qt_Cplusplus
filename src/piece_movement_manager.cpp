@@ -1,17 +1,5 @@
 #include "piece_movement_manager.h"
 
-bool PieceMovementManager::checkMovePossibility(const Piece& piece, const PiecesManager& piecesManager, const Coordinates& targetTileCoordinates)
-{
-    if (!piecesManager.isPieceAtCoordinates(targetTileCoordinates))
-    {
-        /*Check if this movement is one of possible movements*/
-        const std::set<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
-        return moveOptions.contains(targetTileCoordinates);
-    }
-
-    return false;
-}
-
 std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(const Player activePlayer, const PiecesManager& piecesManager)
 {
     std::vector<Piece*> piecesWhichCanMove;
@@ -28,6 +16,28 @@ std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(const Player active
     }
 
     return piecesWhichCanMove;
+}
+
+bool PieceMovementManager::checkMovePossibility(const Piece& piece, const PiecesManager& piecesManager, const Coordinates& targetTileCoordinates)
+{
+    if (!piecesManager.isPieceAtCoordinates(targetTileCoordinates))
+    {
+        /*Check if this movement is one of possible movements*/
+        const std::set<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
+        return moveOptions.contains(targetTileCoordinates);
+    }
+
+    return false;
+}
+
+bool PieceMovementManager::checkIfPieceCanMove(const Piece& piece, const PiecesManager& piecesManager)
+{
+    std::set<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
+
+    return std::ranges::any_of(moveOptions, [&piece, &piecesManager](const Coordinates& moveOption)
+    {
+        return checkMovePossibility(piece, piecesManager, moveOption);
+    });
 }
 
 std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptionsCoordinates(const Piece& piece)
@@ -76,14 +86,4 @@ std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptions
     }
 
     return validMovementCoordinates;
-}
-
-bool PieceMovementManager::checkIfPieceCanMove(const Piece& piece, const PiecesManager& piecesManager)
-{
-    std::set<Coordinates> moveOptions = generatePossiblePieceMovementOptionsCoordinates(piece);
-
-    return std::ranges::any_of(moveOptions, [&piece, &piecesManager](const Coordinates& moveOption)
-    {
-        return checkMovePossibility(piece, piecesManager, moveOption);
-    });
 }

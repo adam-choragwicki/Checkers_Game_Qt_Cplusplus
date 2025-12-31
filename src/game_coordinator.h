@@ -5,6 +5,7 @@
 
 #include "piece_capture_manager.h"
 #include "state_machine/game_state_manager.h"
+#include "game_end_reason.h"
 
 class GameCoordinator : public QObject
 {
