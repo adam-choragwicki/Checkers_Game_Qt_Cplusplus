@@ -21,6 +21,11 @@ PiecesManager::PiecesManager()
     // createPiece(Coordinates{6, 1}, Player::SOUTH);
     // createPiece(Coordinates{4, 5}, Player::NORTH);
     // createPiece(Coordinates{4, 3}, Player::NORTH);
+
+    // Multi capture testing
+    // createPiece(Coordinates{6, 3}, Player::SOUTH);
+    // createPiece(Coordinates{3, 4}, Player::NORTH);
+    // createPiece(Coordinates{5, 4}, Player::NORTH);
 }
 
 void PiecesManager::reset()
