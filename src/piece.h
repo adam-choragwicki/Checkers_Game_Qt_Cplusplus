@@ -58,6 +58,8 @@ public:
     [[nodiscard]] bool isAnimationEnabled() const { return animationEnabled_; }
     void setAnimationEnabled(bool enabled);
 
+    void onClicked();
+
 private:
     const Coordinates STARTING_COORDINATES_;
     Coordinates coordinates_;

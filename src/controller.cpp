@@ -69,11 +69,7 @@ void Controller::onPieceClicked(const int pieceId)
 
         qDebug() << "C++: Piece" << pieceId << "clicked";
 
-        if (piece->isActive())
-        {
-            qDebug() << "C++: Setting piece" << pieceId << "as selected";
-            piece->setState(Piece::State::SELECTED);
-        }
+        piece->onClicked();
     }
     else
     {

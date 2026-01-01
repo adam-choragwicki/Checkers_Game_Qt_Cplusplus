@@ -103,6 +103,19 @@ void Piece::setAnimationEnabled(const bool enabled)
     emit pieceChanged(id_);
 }
 
+void Piece::onClicked()
+{
+    if (state_ == State::ACTIVE)
+    {
+        qDebug() << "C++: Setting piece" << id_ << "as selected";
+        setState(State::SELECTED);
+    }
+    else
+    {
+        qDebug() << "C++: Ignoring click on piece" << id_ << "because it is not active";
+    }
+}
+
 void Piece::moveToCoordinates(const Coordinates& newCoordinates)
 {
     qDebug() << "C++: Moving piece" << id_ << "to coordinates" << newCoordinates;
