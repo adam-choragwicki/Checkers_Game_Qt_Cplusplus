@@ -1,6 +1,5 @@
 // #include "tile.h"
 // #include "drawer.h"
-// #include "gui_config.h"
 // #include <QGraphicsSceneMouseEvent>
 //
 // Tile::Tile(const Coordinates& coordinates) : coordinates_(coordinates)

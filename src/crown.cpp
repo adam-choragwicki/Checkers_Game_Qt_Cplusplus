@@ -1,5 +1,4 @@
 // #include "crown.h"
-// #include "gui_config.h"
 // #include <QBrush>
 //
 // Crown::Crown(QGraphicsItem* parent) : QGraphicsPolygonItem(parent)
