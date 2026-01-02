@@ -19,7 +19,7 @@ public:
 
     void checkAndMarkPlayerMoveOptions(Player player);
 
-    void processPieceMove(Piece& piece, const Coordinates& targetTileCoordinates);
+    void processTileClicked(const Coordinates& targetTileCoordinates);
 
     void movePieceToCoordinates(Piece& piece, const Coordinates& targetTileCoordinates);
 

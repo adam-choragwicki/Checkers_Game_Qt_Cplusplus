@@ -1,6 +1,5 @@
 #include "controller.h"
 #include "piece.h"
-#include "selected_piece_manager.h"
 
 Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : model_(model), view_(view), gameStateManager_(this)
 {
@@ -80,23 +79,11 @@ void Controller::onPieceClicked(const int pieceId)
 // void Controller::onTileClicked(const Coordinates& targetTileCoordinates)
 void Controller::onTileClicked(const int row, const int column) // TODO send coordinates from QML directly?
 {
-    const Coordinates targetTileCoordinates(row, column);
+    const Coordinates clickedTileCoordinates(row, column);
 
-    qDebug() << "C++: Tile clicked at coordinates" << targetTileCoordinates;
+    qDebug() << "C++: Tile clicked at coordinates" << clickedTileCoordinates;
 
-    if (!model_.isMoveInProgress())
-    {
-        model_.setMoveInProgress(true);
-
-        /*Ignore clicking on a tile unless any piece is selected*/
-        if (SelectedPieceManager::isAnyPieceSelected())
-        {
-            Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
-            gameCoordinator_->processPieceMove(selectedPiece, targetTileCoordinates);
-        }
-
-        model_.setMoveInProgress(false);
-    }
+    gameCoordinator_->processTileClicked(clickedTileCoordinates);
 }
 
 void Controller::onResumeClicked()

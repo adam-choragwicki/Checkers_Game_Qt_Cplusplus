@@ -2,6 +2,7 @@
 #include "piece_movement_manager.h"
 #include "piece_state_manager.h"
 #include "piece_promotion_manager.h"
+#include "selected_piece_manager.h"
 
 GameCoordinator::GameCoordinator(Model& model, IStateActions* stateActions) : model_(model), stateActions_(stateActions)
 {
@@ -66,51 +67,69 @@ void GameCoordinator::checkAndMarkPlayerMoveOptions(Player player)
     }
 }
 
-void GameCoordinator::processPieceMove(Piece& piece, const Coordinates& targetTileCoordinates)
+void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinates)
 {
-    /*If any capture is possible, then any capture has to be the next move*/
-    if (PieceCaptureManager::checkIfPieceCanCapture(piece, model_.getPiecesManager()))
+    /*Ignore clicking on a tile unless any piece is selected*/
+    if (SelectedPieceManager::isAnyPieceSelected())
     {
-        if (PieceCaptureManager::checkCapturePossibility(piece, model_.getPiecesManager(), targetTileCoordinates))
+        Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
+
+        if (!model_.isMoveInProgress())
         {
-            capturePiece(piece, targetTileCoordinates);
+            model_.setMoveInProgress(true);
 
-            if (checkEligibilityAndPromotePiece(piece))
+            /*If any capture is possible, then any capture has to be the next move*/
+            if (PieceCaptureManager::checkIfPieceCanCapture(selectedPiece, model_.getPiecesManager()))
             {
-                model_.getMultiCaptureManager().endMultiCapture();
+                if (PieceCaptureManager::checkCapturePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
+                {
+                    capturePiece(selectedPiece, targetTileCoordinates);
 
-                /*Turn ends immediately after promotion, no immediate backward capture is possible*/
-                endTurn();
+                    if (checkEligibilityAndPromotePiece(selectedPiece))
+                    {
+                        model_.getMultiCaptureManager().endMultiCapture();
+
+                        /*Turn ends immediately after promotion, no immediate backward capture is possible*/
+                        endTurn();
+                    }
+                    else if (PieceCaptureManager::checkIfPieceCanCapture(selectedPiece, model_.getPiecesManager()))
+                    {
+                        model_.getMultiCaptureManager().startMultiCapture(selectedPiece);
+                        model_.getPiecesManager().disableAllPieces();
+                        checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+                    }
+                    else
+                    {
+                        endTurn();
+                    }
+                }
+                else
+                {
+                    /*Capture was possible but player chose another tile, so no move was taken and a selected piece is reset*/
+                    PieceStateManager::deselectPiece(selectedPiece);
+                }
             }
-            else if (PieceCaptureManager::checkIfPieceCanCapture(piece, model_.getPiecesManager()))
+            else if (PieceMovementManager::checkIfPieceCanMove(selectedPiece, model_.getPiecesManager()))
             {
-                model_.getMultiCaptureManager().startMultiCapture(piece);
-                model_.getPiecesManager().disableAllPieces();
-                checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+                if (PieceMovementManager::checkMovePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
+                {
+                    movePieceToCoordinates(selectedPiece, targetTileCoordinates);
+                    checkEligibilityAndPromotePiece(selectedPiece);
+                    endTurn();
+                }
             }
             else
             {
-                endTurn();
+                throw std::runtime_error("Error, piece is in undefined state, cannot capture and cannot move");
             }
-        }
-        else
-        {
-            /*Capture was possible but player chose another tile, so no move was taken and a selected piece is reset*/
-            PieceStateManager::deselectPiece(piece);
-        }
-    }
-    else if (PieceMovementManager::checkIfPieceCanMove(piece, model_.getPiecesManager()))
-    {
-        if (PieceMovementManager::checkMovePossibility(piece, model_.getPiecesManager(), targetTileCoordinates))
-        {
-            movePieceToCoordinates(piece, targetTileCoordinates);
-            checkEligibilityAndPromotePiece(piece);
-            endTurn();
+
+            model_.setMoveInProgress(false);
         }
     }
     else
     {
-        throw std::runtime_error("Error, piece is in undefined state, cannot capture and cannot move");
+        /*Ignore clicking on a tile unless any piece is selected*/
+        qDebug() << "Ignoring click on a tile, because no piece is selected";
     }
 }
 
