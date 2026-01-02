@@ -4,8 +4,11 @@
 #include "piece_promotion_manager.h"
 #include "selected_piece_manager.h"
 
-GameCoordinator::GameCoordinator(Model& model, QmlHelper& qmlHelper, IStateActions* stateActions) : model_(model), qmlHelper_(qmlHelper), stateActions_(stateActions)
+GameCoordinator::GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions* stateActions) : model_(model), qmlHelper_(qmlHelper), stateActions_(stateActions)
 {
+    pieceMovementAnimationTimer_.setSingleShot(true);
+    pieceMovementAnimationTimer_.setInterval(gameConfig.PIECE_MOVEMENT_ANIMATION_DURATION_MS);
+
     checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
 }
 
@@ -13,7 +16,10 @@ void GameCoordinator::restartGame()
 {
     qInfo() << "Restarting game";
 
-    // Restore keyboard focus to GameInput
+    // defensive - stop any pending post-move logic, because the pieces are about to be deleted
+    pieceMovementAnimationTimer_.stop();
+    model_.setMoveInProgress(false);
+
     QMetaObject::invokeMethod(qmlHelper_.getGameInput(), "refocus");
 
     model_.reset();
@@ -66,77 +72,121 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
     {
         Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
 
-        if (!model_.isMoveInProgress())
+        // If a move is already happening, ignore input
+        if (model_.isMoveInProgress())
         {
-            model_.setMoveInProgress(true);
+            return;
+        }
 
-            /*If any capture is possible, then any capture has to be the next move*/
-            if (PieceCaptureManager::checkIfPieceCanCapture(selectedPiece, model_.getPiecesManager()))
+        // Lock the input. It will be unlocked after the animation finishes
+        model_.setMoveInProgress(true);
+        bool moveAccepted = false;
+        bool movementIsCapture = false;
+        std::optional<Coordinates> capturedPieceCoordinates = std::nullopt;
+
+        /*If any capture is possible, then any capture has to be the next move*/
+        if (PieceCaptureManager::checkIfPieceCanCapture(selectedPiece, model_.getPiecesManager()))
+        {
+            if (PieceCaptureManager::checkCapturePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
             {
-                if (PieceCaptureManager::checkCapturePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
-                {
-                    capturePiece(selectedPiece, targetTileCoordinates);
-
-                    if (checkEligibilityAndPromotePiece(selectedPiece))
-                    {
-                        model_.getMultiCaptureManager().endMultiCapture();
-
-                        /*Turn ends immediately after promotion, no immediate backward capture is possible*/
-                        endTurn();
-                    }
-                    else if (PieceCaptureManager::checkIfPieceCanCapture(selectedPiece, model_.getPiecesManager()))
-                    {
-                        model_.getMultiCaptureManager().startMultiCapture(selectedPiece);
-                        model_.getPiecesManager().disableAllPieces();
-                        checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
-                    }
-                    else
-                    {
-                        endTurn();
-                    }
-                }
-                else
-                {
-                    /*Capture was possible but player chose another tile, so no move was taken, and a selected piece is reset*/
-                    PieceStateManager::deselectPiece(selectedPiece);
-                }
-            }
-            else if (PieceMovementManager::checkIfPieceCanMove(selectedPiece, model_.getPiecesManager()))
-            {
-                if (PieceMovementManager::checkMovePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
-                {
-                    movePieceToCoordinates(selectedPiece, targetTileCoordinates);
-                    checkEligibilityAndPromotePiece(selectedPiece);
-                    endTurn();
-                }
+                // Calculate where the victim piece is, but do not kill it yet
+                capturedPieceCoordinates = getCapturedPieceCoordinates(selectedPiece, targetTileCoordinates);
+                movementIsCapture = true;
+                moveAccepted = true;
             }
             else
             {
-                throw std::runtime_error("Error, piece is in undefined state, cannot capture and cannot move");
+                // Invalid capture attempt
+                PieceStateManager::deselectPiece(selectedPiece);
+                model_.setMoveInProgress(false); // Unlock immediately
+                return;
             }
+        }
+        // Check if a normal move is possible
+        else if (PieceMovementManager::checkIfPieceCanMove(selectedPiece, model_.getPiecesManager()))
+        {
+            if (PieceMovementManager::checkMovePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
+            {
+                moveAccepted = true;
+            }
+        }
 
-            model_.setMoveInProgress(false);
+        if (moveAccepted)
+        {
+            // A. VISUALS: Start the move (QML will animate this change)
+            movePieceToCoordinates(selectedPiece, targetTileCoordinates);
+
+            // B. LOGIC DELAY: Wait for animation to finish
+            Piece* piecePtr = &selectedPiece;
+
+            // Connect the timer to the finalization logic
+            pieceMovementAnimationTimer_.disconnect(); // clear previous connections
+
+            connect(&pieceMovementAnimationTimer_, &QTimer::timeout, this, [this, piecePtr, movementIsCapture, capturedPieceCoordinates]()
+            {
+                onPieceAnimationFinished(piecePtr, movementIsCapture, capturedPieceCoordinates);
+            });
+
+            pieceMovementAnimationTimer_.start();
+        }
+        else
+        {
+            throw std::runtime_error("Error, piece is in undefined state, cannot capture and cannot move");
         }
     }
-    else
+}
+
+void GameCoordinator::onPieceAnimationFinished(Piece* piece, const bool movementWasCapture, const std::optional<Coordinates> capturedPieceCoordinates)
+{
+    // If movement was a capture, remove the victim piece now (after the jump lands)
+    if (movementWasCapture && capturedPieceCoordinates.has_value())
     {
-        /*Ignore clicking on a tile unless any piece is selected*/
-        qDebug() << "Ignoring click on a tile, because no piece is selected";
+        killCapturedPiece(capturedPieceCoordinates.value());
     }
+
+    // 2. Run the rules logic
+    if (movementWasCapture)
+    {
+        if (checkEligibilityAndPromotePiece(*piece))
+        {
+            model_.getMultiCaptureManager().endMultiCapture();
+            endTurn();
+        }
+        else if (PieceCaptureManager::checkIfPieceCanCapture(*piece, model_.getPiecesManager()))
+        {
+            // Multi-capture available
+            model_.getMultiCaptureManager().startMultiCapture(*piece);
+            model_.getPiecesManager().disableAllPieces();
+            checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+        }
+        else
+        {
+            endTurn();
+        }
+    }
+    else // Normal move
+    {
+        checkEligibilityAndPromotePiece(*piece);
+        endTurn();
+    }
+
+    // 3. Finally, unlock input
+    model_.setMoveInProgress(false);
+}
+
+Coordinates GameCoordinator::getCapturedPieceCoordinates(const Piece& piece, const Coordinates& targetTileCoordinates) const
+{
+    return Coordinates((targetTileCoordinates.getRow() + piece.getRow()) / 2, (targetTileCoordinates.getColumn() + piece.getColumn()) / 2);
+}
+
+void GameCoordinator::killCapturedPiece(const Coordinates& coordinates)
+{
+    model_.getPiecesManager().killPieceAtCoordinates(coordinates);
 }
 
 void GameCoordinator::movePieceToCoordinates(Piece& piece, const Coordinates& targetTileCoordinates)
 {
     piece.moveToCoordinates(targetTileCoordinates);
-}
-
-void GameCoordinator::capturePiece(Piece& piece, const Coordinates& targetTileCoordinates)
-{
-    const Coordinates coordinatesOfPieceBetween((targetTileCoordinates.getRow() + piece.getRow()) / 2, (targetTileCoordinates.getColumn() + piece.getColumn()) / 2);
-
-    movePieceToCoordinates(piece, targetTileCoordinates);
-
-    model_.getPiecesManager().killPieceAtCoordinates(coordinatesOfPieceBetween); // TODO add delay, piece should be removed after animation is finished
 }
 
 void GameCoordinator::endTurn()

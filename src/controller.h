@@ -50,6 +50,7 @@ public:
     bool isGameRunning() const { return gameStateManager_.getCurrentGameStateType() == GameStateType::Running; }
 
 private:
+    const GameConfig& gameConfig_;
     Model& model_;
     QQmlApplicationEngine& view_;
 

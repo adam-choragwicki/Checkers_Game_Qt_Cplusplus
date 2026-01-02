@@ -1,7 +1,7 @@
 #include "controller.h"
 #include "piece.h"
 
-Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : model_(model), view_(view), gameStateManager_(this)
+Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : gameConfig_(gameConfig), model_(model), view_(view), gameStateManager_(this)
 {
     qInfo() << "Initializing controller";
 
@@ -17,7 +17,7 @@ void Controller::onQmlEngineFullyInitialized()
     windowManager_.setWindow(qmlHelper_.getMainWindow());
     overlayManager_ = std::make_unique<OverlayManager>(qmlHelper_);
 
-    gameCoordinator_ = std::make_unique<GameCoordinator>(model_, qmlHelper_, this);
+    gameCoordinator_ = std::make_unique<GameCoordinator>(gameConfig_, model_, qmlHelper_, this);
 
     setGameState(GameStateType::ReadyToStart);
 }

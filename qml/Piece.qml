@@ -46,13 +46,12 @@ Rectangle {
     }
 
     // Animation
-    readonly property int pieceMovementAnimationDurationMs: 200
 
     Behavior on x {
         enabled: animationEnabledRole
 
         NumberAnimation {
-            duration: pieceMovementAnimationDurationMs
+            duration: pieceMovementAnimationDurationMs // exposed from C++
             easing.type: Easing.Linear
         }
     }
@@ -61,7 +60,7 @@ Rectangle {
         enabled: animationEnabledRole
 
         NumberAnimation {
-            duration: pieceMovementAnimationDurationMs
+            duration: pieceMovementAnimationDurationMs // exposed from C++
             easing.type: Easing.Linear
         }
     }

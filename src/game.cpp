@@ -52,9 +52,13 @@ void Game::printAppInfo()
 
 void Game::exposeDataToQml() const
 {
-    view_->rootContext()->setContextProperty("gameModel", model_.get());
     view_->rootContext()->setContextProperty("Controller", controller_.get());
 
+    // expose constants
+    view_->rootContext()->setContextProperty("pieceMovementAnimationDurationMs", gameConfig_->PIECE_MOVEMENT_ANIMATION_DURATION_MS);
+
+    // expose models
+    view_->rootContext()->setContextProperty("gameModel", model_.get());
     view_->rootContext()->setContextProperty("piecesModel", model_->getPiecesModel());
 }
 

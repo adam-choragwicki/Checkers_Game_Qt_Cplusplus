@@ -1,7 +1,9 @@
 #pragma once
 
-class GameConfig // TODO is this class needed
+class GameConfig
 {
 public:
     GameConfig();
+
+    int PIECE_MOVEMENT_ANIMATION_DURATION_MS{};
 };
