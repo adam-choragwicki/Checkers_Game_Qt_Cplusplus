@@ -35,9 +35,9 @@ void GameCoordinator::checkAndMarkPlayerMoveOptions(Player player)
     {
         qDebug() << "Multi capture in progress";
 
-        if (PieceCaptureManager::checkIfPieceCanCapture(*model_.getMultiCaptureManager().getMulticapturingPiece(), model_.getPiecesManager()))
+        if (PieceCaptureManager::checkIfPieceCanCapture(model_.getMultiCaptureManager().getMulticapturingPiece(), model_.getPiecesManager()))
         {
-            const std::vector piecesWhichCanCapture{model_.getMultiCaptureManager().getMulticapturingPiece()};
+            const std::vector piecesWhichCanCapture{&model_.getMultiCaptureManager().getMulticapturingPiece()};
             model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanCapture);
             return;
         }
