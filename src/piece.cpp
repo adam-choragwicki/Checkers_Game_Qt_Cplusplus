@@ -52,7 +52,7 @@ void Piece::setState(const State newState)
     {
         if (newState == State::SELECTED)
         {
-            SelectedPieceManager::switchSelectedPiece(this);
+            SelectedPieceManager::switchSelectedPiece(*this);
         }
         else if (newState == State::DISABLED)
         {

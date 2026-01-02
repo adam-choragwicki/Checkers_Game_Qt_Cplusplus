@@ -105,7 +105,7 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
                 }
                 else
                 {
-                    /*Capture was possible but player chose another tile, so no move was taken and a selected piece is reset*/
+                    /*Capture was possible but player chose another tile, so no move was taken, and a selected piece is reset*/
                     PieceStateManager::deselectPiece(selectedPiece);
                 }
             }
