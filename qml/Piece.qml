@@ -19,11 +19,11 @@ Rectangle {
     readonly property color southPlayerMainColor: Qt.rgba(50 / 255, 50 / 255, 50 / 255, 1)
     readonly property color southPlayerDisabledPieceOutlineColor: "black"
 
-    x: (xRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_X
-    y: (yRole * checkerboard.tileSize) + uiScaler.px(15) // TODO Taken from GuiConfig::Tile::SIZE plus GuiConfig::Piece::OFFSET_Y
+    x: (xRole * checkerboard.tileSize) + uiScaler.px(15)
+    y: (yRole * checkerboard.tileSize) + uiScaler.px(15)
 
-    width: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
-    height: uiScaler.px(50) // TODO Taken from GuiConfig::Piece::SIZE
+    width: uiScaler.px(50)
+    height: uiScaler.px(50)
     radius: 50 // circle
 
     readonly property bool isPlayerNorth: playerRole === 1

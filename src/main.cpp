@@ -30,7 +30,6 @@ int main(int argc, char* argv[])
 }
 
 //TODO add shadows showing possible movements
-//TODO get rid of Drawer class
 //TODO implement state pattern for Piece state
 //TODO optimize multi-capture manager
 //TODO optimize player manager

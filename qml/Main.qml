@@ -2,8 +2,8 @@ import QtQuick
 
 Window {
     id: mainWindow
-    minimumWidth: 800 // TODO remove, taken from main_window.cpp
-    minimumHeight: 800 // TODO remove, taken from main_window.cpp
+    minimumWidth: 800
+    minimumHeight: 800
     visible: true
 
     // Component.onCompleted: {

@@ -13,16 +13,6 @@ public:
 
     void reset();
 
-    // const std::vector<Piece>& getPieces() const
-    // {
-    //     return pieces_;
-    // }
-    //
-    // std::vector<Piece>& getPieces()
-    // {
-    //     return pieces_;
-    // }
-
     void enablePiecesAnimations();
     void disablePiecesAnimations();
 
@@ -46,7 +36,4 @@ public:
 
 private:
     std::vector<std::unique_ptr<Piece>> pieces_;
-    // std::vector<std::unique_ptr<PieceModel>> piecesModels_;
-
-    // std::vector<Piece> pieces_;
 };

@@ -33,7 +33,6 @@ Item {
         }
 
         Text {
-           // visible: gameModel.hasGameEndReasonText
             text: gameModel.gameEndReasonText
             color: "white"
             font.pixelSize: uiScaler.px(40)

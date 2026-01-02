@@ -4,7 +4,6 @@
 #include "multi_capture_manager.h"
 #include <memory>
 
-#include "checkerboard.h"
 #include "game_config.h"
 #include "pieces_manager.h"
 #include "pieces_model.h"
@@ -32,8 +31,6 @@ public:
     Q_PROPERTY(QObject* piecesModel READ getPiecesModel CONSTANT)
     [[nodiscard]] QObject* getPiecesModel() const { return piecesModel_.get(); }
 
-    // Checkerboard& getCheckerboard() const { return *checkerboard_; } // TODO remove because it was part of frontend
-
     void setGameEndReason(const QString& gameEndReasonText);
 
     Q_PROPERTY(QString gameEndReasonText READ getGameEndReasonText NOTIFY gameEndReasonTextChanged)
@@ -41,8 +38,6 @@ public:
 
 private:
     void clearGameEndReason();
-
-    // std::unique_ptr<Checkerboard> checkerboard_; // TODO remove because it was part of frontend
 
     std::unique_ptr<MultiCaptureManager> multiCaptureManager_;
     std::unique_ptr<PlayerManager> playerManager_;
