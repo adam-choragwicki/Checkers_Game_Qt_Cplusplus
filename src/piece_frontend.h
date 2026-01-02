@@ -1,7 +1,6 @@
 // #pragma once
 //
 // #include "piece.h"
-// #include "crown.h"
 // #include <QGraphicsEllipseItem>
 // #include <QGraphicsSceneMouseEvent>
 // #include <QPropertyAnimation>
