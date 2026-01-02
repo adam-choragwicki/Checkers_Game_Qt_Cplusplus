@@ -4,25 +4,17 @@
 #include "piece_promotion_manager.h"
 #include "selected_piece_manager.h"
 
-GameCoordinator::GameCoordinator(Model& model, IStateActions* stateActions) : model_(model), stateActions_(stateActions)
+GameCoordinator::GameCoordinator(Model& model, QmlHelper& qmlHelper, IStateActions* stateActions) : model_(model), qmlHelper_(qmlHelper), stateActions_(stateActions)
 {
     checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
-}
-
-void GameCoordinator::setQmlHelper(QmlHelper* qmlHelper)
-{
-    qmlHelper_ = qmlHelper;
 }
 
 void GameCoordinator::restartGame()
 {
     qInfo() << "Restarting game";
 
-    if (qmlHelper_)
-    {
-        // Restore keyboard focus to GameInput
-        QMetaObject::invokeMethod(qmlHelper_->getGameInput(), "refocus");
-    }
+    // Restore keyboard focus to GameInput
+    QMetaObject::invokeMethod(qmlHelper_.getGameInput(), "refocus");
 
     model_.reset();
 

@@ -12,8 +12,7 @@ class GameCoordinator : public QObject
     Q_OBJECT
 
 public:
-    explicit GameCoordinator(Model& model, IStateActions* stateActions);
-    void setQmlHelper(QmlHelper* qmlHelper);
+    explicit GameCoordinator(Model& model, QmlHelper& qmlHelper, IStateActions* stateActions);
 
     void restartGame();
 
@@ -33,7 +32,6 @@ public:
 
 private:
     Model& model_;
-    QmlHelper* qmlHelper_{};
-
+    QmlHelper& qmlHelper_;
     IStateActions* stateActions_{};
 };
