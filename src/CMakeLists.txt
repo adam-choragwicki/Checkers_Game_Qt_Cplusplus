@@ -14,7 +14,6 @@ set(BACKEND_SOURCE_FILES
         piece_movement_manager.h piece_movement_manager.cpp
         piece_promotion_manager.h piece_promotion_manager.cpp
         coordinates_database.h coordinates_database.cpp
-        pieces_placement.h pieces_placement.cpp
         piece_state_manager.h piece_state_manager.cpp
         game_config.cpp game_config.h
         pieces_model.cpp pieces_model.h
