@@ -1,10 +1,8 @@
 #include "overlay_manager.h"
+#include "qml_helper.h"
 
-OverlayManager::OverlayManager(QmlHelper& qml_helper) : qmlHelper_(qml_helper)
-{
-    escapeMenuOverlay_ = qmlHelper_.getOverlay(QmlOverlay::EscapeMenuOverlay);
-    endGameOverlay_ = qmlHelper_.getOverlay(QmlOverlay::EndGameOverlay);
-}
+OverlayManager::OverlayManager(QmlHelper& qml_helper) : qmlHelper_(qml_helper), escapeMenuOverlay_(qmlHelper_.getOverlay(QmlOverlay::EscapeMenuOverlay)), endGameOverlay_(qmlHelper_.getOverlay(QmlOverlay::EndGameOverlay))
+{}
 
 void OverlayManager::showEscapeMenuOverlay()
 {

@@ -1,7 +1,9 @@
 #pragma once
 
 #include "game_result.h"
-#include "qml_helper.h"
+#include <QObject>
+
+class QmlHelper;
 
 class OverlayManager
 {
@@ -17,6 +19,6 @@ public:
 private:
     QmlHelper& qmlHelper_;
 
-    QObject* escapeMenuOverlay_{};
-    QObject* endGameOverlay_{};
+    QObject* const escapeMenuOverlay_;
+    QObject* const endGameOverlay_;
 };
