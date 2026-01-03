@@ -4,17 +4,17 @@
 #include "piece_promotion_manager.h"
 #include "selected_piece_manager.h"
 
-GameCoordinator::GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions* stateActions) : model_(model), qmlHelper_(qmlHelper), stateActions_(stateActions)
+GameCoordinator::GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions& stateActions) : model_(model), qmlHelper_(qmlHelper), stateActions_(stateActions)
 {
     pieceMovementAnimationTimer_.setSingleShot(true);
     pieceMovementAnimationTimer_.setInterval(gameConfig.PIECE_MOVEMENT_ANIMATION_DURATION_MS);
 
-    stateActions_->setGameState(GameStateType::ReadyToStart);
+    stateActions_.setGameState(GameStateType::ReadyToStart);
 }
 
 void GameCoordinator::startGame()
 {
-    stateActions_->setGameState(GameStateType::Running);
+    stateActions_.setGameState(GameStateType::Running);
     startNewTurn();
 }
 
@@ -32,7 +32,7 @@ void GameCoordinator::restartGame()
 
     turnCounter_ = 0;
 
-    stateActions_->setGameState(GameStateType::ReadyToStart);
+    stateActions_.setGameState(GameStateType::ReadyToStart);
 
     startGame();
 }
@@ -261,11 +261,11 @@ void GameCoordinator::endGame(const Player losingPlayer, const GameEndReason gam
 
     if (losingPlayer == Player::SOUTH)
     {
-        stateActions_->setGameState(GameStateType::EndedVictoryNorthPlayer);
+        stateActions_.setGameState(GameStateType::EndedVictoryNorthPlayer);
     }
     else if (losingPlayer == Player::NORTH)
     {
-        stateActions_->setGameState(GameStateType::EndedVictorySouthPlayer);
+        stateActions_.setGameState(GameStateType::EndedVictorySouthPlayer);
     }
     else
     {

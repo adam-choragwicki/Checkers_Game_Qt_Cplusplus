@@ -5,7 +5,7 @@ Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicati
 {
     qInfo() << "Initializing controller";
 
-    inputHandler_ = std::make_unique<InputHandler>(this, &windowManager_);
+    inputHandler_ = std::make_unique<InputHandler>(*this, windowManager_);
 
     connect(&gameStateManager_, &GameStateManager::gameStateChanged, this, &Controller::gameStateChanged, Qt::UniqueConnection);
 }
@@ -17,7 +17,7 @@ void Controller::onQmlEngineFullyInitialized()
     windowManager_.setWindow(qmlHelper_.getMainWindow());
     overlayManager_ = std::make_unique<OverlayManager>(qmlHelper_);
 
-    gameCoordinator_ = std::make_unique<GameCoordinator>(gameConfig_, model_, qmlHelper_, this);
+    gameCoordinator_ = std::make_unique<GameCoordinator>(gameConfig_, model_, qmlHelper_, *this);
 
     gameCoordinator_->startGame();
 }

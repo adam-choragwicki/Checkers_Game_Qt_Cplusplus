@@ -12,7 +12,7 @@ class GameCoordinator : public QObject
     Q_OBJECT
 
 public:
-    explicit GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions* stateActions);
+    explicit GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions&  stateActions);
 
     void startGame();
     void restartGame();
@@ -33,7 +33,7 @@ private:
 
     Model& model_;
     QmlHelper& qmlHelper_;
-    IStateActions* stateActions_{};
+    IStateActions& stateActions_;
 
     QTimer pieceMovementAnimationTimer_;
 
