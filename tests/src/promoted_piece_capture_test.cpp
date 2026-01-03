@@ -7,11 +7,11 @@ class PromotedPieceCaptureTest : public CommonTestFixture
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_PlayerUpCaptureAllDirections)
 {
     setup({
-        {{4, 3}, Player::NORTH, true},
-        {{3, 2}, Player::SOUTH, true},
-        {{3, 4}, Player::SOUTH, true},
-        {{5, 2}, Player::SOUTH, true},
-        {{5, 4}, Player::SOUTH, true}
+        {{4, 3}, NORTH_PLAYER, true},
+        {{3, 2}, SOUTH_PLAYER, true},
+        {{3, 4}, SOUTH_PLAYER, true},
+        {{5, 2}, SOUTH_PLAYER, true},
+        {{5, 4}, SOUTH_PLAYER, true}
     });
 
     EXPECT_TRUE(PieceCaptureManager::checkIfPieceCanCapture(*piecesOnCheckerboard_.at(0), piecesManager_));
@@ -25,11 +25,11 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_PlayerUpCaptureA
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_PlayerDownCaptureAllDirections)
 {
     setup({
-        {{5, 6}, Player::NORTH, true},
-        {{4, 5}, Player::SOUTH, true},
-        {{4, 7}, Player::SOUTH, true},
-        {{6, 5}, Player::SOUTH, true},
-        {{6, 7}, Player::SOUTH, true}
+        {{5, 6}, NORTH_PLAYER, true},
+        {{4, 5}, SOUTH_PLAYER, true},
+        {{4, 7}, SOUTH_PLAYER, true},
+        {{6, 5}, SOUTH_PLAYER, true},
+        {{6, 7}, SOUTH_PLAYER, true}
     });
 
     EXPECT_TRUE(PieceCaptureManager::checkIfPieceCanCapture(*piecesOnCheckerboard_.at(0), piecesManager_));
@@ -43,10 +43,10 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_PlayerDownCaptur
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSideOtherSideWall)
 {
     setup({
-        {{3, 2}, Player::NORTH, true},
-        {{3, 6}, Player::NORTH, true},
-        {{4, 3}, Player::SOUTH, true},
-        {{4, 7}, Player::SOUTH, true}
+        {{3, 2}, NORTH_PLAYER, true},
+        {{3, 6}, NORTH_PLAYER, true},
+        {{4, 3}, SOUTH_PLAYER, true},
+        {{4, 7}, SOUTH_PLAYER, true}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -58,10 +58,10 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnOneSide
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnBothSides)
 {
     setup({
-        {{4, 3}, Player::NORTH, true},
-        {{4, 5}, Player::NORTH, true},
-        {{5, 4}, Player::SOUTH, true},
-        {{5, 2}, Player::SOUTH, true}
+        {{4, 3}, NORTH_PLAYER, true},
+        {{4, 5}, NORTH_PLAYER, true},
+        {{5, 4}, SOUTH_PLAYER, true},
+        {{5, 2}, SOUTH_PLAYER, true}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -73,9 +73,9 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCapturePositive_CaptureOnBothSid
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_SideWallBehindPiece)
 {
     setup({
-        {{2, 1}, Player::NORTH, true},
-        {{3, 2}, Player::SOUTH, true},
-        {{4, 3}, Player::SOUTH, true}
+        {{2, 1}, NORTH_PLAYER, true},
+        {{3, 2}, SOUTH_PLAYER, true},
+        {{4, 3}, SOUTH_PLAYER, true}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -87,10 +87,10 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_SideWallBehindPi
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_TopBottomAndSideWallBehindPiece)
 {
     setup({
-        {{1, 2}, Player::NORTH, true},
-        {{7, 8}, Player::NORTH, true},
-        {{2, 1}, Player::SOUTH, true},
-        {{8, 7}, Player::SOUTH, true}
+        {{1, 2}, NORTH_PLAYER, true},
+        {{7, 8}, NORTH_PLAYER, true},
+        {{2, 1}, SOUTH_PLAYER, true},
+        {{8, 7}, SOUTH_PLAYER, true}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -102,10 +102,10 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_TopBottomAndSide
 TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_FriendlyPieceBehindPiece)
 {
     setup({
-        {{3, 6}, Player::NORTH, true},
-        {{4, 5}, Player::NORTH, true},
-        {{5, 4}, Player::SOUTH, true},
-        {{6, 3}, Player::SOUTH, true}
+        {{3, 6}, NORTH_PLAYER, true},
+        {{4, 5}, NORTH_PLAYER, true},
+        {{5, 4}, SOUTH_PLAYER, true},
+        {{6, 3}, SOUTH_PLAYER, true}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -117,11 +117,11 @@ TEST_F(PromotedPieceCaptureTest, CheckIfPieceCanCaptureNegative_FriendlyPieceBeh
 TEST_F(PromotedPieceCaptureTest, CheckCapturePossibilityPlayerUp)
 {
     setup({
-        {{5, 4}, Player::NORTH, true},
-        {{4, 3}, Player::SOUTH, true},
-        {{4, 5}, Player::SOUTH, true},
-        {{6, 3}, Player::SOUTH, true},
-        {{6, 5}, Player::SOUTH, true}
+        {{5, 4}, NORTH_PLAYER, true},
+        {{4, 3}, SOUTH_PLAYER, true},
+        {{4, 5}, SOUTH_PLAYER, true},
+        {{6, 3}, SOUTH_PLAYER, true},
+        {{6, 5}, SOUTH_PLAYER, true}
     });
 
     EXPECT_TRUE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, {3, 2}));
@@ -142,11 +142,11 @@ TEST_F(PromotedPieceCaptureTest, CheckCapturePossibilityPlayerUp)
 TEST_F(PromotedPieceCaptureTest, CheckCapturePossibilityPlayerDown)
 {
     setup({
-        {{5, 4}, Player::SOUTH, true},
-        {{4, 3}, Player::NORTH, true},
-        {{4, 5}, Player::NORTH, true},
-        {{6, 3}, Player::NORTH, true},
-        {{6, 5}, Player::NORTH, true}
+        {{5, 4}, SOUTH_PLAYER, true},
+        {{4, 3}, NORTH_PLAYER, true},
+        {{4, 5}, NORTH_PLAYER, true},
+        {{6, 3}, NORTH_PLAYER, true},
+        {{6, 5}, NORTH_PLAYER, true}
     });
 
     EXPECT_TRUE(PieceCaptureManager::checkCapturePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, {3, 2}));
@@ -167,17 +167,17 @@ TEST_F(PromotedPieceCaptureTest, CheckCapturePossibilityPlayerDown)
 TEST_F(PromotedPieceCaptureTest, WhichPiecesCanCapture)
 {
     setup({
-        {{3, 4}, Player::NORTH, true},
-        {{3, 6}, Player::NORTH, true},
-        {{8, 3}, Player::NORTH, true},
-        {{4, 3}, Player::SOUTH, true},
-        {{4, 5}, Player::SOUTH, true},
-        {{4, 7}, Player::SOUTH, true},
-        {{7, 2}, Player::SOUTH, true}
+        {{3, 4}, NORTH_PLAYER, true},
+        {{3, 6}, NORTH_PLAYER, true},
+        {{8, 3}, NORTH_PLAYER, true},
+        {{4, 3}, SOUTH_PLAYER, true},
+        {{4, 5}, SOUTH_PLAYER, true},
+        {{4, 7}, SOUTH_PLAYER, true},
+        {{7, 2}, SOUTH_PLAYER, true}
     });
 
-    std::vector<Piece*> piecesWhichCanCapturePlayerUp = PieceCaptureManager::whichPiecesCanCapture(Player::NORTH, piecesManager_);
-    std::vector<Piece*> piecesWhichCanCapturePlayerDown = PieceCaptureManager::whichPiecesCanCapture(Player::SOUTH, piecesManager_);
+    std::vector<Piece*> piecesWhichCanCapturePlayerUp = PieceCaptureManager::whichPiecesCanCapture(NORTH_PLAYER, piecesManager_);
+    std::vector<Piece*> piecesWhichCanCapturePlayerDown = PieceCaptureManager::whichPiecesCanCapture(SOUTH_PLAYER, piecesManager_);
 
     EXPECT_EQ(piecesWhichCanCapturePlayerUp.size(), 3);
     EXPECT_EQ(piecesWhichCanCapturePlayerDown.size(), 3);

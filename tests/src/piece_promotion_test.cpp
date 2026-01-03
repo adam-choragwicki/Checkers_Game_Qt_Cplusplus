@@ -7,10 +7,10 @@ class PiecePromotionTest : public CommonTestFixture
 TEST_F(PiecePromotionTest, CheckPromotionEligibilityPositive)
 {
     const std::initializer_list<Piece> promotablePieces = {
-        {{8, 3}, Player::NORTH},
-        {{8, 7}, Player::NORTH},
-        {{1, 4}, Player::SOUTH},
-        {{1, 8}, Player::SOUTH}
+        {{8, 3}, NORTH_PLAYER},
+        {{8, 7}, NORTH_PLAYER},
+        {{1, 4}, SOUTH_PLAYER},
+        {{1, 8}, SOUTH_PLAYER}
     };
 
     for (const auto& piece: promotablePieces)
@@ -22,14 +22,14 @@ TEST_F(PiecePromotionTest, CheckPromotionEligibilityPositive)
 TEST_F(PiecePromotionTest, CheckPromotionEligibilityNegative)
 {
     const std::initializer_list<Piece> nonPromotablePieces = {
-        {{1, 2}, Player::NORTH},
-        {{1, 6}, Player::NORTH},
-        {{4, 3}, Player::NORTH},
-        {{5, 8}, Player::NORTH},
-        {{8, 3}, Player::SOUTH},
-        {{8, 7}, Player::SOUTH},
-        {{4, 3}, Player::SOUTH},
-        {{5, 6}, Player::SOUTH}
+        {{1, 2}, NORTH_PLAYER},
+        {{1, 6}, NORTH_PLAYER},
+        {{4, 3}, NORTH_PLAYER},
+        {{5, 8}, NORTH_PLAYER},
+        {{8, 3}, SOUTH_PLAYER},
+        {{8, 7}, SOUTH_PLAYER},
+        {{4, 3}, SOUTH_PLAYER},
+        {{5, 6}, SOUTH_PLAYER}
     };
 
     for (const auto& piece: nonPromotablePieces)
@@ -41,8 +41,8 @@ TEST_F(PiecePromotionTest, CheckPromotionEligibilityNegative)
 TEST_F(PiecePromotionTest, DoublePromotionNotAllowed)
 {
     const std::initializer_list<Piece> alreadyPromotedPieces = {
-        {{8, 3}, Player::NORTH, true},
-        {{1, 4}, Player::SOUTH, true}
+        {{8, 3}, NORTH_PLAYER, true},
+        {{1, 4}, SOUTH_PLAYER, true}
     };
 
     for (const auto& piece: alreadyPromotedPieces)

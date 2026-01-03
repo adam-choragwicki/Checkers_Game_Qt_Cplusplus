@@ -7,10 +7,10 @@ class PieceMovementTest : public CommonTestFixture
 TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesInTheirFirstRows)
 {
     setup({
-        {{1, 4}, Player::NORTH},
-        {{1, 6}, Player::NORTH},
-        {{8, 3}, Player::SOUTH},
-        {{8, 5}, Player::SOUTH}
+        {{1, 4}, NORTH_PLAYER},
+        {{1, 6}, NORTH_PLAYER},
+        {{8, 3}, SOUTH_PLAYER},
+        {{8, 5}, SOUTH_PLAYER}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -22,10 +22,10 @@ TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesInTheirFirstRows)
 TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesInMiddleRows)
 {
     setup({
-        {{3, 4}, Player::NORTH},
-        {{3, 6}, Player::NORTH},
-        {{6, 3}, Player::SOUTH},
-        {{6, 5}, Player::SOUTH}
+        {{3, 4}, NORTH_PLAYER},
+        {{3, 6}, NORTH_PLAYER},
+        {{6, 3}, SOUTH_PLAYER},
+        {{6, 5}, SOUTH_PLAYER}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -37,10 +37,10 @@ TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesInMiddleRows)
 TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesInSideColumns)
 {
     setup({
-        {{3, 8}, Player::NORTH},
-        {{4, 1}, Player::NORTH},
-        {{5, 8}, Player::SOUTH},
-        {{6, 1}, Player::SOUTH}
+        {{3, 8}, NORTH_PLAYER},
+        {{4, 1}, NORTH_PLAYER},
+        {{5, 8}, SOUTH_PLAYER},
+        {{6, 1}, SOUTH_PLAYER}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -52,14 +52,14 @@ TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesInSideColumns)
 TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesHalfBlockedByOtherFriendlyPieces)
 {
     setup({
-        {{3, 2}, Player::NORTH},
-        {{4, 3}, Player::NORTH},
-        {{3, 6}, Player::NORTH},
-        {{4, 5}, Player::NORTH},
-        {{7, 2}, Player::SOUTH},
-        {{6, 3}, Player::SOUTH},
-        {{7, 6}, Player::SOUTH},
-        {{6, 5}, Player::SOUTH}
+        {{3, 2}, NORTH_PLAYER},
+        {{4, 3}, NORTH_PLAYER},
+        {{3, 6}, NORTH_PLAYER},
+        {{4, 5}, NORTH_PLAYER},
+        {{7, 2}, SOUTH_PLAYER},
+        {{6, 3}, SOUTH_PLAYER},
+        {{7, 6}, SOUTH_PLAYER},
+        {{6, 5}, SOUTH_PLAYER}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -71,14 +71,14 @@ TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesHalfBlockedByOtherFr
 TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesHalfBlockedByOtherEnemyPieces)
 {
     setup({
-        {{3, 2}, Player::NORTH},
-        {{4, 3}, Player::SOUTH},
-        {{3, 6}, Player::NORTH},
-        {{4, 5}, Player::SOUTH},
-        {{7, 2}, Player::SOUTH},
-        {{6, 3}, Player::NORTH},
-        {{7, 6}, Player::SOUTH},
-        {{6, 5}, Player::NORTH}
+        {{3, 2}, NORTH_PLAYER},
+        {{4, 3}, SOUTH_PLAYER},
+        {{3, 6}, NORTH_PLAYER},
+        {{4, 5}, SOUTH_PLAYER},
+        {{7, 2}, SOUTH_PLAYER},
+        {{6, 3}, NORTH_PLAYER},
+        {{7, 6}, SOUTH_PLAYER},
+        {{6, 5}, NORTH_PLAYER}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -90,10 +90,10 @@ TEST_F(PieceMovementTest, CheckIfPieceCanMovePositive_PiecesHalfBlockedByOtherEn
 TEST_F(PieceMovementTest, CheckIfPiecesCanMoveNegative_PiecesInTheirLastRows)
 {
     setup({
-        {{8, 3}, Player::NORTH},
-        {{8, 5}, Player::NORTH},
-        {{1, 4}, Player::SOUTH},
-        {{1, 6}, Player::SOUTH}
+        {{8, 3}, NORTH_PLAYER},
+        {{8, 5}, NORTH_PLAYER},
+        {{1, 4}, SOUTH_PLAYER},
+        {{1, 6}, SOUTH_PLAYER}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -105,14 +105,14 @@ TEST_F(PieceMovementTest, CheckIfPiecesCanMoveNegative_PiecesInTheirLastRows)
 TEST_F(PieceMovementTest, CheckIfPieceCanMoveNegative_PiecesBlockedInFrontByEnemyPiecesAndWall)
 {
     setup({
-        {{4, 1}, Player::NORTH},
-        {{4, 3}, Player::NORTH},
-        {{4, 5}, Player::NORTH},
-        {{4, 7}, Player::NORTH},
-        {{5, 2}, Player::SOUTH},
-        {{5, 4}, Player::SOUTH},
-        {{5, 6}, Player::SOUTH},
-        {{5, 8}, Player::SOUTH}
+        {{4, 1}, NORTH_PLAYER},
+        {{4, 3}, NORTH_PLAYER},
+        {{4, 5}, NORTH_PLAYER},
+        {{4, 7}, NORTH_PLAYER},
+        {{5, 2}, SOUTH_PLAYER},
+        {{5, 4}, SOUTH_PLAYER},
+        {{5, 6}, SOUTH_PLAYER},
+        {{5, 8}, SOUTH_PLAYER}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -124,10 +124,10 @@ TEST_F(PieceMovementTest, CheckIfPieceCanMoveNegative_PiecesBlockedInFrontByEnem
 TEST_F(PieceMovementTest, CheckIfPieceCanMoveNegative_PiecesBlockedInFrontByFriendPiecesAndTheirLastRowWall)
 {
     setup({
-        {{1, 2}, Player::SOUTH}, {{1, 4}, Player::SOUTH}, {{1, 6}, Player::SOUTH}, {{1, 8}, Player::SOUTH},
-        {{2, 1}, Player::SOUTH}, {{2, 3}, Player::SOUTH}, {{2, 5}, Player::SOUTH}, {{2, 7}, Player::SOUTH},
-        {{7, 2}, Player::NORTH}, {{7, 4}, Player::NORTH}, {{7, 6}, Player::NORTH}, {{7, 8}, Player::NORTH},
-        {{8, 1}, Player::NORTH}, {{8, 3}, Player::NORTH}, {{8, 5}, Player::NORTH}, {{8, 7}, Player::NORTH}
+        {{1, 2}, SOUTH_PLAYER}, {{1, 4}, SOUTH_PLAYER}, {{1, 6}, SOUTH_PLAYER}, {{1, 8}, SOUTH_PLAYER},
+        {{2, 1}, SOUTH_PLAYER}, {{2, 3}, SOUTH_PLAYER}, {{2, 5}, SOUTH_PLAYER}, {{2, 7}, SOUTH_PLAYER},
+        {{7, 2}, NORTH_PLAYER}, {{7, 4}, NORTH_PLAYER}, {{7, 6}, NORTH_PLAYER}, {{7, 8}, NORTH_PLAYER},
+        {{8, 1}, NORTH_PLAYER}, {{8, 3}, NORTH_PLAYER}, {{8, 5}, NORTH_PLAYER}, {{8, 7}, NORTH_PLAYER}
     });
 
     for (auto& piece: piecesOnCheckerboard_)
@@ -139,8 +139,8 @@ TEST_F(PieceMovementTest, CheckIfPieceCanMoveNegative_PiecesBlockedInFrontByFrie
 TEST_F(PieceMovementTest, CheckMovePossibility1)
 {
     setup({
-        {{3, 4}, Player::NORTH},
-        {{6, 5}, Player::SOUTH}
+        {{3, 4}, NORTH_PLAYER},
+        {{6, 5}, SOUTH_PLAYER}
     });
 
     EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(4, 3)));
@@ -173,8 +173,8 @@ TEST_F(PieceMovementTest, CheckMovePossibility1)
 TEST_F(PieceMovementTest, CheckMovePossibility2)
 {
     setup({
-        {{4, 5}, Player::NORTH},
-        {{5, 4}, Player::SOUTH}
+        {{4, 5}, NORTH_PLAYER},
+        {{5, 4}, SOUTH_PLAYER}
     });
 
     EXPECT_TRUE(PieceMovementManager::checkMovePossibility(*piecesOnCheckerboard_.at(0), piecesManager_, Coordinates(5, 6)));
@@ -191,16 +191,16 @@ TEST_F(PieceMovementTest, CheckMovePossibility2)
 TEST_F(PieceMovementTest, WhichPiecesCanMove)
 {
     setup({
-        {{7, 2}, Player::NORTH},
-        {{8, 3}, Player::NORTH},
-        {{1, 2}, Player::SOUTH},
-        {{4, 5}, Player::SOUTH},
-        {{3, 4}, Player::SOUTH},
-        {{3, 6}, Player::SOUTH}
+        {{7, 2}, NORTH_PLAYER},
+        {{8, 3}, NORTH_PLAYER},
+        {{1, 2}, SOUTH_PLAYER},
+        {{4, 5}, SOUTH_PLAYER},
+        {{3, 4}, SOUTH_PLAYER},
+        {{3, 6}, SOUTH_PLAYER}
     });
 
-    std::vector<Piece*> piecesWhichCanMovePlayerUp = PieceMovementManager::whichPiecesCanMove(Player::NORTH, piecesManager_);
-    std::vector<Piece*> piecesWhichCanMovePlayerDown = PieceMovementManager::whichPiecesCanMove(Player::SOUTH, piecesManager_);
+    std::vector<Piece*> piecesWhichCanMovePlayerUp = PieceMovementManager::whichPiecesCanMove(NORTH_PLAYER, piecesManager_);
+    std::vector<Piece*> piecesWhichCanMovePlayerDown = PieceMovementManager::whichPiecesCanMove(SOUTH_PLAYER, piecesManager_);
 
     EXPECT_EQ(piecesWhichCanMovePlayerUp.size(), 1);
     EXPECT_EQ(piecesWhichCanMovePlayerDown.size(), 2);
