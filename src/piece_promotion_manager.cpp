@@ -7,10 +7,10 @@ bool PiecePromotionManager::checkPromotionEligibility(const Piece& piece)
         return false;
     }
 
-    const Player piecePlayer = piece.getPlayer();
+    const Player& piecePlayer = piece.getPlayer();
     const Coordinates pieceCoordinates(piece.getRow(), piece.getColumn());
 
-    if (piecePlayer == Player::SOUTH)
+    if (piecePlayer == SOUTH_PLAYER)
     {
         /*Movement UP is permitted*/
         if (pieceCoordinates.getRow() == 1)
@@ -18,7 +18,7 @@ bool PiecePromotionManager::checkPromotionEligibility(const Piece& piece)
             return true;
         }
     }
-    else if (piecePlayer == Player::NORTH)
+    else if (piecePlayer == NORTH_PLAYER)
     {
         /*Movement DOWN is permitted*/
         if (pieceCoordinates.getRow() == 8)

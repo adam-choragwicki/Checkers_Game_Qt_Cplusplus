@@ -2,7 +2,7 @@
 #include "selected_piece_manager.h"
 #include <QDebug>
 
-Piece::Piece(const Coordinates& coordinates, const Player player, const bool promoted) : STARTING_COORDINATES_(coordinates), coordinates_(coordinates), player_(player)
+Piece::Piece(const Coordinates& coordinates, const Player& player, const bool promoted) : STARTING_COORDINATES_(coordinates), coordinates_(coordinates), player_(player)
 {
     state_ = State::DISABLED;
 

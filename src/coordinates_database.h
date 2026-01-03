@@ -1,6 +1,5 @@
 #pragma once
 
-#include "game_end_reason.h"
 #include "coordinates.h"
 #include "player_manager.h"
 #include <set>
@@ -12,7 +11,7 @@ class CoordinatesDatabase
     public:
         static std::set<Coordinates> generatePlayableTilesCoordinates();
         static std::set<Coordinates> generateNonPlayableTilesCoordinates();
-        static std::set<Coordinates> generateStartingPiecesCoordinates(Player player);
+        static std::set<Coordinates> generateStartingPiecesCoordinates(const Player& player);
     };
 
 public:
@@ -22,28 +21,21 @@ public:
         return coordinatesDatabase;
     }
 
-    [[nodiscard]] const std::set<Coordinates>& getPlayableCoordinates() const
-    { return playableCoordinates_; }
+    [[nodiscard]] const std::set<Coordinates>& getPlayableCoordinates() const { return playableCoordinates_; }
+    [[nodiscard]] const std::set<Coordinates>& getNonPlayableCoordinates() const { return nonPlayableCoordinates_; }
 
-    [[nodiscard]] const std::set<Coordinates>& getNonPlayableCoordinates() const
-    { return nonPlayableCoordinates_; }
-
-    [[nodiscard]] const std::set<Coordinates>& getStartingPieceCoordinatesOfNorthPlayer() const
-    { return startingPieceCoordinatesPlayerUp_; }
-
-    [[nodiscard]] const std::set<Coordinates>& getStartingPieceCoordinatesOfSouthPlayer() const
-    { return startingPieceCoordinatesPlayerDown_; }
+    [[nodiscard]] const std::set<Coordinates>& getStartingPieceCoordinatesOfNorthPlayer() const { return startingPieceCoordinatesNorthPlayer_; }
+    [[nodiscard]] const std::set<Coordinates>& getStartingPieceCoordinatesOfSouthPlayer() const { return startingPieceCoordinatesSouthPlayer_; }
 
 private:
-    CoordinatesDatabase() :
-            playableCoordinates_(CoordinatesGenerator::generatePlayableTilesCoordinates()),
-            nonPlayableCoordinates_(CoordinatesGenerator::generateNonPlayableTilesCoordinates()),
-            startingPieceCoordinatesPlayerUp_(CoordinatesGenerator::generateStartingPiecesCoordinates(Player::NORTH)),
-            startingPieceCoordinatesPlayerDown_(CoordinatesGenerator::generateStartingPiecesCoordinates(Player::SOUTH))
+    CoordinatesDatabase() : playableCoordinates_(CoordinatesGenerator::generatePlayableTilesCoordinates()),
+                            nonPlayableCoordinates_(CoordinatesGenerator::generateNonPlayableTilesCoordinates()),
+                            startingPieceCoordinatesNorthPlayer_(CoordinatesGenerator::generateStartingPiecesCoordinates(NORTH_PLAYER)),
+                            startingPieceCoordinatesSouthPlayer_(CoordinatesGenerator::generateStartingPiecesCoordinates(SOUTH_PLAYER))
     {}
 
     const std::set<Coordinates> playableCoordinates_;
     const std::set<Coordinates> nonPlayableCoordinates_;
-    const std::set<Coordinates> startingPieceCoordinatesPlayerUp_;
-    const std::set<Coordinates> startingPieceCoordinatesPlayerDown_;
+    const std::set<Coordinates> startingPieceCoordinatesNorthPlayer_;
+    const std::set<Coordinates> startingPieceCoordinatesSouthPlayer_;
 };

@@ -1,6 +1,4 @@
 #include "pieces_manager.h"
-
-#include "pieces_placement.h"
 #include "coordinates_database.h"
 #include "piece_state_manager.h"
 
@@ -9,37 +7,37 @@ PiecesManager::PiecesManager()
     // TODO eventually the PiecesManager cannot create pieces in constructor (tests require piece manager to be empty)
 
     // Movement and capture testing
-    // createPiece(Coordinates{6, 3}, Player::SOUTH);
-    // createPiece(Coordinates{4, 5}, Player::NORTH);
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
 
     // Promotion testing
-    // createPiece(Coordinates{2, 5}, Player::SOUTH);
-    // createPiece(Coordinates{7, 6}, Player::NORTH);
+    // createPiece(Coordinates{2, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{7, 6}, NORTH_PLAYER);
 
     // Multi pieces testing 2 vs 2
-    // createPiece(Coordinates{6, 3}, Player::SOUTH);
-    // createPiece(Coordinates{6, 5}, Player::SOUTH);
-    // createPiece(Coordinates{4, 3}, Player::NORTH);
-    // createPiece(Coordinates{4, 5}, Player::NORTH);
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
 
     // Multi pieces testing 4 vs 4
-    // createPiece(Coordinates{6, 1}, Player::SOUTH);
-    // createPiece(Coordinates{6, 3}, Player::SOUTH);
-    // createPiece(Coordinates{6, 5}, Player::SOUTH);
-    // createPiece(Coordinates{6, 7}, Player::SOUTH);
-    // createPiece(Coordinates{4, 1}, Player::NORTH);
-    // createPiece(Coordinates{4, 3}, Player::NORTH);
-    // createPiece(Coordinates{4, 5}, Player::NORTH);
-    // createPiece(Coordinates{4, 7}, Player::NORTH);
+    // createPiece(Coordinates{6, 1}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 7}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 1}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 7}, NORTH_PLAYER);
 
     // Multi capture testing
-    // createPiece(Coordinates{6, 3}, Player::SOUTH);
-    // createPiece(Coordinates{3, 4}, Player::NORTH);
-    // createPiece(Coordinates{5, 4}, Player::NORTH);
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{3, 4}, NORTH_PLAYER);
+    // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
 
     // End game testing 1 vs 1
-    createPiece(Coordinates{5, 4}, Player::SOUTH);
-    createPiece(Coordinates{4, 5}, Player::NORTH);
+    createPiece(Coordinates{5, 4}, SOUTH_PLAYER);
+    createPiece(Coordinates{4, 5}, NORTH_PLAYER);
 }
 
 void PiecesManager::reset()
@@ -67,7 +65,7 @@ void PiecesManager::disablePiecesAnimations()
     }
 }
 
-void PiecesManager::createPiece(const Coordinates& coordinates, Player player)
+void PiecesManager::createPiece(const Coordinates& coordinates, const Player& player)
 {
     if (!isPieceAtCoordinates(coordinates))
     {
@@ -138,8 +136,8 @@ void PiecesManager::createPieces()
         }
     };
 
-    placePieces(southPlayerStartingPiecesCoordinates, Player::SOUTH);
-    placePieces(northPlayerStartingPiecesCoordinates, Player::NORTH);
+    placePieces(southPlayerStartingPiecesCoordinates, SOUTH_PLAYER);
+    placePieces(northPlayerStartingPiecesCoordinates, NORTH_PLAYER);
 
     qDebug() << "Created" << pieces_.size() << "pieces";
 }
@@ -180,7 +178,7 @@ Piece& PiecesManager::getPieceAtCoordinates(const Coordinates& coordinates) cons
     throw std::runtime_error("Error, no (alive) piece at given coordinates");
 }
 
-size_t PiecesManager::countPlayerPieces(Player player) const
+size_t PiecesManager::countPlayerPieces(const Player& player) const
 {
     return std::ranges::count_if(pieces_, [&player](const auto& piece)
     {
@@ -190,25 +188,25 @@ size_t PiecesManager::countPlayerPieces(Player player) const
 
 bool PiecesManager::didAnyPlayerRunOutOfPieces() const
 {
-    const size_t northPlayerPiecesCount = countPlayerPieces(Player::NORTH);
-    const size_t southPlayerPiecesCount = countPlayerPieces(Player::SOUTH);
+    const size_t northPlayerPiecesCount = countPlayerPieces(NORTH_PLAYER);
+    const size_t southPlayerPiecesCount = countPlayerPieces(SOUTH_PLAYER);
 
-    qDebug() << "NORTH player has" << northPlayerPiecesCount << "pieces left";
+    qDebug() << NORTH_PLAYER.toString() << "has" << northPlayerPiecesCount << "pieces left";
     qDebug() << "SOUTH player has" << southPlayerPiecesCount << "pieces left";
 
     return northPlayerPiecesCount == 0 || southPlayerPiecesCount == 0;
 }
 
-Player PiecesManager::getPlayerWithNoPiecesLeft() const
+const Player& PiecesManager::getPlayerWithNoPiecesLeft() const
 {
-    if (countPlayerPieces(Player::SOUTH) == 0)
+    if (countPlayerPieces(SOUTH_PLAYER) == 0)
     {
-        return Player::SOUTH;
+        return SOUTH_PLAYER;
     }
 
-    if (countPlayerPieces(Player::NORTH) == 0)
+    if (countPlayerPieces(NORTH_PLAYER) == 0)
     {
-        return Player::NORTH;
+        return NORTH_PLAYER;
     }
 
     throw std::runtime_error("Error, both players have pieces left");

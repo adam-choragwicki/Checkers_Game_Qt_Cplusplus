@@ -1,6 +1,6 @@
 #include "piece_movement_manager.h"
 
-std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(const Player activePlayer, const PiecesManager& piecesManager)
+std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(const Player& activePlayer, const PiecesManager& piecesManager)
 {
     std::vector<Piece*> piecesWhichCanMove;
 
@@ -49,7 +49,7 @@ bool PieceMovementManager::checkIfPieceCanMove(const Piece& piece, const PiecesM
 
 std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptionsCoordinates(const Piece& piece)
 {
-    const Player piecePlayer = piece.getPlayer();
+    const Player& piecePlayer = piece.getPlayer();
     std::vector<std::pair<int, int>> validRowColumnMovementOffsets;
 
     if (piece.isPromoted())
@@ -63,7 +63,7 @@ std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptions
     }
     else
     {
-        if (piecePlayer == Player::SOUTH)
+        if (piecePlayer == SOUTH_PLAYER)
         {
             /*Movement UP is permitted*/
             validRowColumnMovementOffsets = {
@@ -71,7 +71,7 @@ std::set<Coordinates> PieceMovementManager::generatePossiblePieceMovementOptions
                 {-1, +1}
             };
         }
-        else if (piecePlayer == Player::NORTH)
+        else if (piecePlayer == NORTH_PLAYER)
         {
             /*Movement DOWN is permitted*/
             validRowColumnMovementOffsets = {

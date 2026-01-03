@@ -26,8 +26,8 @@ private:
     void startNewTurn();
     void endTurn();
     bool checkEligibilityAndPromotePiece(Piece& piece);
-    void endGame(Player losingPlayer, GameEndReason gameEndReason);
-    void checkAndMarkPlayerMoveOptions(Player player);
+    void endGame(const Player& losingPlayer, GameEndReason gameEndReason);
+    void checkAndMarkPlayerMoveOptions(const Player& player);
 
     void onPieceAnimationFinished(Piece* piece, bool movementWasCapture, std::optional<std::reference_wrapper<Piece>> capturedPiece);
 

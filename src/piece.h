@@ -14,7 +14,7 @@ signals:
     void pieceChanged(int id);
 
 public:
-    Piece(const Coordinates& coordinates, Player player, bool promoted = false);
+    Piece(const Coordinates& coordinates, const Player& player, bool promoted = false);
     void reset();
 
     [[nodiscard]] int getColumn() const { return coordinates_.getColumn(); }
@@ -22,11 +22,11 @@ public:
 
     [[nodiscard]] const Coordinates& getCoordinates() const { return coordinates_; }
 
-    [[nodiscard]] Player getPlayer() const { return player_; }
+    [[nodiscard]] const Player& getPlayer() const { return player_; }
 
     [[nodiscard]] int getPlayerAsInt() const // TODO fix
     {
-        return static_cast<int>(player_);
+        return player_.toInt();
     }
 
     [[nodiscard]] bool isPromoted() const { return promoted_; }

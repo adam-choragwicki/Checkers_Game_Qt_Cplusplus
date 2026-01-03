@@ -7,7 +7,7 @@
 class PieceMovementManager
 {
 public:
-    static std::vector<Piece*> whichPiecesCanMove(Player activePlayer, const PiecesManager& piecesManager);
+    static std::vector<Piece*> whichPiecesCanMove(const Player& activePlayer, const PiecesManager& piecesManager);
     static bool checkIfPieceCanMove(const Piece& piece, const PiecesManager& piecesManager);
     static bool checkMovePossibility(const Piece& piece, const PiecesManager& piecesManager, const Coordinates& targetTileCoordinates);
 

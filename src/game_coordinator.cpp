@@ -37,7 +37,7 @@ void GameCoordinator::restartGame()
     startGame();
 }
 
-void GameCoordinator::checkAndMarkPlayerMoveOptions(Player player)
+void GameCoordinator::checkAndMarkPlayerMoveOptions(const Player& player)
 {
     if (model_.getMultiCaptureManager().isMultiCaptureInProgress())
     {
@@ -55,22 +55,22 @@ void GameCoordinator::checkAndMarkPlayerMoveOptions(Player player)
 
     if (const std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, model_.getPiecesManager()); piecesWhichCanCapture.empty())
     {
-        qDebug() << "Player" << static_cast<int>(player) << "has no pieces which can capture";
+        qDebug() << player.toString() << "has no pieces which can capture";
 
         if (const std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, model_.getPiecesManager()); piecesWhichCanMove.empty())
         {
-            qInfo() << "Player" << static_cast<int>(player) << "has no pieces which can move, game over";
+            qDebug() << player.toString() << "has no pieces which can move, game over";
             endGame(model_.getPlayerManager().getActivePlayer(), GameEndReason::NO_MOVES_LEFT);
         }
         else
         {
-            qDebug() << "Player" << static_cast<int>(player) << "has pieces which can move";
+            qDebug() << player.toString() << "has pieces which can move";
             model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanMove);
         }
     }
     else
     {
-        qDebug() << "Player" << static_cast<int>(player) << "has pieces which can capture";
+        qDebug() << player.toString() << "has pieces which can capture";
         model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanCapture);
     }
 }
@@ -211,9 +211,9 @@ void GameCoordinator::endTurn()
 
     if (model_.getPiecesManager().didAnyPlayerRunOutOfPieces())
     {
-        const Player playerWithNoPiecesLeft = model_.getPiecesManager().getPlayerWithNoPiecesLeft();
+        const Player& playerWithNoPiecesLeft = model_.getPiecesManager().getPlayerWithNoPiecesLeft();
 
-        qDebug() << "Player" << static_cast<int>(playerWithNoPiecesLeft) << "has no pieces left";
+        qDebug() << playerWithNoPiecesLeft.toString() << "has no pieces left";
         endGame(playerWithNoPiecesLeft, GameEndReason::NO_PIECES_LEFT);
         return;
     }
@@ -236,19 +236,18 @@ bool GameCoordinator::checkEligibilityAndPromotePiece(Piece& piece)
     return false;
 }
 
-void GameCoordinator::endGame(const Player losingPlayer, const GameEndReason gameEndReason)
+void GameCoordinator::endGame(const Player& losingPlayer, const GameEndReason gameEndReason)
 {
     // NOTE the function accepts LOSING player as a parameter
-    const QString playerString = losingPlayer == Player::SOUTH ? "SOUTH" : "NORTH";
     QString message;
 
     if (gameEndReason == GameEndReason::NO_MOVES_LEFT)
     {
-        message = "Player " + playerString + " has no moves left";
+        message = losingPlayer.toString() + " has no moves left";
     }
     else if (gameEndReason == GameEndReason::NO_PIECES_LEFT)
     {
-        message = "Player " + playerString + " has no pieces left";
+        message = losingPlayer.toString() + " has no pieces left";
     }
     else
     {
@@ -259,11 +258,11 @@ void GameCoordinator::endGame(const Player losingPlayer, const GameEndReason gam
 
     model_.setGameEndReason(message);
 
-    if (losingPlayer == Player::SOUTH)
+    if (losingPlayer == SOUTH_PLAYER)
     {
         stateActions_.setGameState(GameStateType::EndedVictoryNorthPlayer);
     }
-    else if (losingPlayer == Player::NORTH)
+    else if (losingPlayer == NORTH_PLAYER)
     {
         stateActions_.setGameState(GameStateType::EndedVictorySouthPlayer);
     }

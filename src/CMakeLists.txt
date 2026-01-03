@@ -39,7 +39,8 @@ set(BACKEND_SOURCE_FILES
         window_manager.cpp window_manager.h
 
         game_result.h
-        resolution.h)
+        resolution.h
+        player.h)
 
 add_library(lib${PROJECT_NAME}Backend ${BACKEND_SOURCE_FILES})
 target_include_directories(lib${PROJECT_NAME}Backend PUBLIC .)

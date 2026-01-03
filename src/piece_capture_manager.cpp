@@ -1,6 +1,6 @@
 #include "piece_capture_manager.h"
 
-std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(const Player activePlayer, const PiecesManager& piecesManager)
+std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(const Player& activePlayer, const PiecesManager& piecesManager)
 {
     std::vector<Piece*> piecesWhichCanCapture;
 
@@ -63,7 +63,7 @@ bool PieceCaptureManager::checkIfPieceCanCapture(const Piece& piece, const Piece
 
 std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCoordinates(const Piece& piece)
 {
-    const Player piecePlayer = piece.getPlayer();
+    const Player& piecePlayer = piece.getPlayer();
     std::vector<std::pair<int, int>> validRowColumnCaptureOffsets;
 
     if (piece.isPromoted())
@@ -77,7 +77,7 @@ std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCo
     }
     else
     {
-        if (piecePlayer == Player::SOUTH)
+        if (piecePlayer == SOUTH_PLAYER)
         {
             /*Movement UP is permitted*/
             validRowColumnCaptureOffsets = {
@@ -85,7 +85,7 @@ std::set<Coordinates> PieceCaptureManager::generatePossiblePieceCaptureOptionsCo
                 {-2, +2}
             };
         }
-        else if (piecePlayer == Player::NORTH)
+        else if (piecePlayer == NORTH_PLAYER)
         {
             /*Movement DOWN is permitted*/
             validRowColumnCaptureOffsets = {

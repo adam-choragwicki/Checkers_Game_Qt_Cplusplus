@@ -1,38 +1,35 @@
 #pragma once
 
+#include "player.h"
 #include <QDebug>
-
-enum class Player
-{
-    NORTH = 1,
-    SOUTH = 2
-};
 
 class PlayerManager
 {
 public:
-    PlayerManager()
+    PlayerManager() : activePlayer_(SOUTH_PLAYER)
+    {}
+
+    void reset() noexcept
     {
-        activePlayer_ = STARTING_PLAYER;
+        activePlayer_ = SOUTH_PLAYER;
     }
 
-    void reset()
-    {
-        activePlayer_ = STARTING_PLAYER;
-    }
+    const Player& getActivePlayer() const noexcept { return activePlayer_; }
 
-    Player& getActivePlayer()
+    void switchPlayer() noexcept
     {
-        return activePlayer_;
-    }
+        if (activePlayer_ == SOUTH_PLAYER)
+        {
+            activePlayer_ = NORTH_PLAYER;
+        }
+        else if (activePlayer_ == NORTH_PLAYER)
+        {
+            activePlayer_ = SOUTH_PLAYER;
+        }
 
-    void switchPlayer()
-    {
-        activePlayer_ = activePlayer_ == Player::NORTH ? Player::SOUTH : Player::NORTH;
-        qDebug() << "SWITCHED PLAYER TO PLAYER" << static_cast<int>(activePlayer_);
+        qDebug() << "Switched player to" << activePlayer_.toString();
     }
 
 private:
     Player activePlayer_;
-    static constexpr auto STARTING_PLAYER = Player::SOUTH;
 };

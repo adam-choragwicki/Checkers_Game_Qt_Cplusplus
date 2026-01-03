@@ -24,15 +24,15 @@ public:
     [[nodiscard]] Piece* findPieceById(int id) const;
 
     void createPieces();
-    void createPiece(const Coordinates& coordinates, Player player);
+    void createPiece(const Coordinates& coordinates, const Player& player);
 
     [[nodiscard]] bool isPieceAtCoordinates(const Coordinates& coordinates) const;
     [[nodiscard]] Piece& getPieceAtCoordinates(const Coordinates& coordinates) const;
     void markPiecesWhichCanMove(const std::vector<Piece*>& pieces);
     void killPiece(Piece& piece);
-    [[nodiscard]] size_t countPlayerPieces(Player player) const;
+    [[nodiscard]] size_t countPlayerPieces(const Player& player) const;
     [[nodiscard]] bool didAnyPlayerRunOutOfPieces() const;
-    [[nodiscard]] Player getPlayerWithNoPiecesLeft() const;
+    [[nodiscard]] const Player& getPlayerWithNoPiecesLeft() const;
 
 private:
     std::vector<std::unique_ptr<Piece>> pieces_;

@@ -56,11 +56,11 @@ std::set<Coordinates> CoordinatesDatabase::CoordinatesGenerator::generateNonPlay
     return nonPlayableTilesCoordinates;
 }
 
-std::set<Coordinates> CoordinatesDatabase::CoordinatesGenerator::generateStartingPiecesCoordinates(Player player)
+std::set<Coordinates> CoordinatesDatabase::CoordinatesGenerator::generateStartingPiecesCoordinates(const Player& player)
 {
     std::set<Coordinates> startingPiecesCoordinates;
 
-    if(player == Player::SOUTH)
+    if(player == SOUTH_PLAYER)
     {
         for(int row = 6; row <= 8; row++)
         {
@@ -83,7 +83,7 @@ std::set<Coordinates> CoordinatesDatabase::CoordinatesGenerator::generateStartin
             }
         }
     }
-    else if(player == Player::NORTH)
+    else if(player == NORTH_PLAYER)
     {
         for(int row = 1; row <= 3; row++)
         {
