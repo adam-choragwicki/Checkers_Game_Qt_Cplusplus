@@ -7,9 +7,25 @@ class MultiCaptureManager
 public:
     MultiCaptureManager() = default;
 
-    bool isMultiCaptureInProgress() const { return multiCapturingPiece_.has_value(); }
-    void startMultiCapture(Piece& piece) { multiCapturingPiece_ = piece; }
-    void endMultiCapture() { multiCapturingPiece_.reset(); }
+    void reset()
+    {
+        multiCapturingPiece_.reset();
+    }
+
+    bool isMultiCaptureInProgress() const
+    {
+        return multiCapturingPiece_.has_value();
+    }
+
+    void startMultiCapture(Piece& piece)
+    {
+        multiCapturingPiece_ = piece;
+    }
+
+    void endMultiCapture()
+    {
+        multiCapturingPiece_.reset();
+    }
 
     Piece& getMulticapturingPiece() const
     {
