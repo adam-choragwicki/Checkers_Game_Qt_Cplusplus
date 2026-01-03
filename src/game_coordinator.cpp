@@ -221,8 +221,6 @@ bool GameCoordinator::checkEligibilityAndPromotePiece(Piece& piece)
 void GameCoordinator::endGame(const Player losingPlayer, const GameEndReason gameEndReason)
 {
     // NOTE the function accepts LOSING player as a parameter
-    qInfo() << "Ending game";
-
     const QString playerString = losingPlayer == Player::SOUTH ? "SOUTH" : "NORTH";
     QString message;
 
@@ -239,7 +237,8 @@ void GameCoordinator::endGame(const Player losingPlayer, const GameEndReason gam
         Q_UNREACHABLE();
     }
 
-    qDebug() << message;
+    qInfo().noquote() << "Game over, reason:" << message;
+
     model_.setGameEndReason(message);
 
     if (losingPlayer == Player::SOUTH)
