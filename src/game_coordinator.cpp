@@ -197,6 +197,7 @@ void GameCoordinator::endTurn()
 
         qDebug() << "Player" << static_cast<int>(playerWithNoPiecesLeft) << "has no pieces left";
         endGame(playerWithNoPiecesLeft, GameEndReason::NO_PIECES_LEFT);
+        return;
     }
 
     model_.getPiecesManager().disableAllPieces();
