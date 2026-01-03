@@ -72,7 +72,7 @@ private:
     inline static int instanceCounter_{};
     int id_{};
 
-    bool animationEnabled_{}; // TODO should it be in backend?
+    bool animationEnabled_{};
 
     State state_{State::DISABLED};
 };

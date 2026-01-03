@@ -1,9 +1,7 @@
 set(SOURCE_FILES
         game.cpp game.h
         controller.cpp controller.h
-        log_manager.cpp log_manager.h)
-
-set(BACKEND_SOURCE_FILES
+        log_manager.cpp log_manager.h
         model.cpp model.h
         piece.h piece.cpp
         selected_piece_manager.h
@@ -42,9 +40,9 @@ set(BACKEND_SOURCE_FILES
         resolution.h
         player.h)
 
-add_library(lib${PROJECT_NAME}Backend ${BACKEND_SOURCE_FILES})
-target_include_directories(lib${PROJECT_NAME}Backend PUBLIC .)
-target_link_libraries(lib${PROJECT_NAME}Backend PUBLIC Qt6::Core Qt6::Quick)
+add_library(lib${PROJECT_NAME}Core ${SOURCE_FILES})
+target_include_directories(lib${PROJECT_NAME}Core PUBLIC .)
+target_link_libraries(lib${PROJECT_NAME}Core PUBLIC Qt6::Core Qt6::Quick)
 
 # Create the main executable
 qt_add_executable(${PROJECT_NAME} main.cpp ${SOURCE_FILES})
@@ -53,5 +51,4 @@ if (WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE $<CONFIG:Release>) # this avoids opening console window on Windows in Release mode
 endif ()
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${BACKEND_DIR})
-target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME}Backend CheckersQmlLibplugin)
+target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME}Core CheckersQmlLibplugin)

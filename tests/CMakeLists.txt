@@ -19,7 +19,7 @@ set(TEST_SOURCES
 add_executable(${PROJECT_NAME}Test_run src/main.cpp ${TEST_SOURCES})
 
 target_include_directories(${PROJECT_NAME}Test_run PRIVATE src)
-target_link_libraries(${PROJECT_NAME}Test_run PRIVATE gtest lib${PROJECT_NAME}Backend)
+target_link_libraries(${PROJECT_NAME}Test_run PRIVATE gtest lib${PROJECT_NAME}Core)
 
 # Enable CTest
 enable_testing()
