@@ -13,7 +13,6 @@ find_package(Qt6 COMPONENTS Core Quick REQUIRED)
 qt_standard_project_setup(REQUIRES 6.9)
 
 set(PROJECT_ROOT ${CMAKE_SOURCE_DIR})
-set(BACKEND_DIR ${PROJECT_ROOT}/src/backend)
 
 # Enable ccache if available
 find_program(CCACHE_PROGRAM ccache)
