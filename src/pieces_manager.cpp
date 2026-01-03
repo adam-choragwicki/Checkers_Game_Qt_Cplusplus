@@ -9,18 +9,28 @@ PiecesManager::PiecesManager()
     // TODO eventually the PiecesManager cannot create pieces in constructor (tests require piece manager to be empty)
 
     // Movement and capture testing
-    createPiece(Coordinates{6, 3}, Player::SOUTH);
-    createPiece(Coordinates{4, 5}, Player::NORTH);
+    // createPiece(Coordinates{6, 3}, Player::SOUTH);
+    // createPiece(Coordinates{4, 5}, Player::NORTH);
 
     // Promotion testing
     // createPiece(Coordinates{2, 5}, Player::SOUTH);
     // createPiece(Coordinates{7, 6}, Player::NORTH);
 
-    // Multi pieces testing
+    // Multi pieces testing 4
     // createPiece(Coordinates{6, 3}, Player::SOUTH);
-    // createPiece(Coordinates{6, 1}, Player::SOUTH);
-    // createPiece(Coordinates{4, 5}, Player::NORTH);
+    // createPiece(Coordinates{6, 5}, Player::SOUTH);
     // createPiece(Coordinates{4, 3}, Player::NORTH);
+    // createPiece(Coordinates{4, 5}, Player::NORTH);
+
+    // Multi pieces testing 8
+    createPiece(Coordinates{6, 1}, Player::SOUTH);
+    createPiece(Coordinates{6, 3}, Player::SOUTH);
+    createPiece(Coordinates{6, 5}, Player::SOUTH);
+    createPiece(Coordinates{6, 7}, Player::SOUTH);
+    createPiece(Coordinates{4, 1}, Player::NORTH);
+    createPiece(Coordinates{4, 3}, Player::NORTH);
+    createPiece(Coordinates{4, 5}, Player::NORTH);
+    createPiece(Coordinates{4, 7}, Player::NORTH);
 
     // Multi capture testing
     // createPiece(Coordinates{6, 3}, Player::SOUTH);
