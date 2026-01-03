@@ -1,7 +1,7 @@
 #include "controller.h"
 #include "piece.h"
 
-Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : gameConfig_(gameConfig), model_(model), view_(view), gameStateManager_(this)
+Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : gameConfig_(gameConfig), model_(model), view_(view), gameStateManager_(*this)
 {
     qInfo() << "Initializing controller";
 

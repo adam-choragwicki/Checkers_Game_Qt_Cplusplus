@@ -5,7 +5,7 @@
 class InitializationState : public AbstractState
 {
 public:
-    InitializationState() : AbstractState("InitializationState", GameStateType::Initialization)
+    explicit InitializationState(IStateActions& stateActions) : AbstractState("InitializationState", GameStateType::Initialization, stateActions)
     {}
 
     void transitionTo(AbstractState* newState) override

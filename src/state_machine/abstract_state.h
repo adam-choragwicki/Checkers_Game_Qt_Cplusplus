@@ -6,11 +6,9 @@
 class AbstractState
 {
 public:
-    explicit AbstractState(QString name, const GameStateType type) : name_(std::move(name)), type_(type) {}
+    explicit AbstractState(QString name, const GameStateType type, IStateActions& stateActions) : name_(std::move(name)), type_(type), stateActions_(stateActions) {}
 
     virtual ~AbstractState() = default;
-
-    void setStateActions(IStateActions* stateActions) { stateActions_ = stateActions; }
 
     virtual void entered() {}
     virtual void exited() {}
@@ -36,7 +34,7 @@ protected:
         throw std::runtime_error("Illegal transition: " + name_.toStdString() + " -> " + newState->getName().toStdString());
     }
 
-    IStateActions* stateActions_{};
     QString name_;
     GameStateType type_;
+    IStateActions& stateActions_;
 };

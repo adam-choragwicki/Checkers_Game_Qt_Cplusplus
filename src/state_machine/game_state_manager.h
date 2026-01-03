@@ -18,21 +18,22 @@ signals:
     void gameStateChanged();
 
 public:
-    explicit GameStateManager(IStateActions* stateActions) : states_{
-        {GameStateType::Initialization, &initializationState_},
-        {GameStateType::ReadyToStart, &readyToStartState_},
-        {GameStateType::Running, &runningState_},
-        {GameStateType::EscapeMenu, &escapeMenuState_},
-        {GameStateType::EndedVictoryNorthPlayer, &endedVictoryNorthPlayerState_},
-        {GameStateType::EndedVictorySouthPlayer, &endedVictorySouthPlayerState_},
-    }
-    {
-        for (auto& state: states_ | std::views::values)
-        {
-            // Assign a state actions pointer to each state
-            state->setStateActions(stateActions);
-        }
+    explicit GameStateManager(IStateActions& stateActions) : initializationState_(stateActions),
+                                                             readyToStartState_(stateActions),
+                                                             runningState_(stateActions),
+                                                             escapeMenuState_(stateActions),
+                                                             endedVictoryNorthPlayerState_(stateActions),
+                                                             endedVictorySouthPlayerState_(stateActions),
 
+                                                             states_{
+                                                                 {GameStateType::Initialization, &initializationState_},
+                                                                 {GameStateType::ReadyToStart, &readyToStartState_},
+                                                                 {GameStateType::Running, &runningState_},
+                                                                 {GameStateType::EscapeMenu, &escapeMenuState_},
+                                                                 {GameStateType::EndedVictoryNorthPlayer, &endedVictoryNorthPlayerState_},
+                                                                 {GameStateType::EndedVictorySouthPlayer, &endedVictorySouthPlayerState_},
+                                                             }
+    {
         currentGameState_ = &initializationState_;
     }
 

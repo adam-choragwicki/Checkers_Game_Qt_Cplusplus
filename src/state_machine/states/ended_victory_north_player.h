@@ -6,19 +6,19 @@
 class EndedVictoryNorthPlayerState : public AbstractState
 {
 public:
-    EndedVictoryNorthPlayerState() : AbstractState("EndedVictoryNorthPlayerState", GameStateType::EndedVictoryNorthPlayer)
+    explicit EndedVictoryNorthPlayerState(IStateActions& stateActions) : AbstractState("EndedVictoryNorthPlayerState", GameStateType::EndedVictoryNorthPlayer, stateActions)
     {}
 
     void entered() override
     {
         qDebug() << "Entered state: EndedVictoryNorthPlayer";
-        stateActions_->showEndGameOverlay(GameResult::NORTH_PLAYER_VICTORY);
+        stateActions_.showEndGameOverlay(GameResult::NORTH_PLAYER_VICTORY);
     }
 
     void exited() override
     {
         qDebug() << "Exited state: EndedVictoryNorthPlayer";
-        stateActions_->hideEndGameOverlay();
+        stateActions_.hideEndGameOverlay();
     }
 
     void transitionTo(AbstractState* newState) override

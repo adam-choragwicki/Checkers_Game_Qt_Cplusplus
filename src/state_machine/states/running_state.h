@@ -5,17 +5,17 @@
 class RunningState : public AbstractState
 {
 public:
-    RunningState() : AbstractState("RunningState", GameStateType::Running)
+    explicit RunningState(IStateActions& stateActions) : AbstractState("RunningState", GameStateType::Running, stateActions)
     {}
 
     void entered() override
     {
-        stateActions_->enablePiecesAnimation();
+        stateActions_.enablePiecesAnimation();
     }
 
     void exited() override
     {
-        stateActions_->disablePiecesAnimation();
+        stateActions_.disablePiecesAnimation();
     }
 
     void transitionTo(AbstractState* newState) override
@@ -55,7 +55,7 @@ public:
                 break;
 
             case Qt::Key_Escape:
-                stateActions_->setGameState(GameStateType::EscapeMenu);
+                stateActions_.setGameState(GameStateType::EscapeMenu);
                 break;
 
             default:

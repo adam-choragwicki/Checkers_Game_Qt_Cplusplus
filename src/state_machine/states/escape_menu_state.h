@@ -5,19 +5,19 @@
 class EscapeMenuState : public AbstractState
 {
 public:
-    EscapeMenuState() : AbstractState("EscapeMenuState", GameStateType::EscapeMenu)
+    explicit EscapeMenuState(IStateActions& stateActions) : AbstractState("EscapeMenuState", GameStateType::EscapeMenu, stateActions)
     {}
 
     void entered() override
     {
         qDebug() << "Entered state: EscapeMenu";
-        stateActions_->showEscapeMenuOverlay();
+        stateActions_.showEscapeMenuOverlay();
     }
 
     void exited() override
     {
         qDebug() << "Exited state: EscapeMenu";
-        stateActions_->hideEscapeMenuOverlay();
+        stateActions_.hideEscapeMenuOverlay();
     }
 
     void transitionTo(AbstractState* newState) override
@@ -40,7 +40,7 @@ public:
         switch (key)
         {
             case Qt::Key_Escape:
-                stateActions_->restorePreviousState();
+                stateActions_.restorePreviousState();
                 break;
 
             default:
