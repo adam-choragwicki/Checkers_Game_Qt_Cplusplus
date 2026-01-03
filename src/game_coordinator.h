@@ -34,4 +34,6 @@ private:
     IStateActions* stateActions_{};
 
     QTimer pieceMovementAnimationTimer_;
+
+    int turnCounter_{1};
 };

@@ -190,7 +190,7 @@ void GameCoordinator::movePieceToCoordinates(Piece& piece, const Coordinates& ta
 
 void GameCoordinator::endTurn()
 {
-    qDebug() << "============================================= END TURN =============================================";
+    qDebug() << QString("=================================== END TURN %1 ===================================").arg(turnCounter_);
     if (model_.getPiecesManager().didAnyPlayerRunOutOfPieces())
     {
         const Player playerWithNoPiecesLeft = model_.getPiecesManager().getPlayerWithNoPiecesLeft();
@@ -202,6 +202,8 @@ void GameCoordinator::endTurn()
     model_.getPiecesManager().disableAllPieces();
     model_.getPlayerManager().switchPlayer();
     checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+
+    ++turnCounter_;
 }
 
 bool GameCoordinator::checkEligibilityAndPromotePiece(Piece& piece)

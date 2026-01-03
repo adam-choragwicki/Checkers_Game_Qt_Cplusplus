@@ -24,7 +24,7 @@ public:
         switch (newState->type())
         {
             case GameStateType::Running:
-                qInfo() << "=========================Game started=========================";
+                qInfo() << "========================= GAME STARTED =========================";
                 break;
 
             case GameStateType::EscapeMenu:

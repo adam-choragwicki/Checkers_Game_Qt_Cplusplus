@@ -16,26 +16,30 @@ PiecesManager::PiecesManager()
     // createPiece(Coordinates{2, 5}, Player::SOUTH);
     // createPiece(Coordinates{7, 6}, Player::NORTH);
 
-    // Multi pieces testing 4
+    // Multi pieces testing 2 vs 2
     // createPiece(Coordinates{6, 3}, Player::SOUTH);
     // createPiece(Coordinates{6, 5}, Player::SOUTH);
     // createPiece(Coordinates{4, 3}, Player::NORTH);
     // createPiece(Coordinates{4, 5}, Player::NORTH);
 
-    // Multi pieces testing 8
-    createPiece(Coordinates{6, 1}, Player::SOUTH);
-    createPiece(Coordinates{6, 3}, Player::SOUTH);
-    createPiece(Coordinates{6, 5}, Player::SOUTH);
-    createPiece(Coordinates{6, 7}, Player::SOUTH);
-    createPiece(Coordinates{4, 1}, Player::NORTH);
-    createPiece(Coordinates{4, 3}, Player::NORTH);
-    createPiece(Coordinates{4, 5}, Player::NORTH);
-    createPiece(Coordinates{4, 7}, Player::NORTH);
+    // Multi pieces testing 4 vs 4
+    // createPiece(Coordinates{6, 1}, Player::SOUTH);
+    // createPiece(Coordinates{6, 3}, Player::SOUTH);
+    // createPiece(Coordinates{6, 5}, Player::SOUTH);
+    // createPiece(Coordinates{6, 7}, Player::SOUTH);
+    // createPiece(Coordinates{4, 1}, Player::NORTH);
+    // createPiece(Coordinates{4, 3}, Player::NORTH);
+    // createPiece(Coordinates{4, 5}, Player::NORTH);
+    // createPiece(Coordinates{4, 7}, Player::NORTH);
 
     // Multi capture testing
     // createPiece(Coordinates{6, 3}, Player::SOUTH);
     // createPiece(Coordinates{3, 4}, Player::NORTH);
     // createPiece(Coordinates{5, 4}, Player::NORTH);
+
+    // End game testing 1 vs 1
+    createPiece(Coordinates{5, 4}, Player::SOUTH);
+    createPiece(Coordinates{4, 5}, Player::NORTH);
 }
 
 void PiecesManager::reset()
