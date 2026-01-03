@@ -16,8 +16,8 @@ public:
     void enablePiecesAnimations();
     void disablePiecesAnimations();
 
-    [[nodiscard]] const std::vector<std::unique_ptr<Piece>>& getPieces() const {return pieces_;}
-    std::vector<std::unique_ptr<Piece>>& getPieces(){return pieces_;}
+    [[nodiscard]] const std::vector<std::unique_ptr<Piece>>& getPieces() const { return pieces_; }
+    std::vector<std::unique_ptr<Piece>>& getPieces() { return pieces_; }
 
     void disableAllPieces();
 
@@ -29,7 +29,7 @@ public:
     [[nodiscard]] bool isPieceAtCoordinates(const Coordinates& coordinates) const;
     [[nodiscard]] Piece& getPieceAtCoordinates(const Coordinates& coordinates) const;
     void markPiecesWhichCanMove(const std::vector<Piece*>& pieces);
-    void killPieceAtCoordinates(const Coordinates& coordinates);
+    void killPiece(Piece& piece);
     [[nodiscard]] size_t countPlayerPieces(Player player) const;
     [[nodiscard]] bool didAnyPlayerRunOutOfPieces() const;
     [[nodiscard]] Player getPlayerWithNoPiecesLeft() const;

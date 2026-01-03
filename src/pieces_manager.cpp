@@ -79,6 +79,12 @@ void PiecesManager::createPiece(const Coordinates& coordinates, Player player)
     }
 }
 
+void PiecesManager::killPiece(Piece& piece)
+{
+    qDebug() << "Killing piece" << piece.getId() << "at" << piece.getCoordinates();
+    piece.setAlive(false);
+}
+
 void PiecesManager::disableAllPieces()
 {
     for (const auto& piece: pieces_)
@@ -168,23 +174,6 @@ Piece& PiecesManager::getPieceAtCoordinates(const Coordinates& coordinates) cons
     }
 
     throw std::runtime_error("Error, no (alive) piece at given coordinates");
-}
-
-void PiecesManager::killPieceAtCoordinates(const Coordinates& coordinates)
-{
-    const auto iter = std::ranges::find_if(pieces_, [coordinates](const auto& piece)
-    {
-        return piece->getCoordinates() == coordinates;
-    });
-
-    if (iter != pieces_.end())
-    {
-        (*iter)->setAlive(false);
-    }
-    else
-    {
-        throw std::runtime_error("Error, trying to kill piece which is not present in pieces placement");
-    }
 }
 
 size_t PiecesManager::countPlayerPieces(Player player) const

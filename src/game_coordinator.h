@@ -2,7 +2,6 @@
 
 #include "model.h"
 #include "qml_helper.h"
-
 #include "piece_capture_manager.h"
 #include "state_machine/game_state_manager.h"
 #include "game_end_reason.h"
@@ -22,14 +21,13 @@ private:
     void movePieceToCoordinates(Piece& piece, const Coordinates& targetTileCoordinates);
 
     Coordinates getCapturedPieceCoordinates(const Piece& piece, const Coordinates& targetTileCoordinates) const;
-    void killCapturedPiece(const Coordinates& coordinates);
 
     void endTurn();
     bool checkEligibilityAndPromotePiece(Piece& piece);
     void endGame(Player losingPlayer, GameEndReason gameEndReason);
     void checkAndMarkPlayerMoveOptions(Player player);
 
-    void onPieceAnimationFinished(Piece* piece, bool movementWasCapture, std::optional<Coordinates> capturedPieceCoordinates);
+    void onPieceAnimationFinished(Piece* piece, bool movementWasCapture, std::optional<std::reference_wrapper<Piece>> capturedPiece);
 
     Model& model_;
     QmlHelper& qmlHelper_;

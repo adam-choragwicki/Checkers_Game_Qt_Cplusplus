@@ -82,23 +82,30 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
         model_.setMoveInProgress(true);
         bool moveAccepted = false;
         bool movementIsCapture = false;
-        std::optional<Coordinates> capturedPieceCoordinates = std::nullopt;
+        std::optional<std::reference_wrapper<Piece>> victimPiece;
 
         /*If any capture is possible, then any capture has to be the next move*/
         if (PieceCaptureManager::checkIfPieceCanCapture(selectedPiece, model_.getPiecesManager()))
         {
             if (PieceCaptureManager::checkCapturePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
             {
-                // Calculate where the victim piece is, but do not kill it yet
-                capturedPieceCoordinates = getCapturedPieceCoordinates(selectedPiece, targetTileCoordinates);
+                // Calculate victim piece coordinates BEFORE moving the attacking piece
+                const Coordinates victimCoordinates = getCapturedPieceCoordinates(selectedPiece, targetTileCoordinates);
+
+                // Find the victim piece
+                if (model_.getPiecesManager().isPieceAtCoordinates(victimCoordinates))
+                {
+                    victimPiece = model_.getPiecesManager().getPieceAtCoordinates(victimCoordinates);
+                }
+
                 movementIsCapture = true;
                 moveAccepted = true;
             }
             else
             {
-                // Invalid capture attempt
+                // Invalid capture attempt // TODO should I do something more here?
                 PieceStateManager::deselectPiece(selectedPiece);
-                model_.setMoveInProgress(false); // Unlock immediately
+                model_.setMoveInProgress(false);
                 return;
             }
         }
@@ -113,18 +120,16 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
 
         if (moveAccepted)
         {
-            // A. VISUALS: Start the move (QML will animate this change)
+            // update logical position
             movePieceToCoordinates(selectedPiece, targetTileCoordinates);
 
-            // B. LOGIC DELAY: Wait for animation to finish
             Piece* piecePtr = &selectedPiece;
 
-            // Connect the timer to the finalization logic
-            pieceMovementAnimationTimer_.disconnect(); // clear previous connections
+            pieceMovementAnimationTimer_.disconnect(); // Disconnect/Connect pattern for safety
 
-            connect(&pieceMovementAnimationTimer_, &QTimer::timeout, this, [this, piecePtr, movementIsCapture, capturedPieceCoordinates]()
+            connect(&pieceMovementAnimationTimer_, &QTimer::timeout, this, [this, piecePtr, movementIsCapture, victimPiece]()
             {
-                onPieceAnimationFinished(piecePtr, movementIsCapture, capturedPieceCoordinates);
+                onPieceAnimationFinished(piecePtr, movementIsCapture, victimPiece);
             });
 
             pieceMovementAnimationTimer_.start();
@@ -136,12 +141,11 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
     }
 }
 
-void GameCoordinator::onPieceAnimationFinished(Piece* piece, const bool movementWasCapture, const std::optional<Coordinates> capturedPieceCoordinates)
+void GameCoordinator::onPieceAnimationFinished(Piece* piece, const bool movementWasCapture, const std::optional<std::reference_wrapper<Piece>> capturedPiece)
 {
-    // If movement was a capture, remove the victim piece now (after the jump lands)
-    if (movementWasCapture && capturedPieceCoordinates.has_value())
+    if (movementWasCapture && capturedPiece)
     {
-        killCapturedPiece(capturedPieceCoordinates.value());
+        model_.getPiecesManager().killPiece(*capturedPiece); // kill the specific piece identified earlier
     }
 
     // 2. Run the rules logic
@@ -170,18 +174,13 @@ void GameCoordinator::onPieceAnimationFinished(Piece* piece, const bool movement
         endTurn();
     }
 
-    // 3. Finally, unlock input
-    model_.setMoveInProgress(false);
+    model_.setMoveInProgress(false); // unlock input
 }
 
 Coordinates GameCoordinator::getCapturedPieceCoordinates(const Piece& piece, const Coordinates& targetTileCoordinates) const
 {
+    // This math is only correct if 'piece' is still at the START position
     return Coordinates((targetTileCoordinates.getRow() + piece.getRow()) / 2, (targetTileCoordinates.getColumn() + piece.getColumn()) / 2);
-}
-
-void GameCoordinator::killCapturedPiece(const Coordinates& coordinates)
-{
-    model_.getPiecesManager().killPieceAtCoordinates(coordinates);
 }
 
 void GameCoordinator::movePieceToCoordinates(Piece& piece, const Coordinates& targetTileCoordinates)
