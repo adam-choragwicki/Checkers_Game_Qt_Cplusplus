@@ -74,12 +74,11 @@ void Controller::onPieceClicked(const int pieceId)
     }
 }
 
-// void Controller::onTileClicked(const Coordinates& targetTileCoordinates)
-void Controller::onTileClicked(const int row, const int column) // TODO send coordinates from QML directly?
+void Controller::onTileClicked(const int row, const int column)
 {
     const Coordinates clickedTileCoordinates(row, column);
 
-    qDebug() << "C++: Tile clicked at coordinates" << clickedTileCoordinates;
+    qDebug().noquote() << "C++: Tile clicked:" << clickedTileCoordinates;
 
     gameCoordinator_->processTileClicked(clickedTileCoordinates);
 }

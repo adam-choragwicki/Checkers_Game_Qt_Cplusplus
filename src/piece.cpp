@@ -118,7 +118,7 @@ void Piece::onClicked()
 
 void Piece::moveToCoordinates(const Coordinates& newCoordinates)
 {
-    qDebug() << "C++: Moving piece" << id_ << "to coordinates" << newCoordinates;
+    qDebug().noquote() << "C++: Moving piece" << id_ << "to coordinates" << newCoordinates;
 
     coordinates_ = newCoordinates;
 
