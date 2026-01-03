@@ -9,7 +9,13 @@ GameCoordinator::GameCoordinator(const GameConfig& gameConfig, Model& model, Qml
     pieceMovementAnimationTimer_.setSingleShot(true);
     pieceMovementAnimationTimer_.setInterval(gameConfig.PIECE_MOVEMENT_ANIMATION_DURATION_MS);
 
-    checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+    stateActions_->setGameState(GameStateType::ReadyToStart);
+}
+
+void GameCoordinator::startGame()
+{
+    stateActions_->setGameState(GameStateType::Running);
+    startNewTurn();
 }
 
 void GameCoordinator::restartGame()
@@ -24,7 +30,11 @@ void GameCoordinator::restartGame()
 
     model_.reset();
 
-    checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+    turnCounter_ = 0;
+
+    stateActions_->setGameState(GameStateType::ReadyToStart);
+
+    startGame();
 }
 
 void GameCoordinator::checkAndMarkPlayerMoveOptions(Player player)
@@ -183,6 +193,13 @@ Coordinates GameCoordinator::getCapturedPieceCoordinates(const Piece& piece, con
     return Coordinates((targetTileCoordinates.getRow() + piece.getRow()) / 2, (targetTileCoordinates.getColumn() + piece.getColumn()) / 2);
 }
 
+void GameCoordinator::startNewTurn()
+{
+    ++turnCounter_;
+    qDebug() << QString("================================ START TURN %1 ================================").arg(turnCounter_);
+    checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+}
+
 void GameCoordinator::movePieceToCoordinates(Piece& piece, const Coordinates& targetTileCoordinates)
 {
     piece.moveToCoordinates(targetTileCoordinates);
@@ -191,6 +208,7 @@ void GameCoordinator::movePieceToCoordinates(Piece& piece, const Coordinates& ta
 void GameCoordinator::endTurn()
 {
     qDebug() << QString("=================================== END TURN %1 ===================================").arg(turnCounter_);
+
     if (model_.getPiecesManager().didAnyPlayerRunOutOfPieces())
     {
         const Player playerWithNoPiecesLeft = model_.getPiecesManager().getPlayerWithNoPiecesLeft();
@@ -202,9 +220,8 @@ void GameCoordinator::endTurn()
 
     model_.getPiecesManager().disableAllPieces();
     model_.getPlayerManager().switchPlayer();
-    checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
 
-    ++turnCounter_;
+    startNewTurn();
 }
 
 bool GameCoordinator::checkEligibilityAndPromotePiece(Piece& piece)

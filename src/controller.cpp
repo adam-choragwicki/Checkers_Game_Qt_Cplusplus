@@ -19,7 +19,7 @@ void Controller::onQmlEngineFullyInitialized()
 
     gameCoordinator_ = std::make_unique<GameCoordinator>(gameConfig_, model_, qmlHelper_, this);
 
-    setGameState(GameStateType::ReadyToStart);
+    gameCoordinator_->startGame();
 }
 
 void Controller::showEscapeMenuOverlay()
@@ -93,7 +93,6 @@ void Controller::onRestartClicked()
 {
     qInfo() << "Restart button clicked";
     gameCoordinator_->restartGame();
-    gameStateManager_.setGameState(GameStateType::ReadyToStart);
 }
 
 void Controller::onQuitClicked()
@@ -105,7 +104,6 @@ void Controller::onQuitClicked()
 void Controller::onPlayAgainClicked()
 {
     gameCoordinator_->restartGame();
-    gameStateManager_.setGameState(GameStateType::ReadyToStart);
 }
 
 void Controller::enablePiecesAnimation()

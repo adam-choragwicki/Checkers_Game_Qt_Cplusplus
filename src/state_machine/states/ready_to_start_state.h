@@ -11,7 +11,6 @@ public:
     void entered() override
     {
         qDebug() << "Entered state: ReadyToStart";
-        stateActions_->setGameState(GameStateType::Running); // TODO start game immediately, ready to start may not be needed in this game
     }
 
     void exited() override

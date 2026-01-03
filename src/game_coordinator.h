@@ -14,6 +14,7 @@ class GameCoordinator : public QObject
 public:
     explicit GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions* stateActions);
 
+    void startGame();
     void restartGame();
     void processTileClicked(const Coordinates& targetTileCoordinates);
 
@@ -22,6 +23,7 @@ private:
 
     Coordinates getCapturedPieceCoordinates(const Piece& piece, const Coordinates& targetTileCoordinates) const;
 
+    void startNewTurn();
     void endTurn();
     bool checkEligibilityAndPromotePiece(Piece& piece);
     void endGame(Player losingPlayer, GameEndReason gameEndReason);
@@ -35,5 +37,5 @@ private:
 
     QTimer pieceMovementAnimationTimer_;
 
-    int turnCounter_{1};
+    int turnCounter_{};
 };
