@@ -37,7 +37,7 @@ public:
 
     void showEscapeMenuOverlay() override;
     void hideEscapeMenuOverlay() override;
-    void showEndGameOverlay(GameResult gameResult) override;
+    void showEndGameOverlay() override;
     void hideEndGameOverlay() override;
 
     void setGameState(GameStateType newGameState) override;

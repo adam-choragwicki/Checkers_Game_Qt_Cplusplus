@@ -5,8 +5,6 @@ Item {
     visible: false
     property int currentIndex: 0
 
-    property string message: "NULL" // to be filled from C++ dynamically
-
     signal playAgainClicked()
     signal quitClicked()
 
@@ -24,7 +22,7 @@ Item {
         width: parent.width * 0.5
 
         Text {
-            text: endGameOverlayRoot.message
+            text: gameModel.winningPlayerText // exposed from C++
             color: "white"
             font.pixelSize: uiScaler.px(64)
             font.bold: true
@@ -33,7 +31,7 @@ Item {
         }
 
         Text {
-            text: gameModel.gameEndReasonText
+            text: gameModel.gameEndReasonText // exposed from C++
             color: "white"
             font.pixelSize: uiScaler.px(40)
             font.bold: true

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../abstract_state.h"
-#include "game_result.h"
 
 class EndedVictoryNorthPlayerState : public AbstractState
 {
@@ -12,7 +11,7 @@ public:
     void entered() override
     {
         qDebug() << "Entered state: EndedVictoryNorthPlayer";
-        stateActions_.showEndGameOverlay(GameResult::NORTH_PLAYER_VICTORY);
+        stateActions_.showEndGameOverlay();
     }
 
     void exited() override

@@ -32,9 +32,9 @@ void Controller::hideEscapeMenuOverlay()
     overlayManager_->hideEscapeMenuOverlay();
 }
 
-void Controller::showEndGameOverlay(const GameResult gameResult)
+void Controller::showEndGameOverlay()
 {
-    overlayManager_->showEndGameOverlay(gameResult);
+    overlayManager_->showEndGameOverlay();
 }
 
 void Controller::hideEndGameOverlay()

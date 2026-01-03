@@ -16,12 +16,9 @@ void OverlayManager::hideEscapeMenuOverlay()
     escapeMenuOverlay_->setProperty("visible", false);
 }
 
-void OverlayManager::showEndGameOverlay(const GameResult gameResult)
+void OverlayManager::showEndGameOverlay()
 {
-    const bool northPlayerVictory = gameResult == GameResult::NORTH_PLAYER_VICTORY;
-
     endGameOverlay_->setProperty("visible", true);
-    endGameOverlay_->setProperty("message", northPlayerVictory ? "NORTH PLAYER WINS!" : "SOUTH PLAYER WINS!");
 }
 
 void OverlayManager::hideEndGameOverlay()

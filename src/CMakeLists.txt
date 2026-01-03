@@ -38,7 +38,7 @@ set(BACKEND_SOURCE_FILES
         input_handler.cpp input_handler.h
         window_manager.cpp window_manager.h
 
-        game_result.h
+        game_result_info.h
         resolution.h
         player.h)
 

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "game_result.h"
 #include <QObject>
 
 class QmlHelper;
@@ -13,7 +12,7 @@ public:
     void showEscapeMenuOverlay();
     void hideEscapeMenuOverlay();
 
-    void showEndGameOverlay(GameResult gameResult);
+    void showEndGameOverlay();
     void hideEndGameOverlay();
 
 private:

@@ -239,24 +239,26 @@ bool GameCoordinator::checkEligibilityAndPromotePiece(Piece& piece)
 void GameCoordinator::endGame(const Player& losingPlayer, const GameEndReason gameEndReason)
 {
     // NOTE the function accepts LOSING player as a parameter
-    QString message;
+    QString gameEndReasonText;
 
     if (gameEndReason == GameEndReason::NO_MOVES_LEFT)
     {
-        message = losingPlayer.toString() + " has no moves left";
+        gameEndReasonText = losingPlayer.getColor().toUpper() + " player has no moves left";
     }
     else if (gameEndReason == GameEndReason::NO_PIECES_LEFT)
     {
-        message = losingPlayer.toString() + " has no pieces left";
+        gameEndReasonText = losingPlayer.getColor().toUpper() + " player has no pieces left";
     }
     else
     {
         Q_UNREACHABLE();
     }
 
-    qInfo().noquote() << "Game over, reason:" << message;
+    qInfo().noquote() << "Game over, reason:" << gameEndReasonText;
 
-    model_.setGameEndReason(message);
+    const Player winningPlayer = model_.getPlayerManager().getOtherPlayer(losingPlayer);
+
+    model_.setGameResultInfo(winningPlayer, gameEndReasonText);
 
     if (losingPlayer == SOUTH_PLAYER)
     {

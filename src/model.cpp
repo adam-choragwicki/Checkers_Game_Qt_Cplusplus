@@ -1,4 +1,5 @@
 #include "model.h"
+#include "game.h"
 
 Model::Model(const GameConfig& gameConfig)
 {
@@ -20,26 +21,39 @@ void Model::reset()
     playerManager_->reset();
     moveInProgress_ = false;
 
-    clearGameEndReason();
+    clearGameResultInfo();
 }
 
-void Model::setGameEndReason(const QString& gameEndReasonText)
+QString Model::getWinningPlayerText() const
 {
-    gameEndReasonText_ = gameEndReasonText;
-    emit gameEndReasonTextChanged();
-}
+    if (gameResultInfo_)
+    {
+        return gameResultInfo_->winningPlayerText_;
+    }
 
-void Model::clearGameEndReason()
-{
-    gameEndReasonText_.reset();
+    return QString("NULL"); // safe default value. This is bound in QML property and cannot be just an empty optional
 }
 
 QString Model::getGameEndReasonText() const
 {
-    if (gameEndReasonText_)
+    if (gameResultInfo_)
     {
-        return *gameEndReasonText_;
+        return gameResultInfo_->gameEndReasonText_;
     }
 
     return QString("NULL"); // safe default value. This is bound in QML property and cannot be just an empty optional
+}
+
+void Model::setGameResultInfo(const Player& winningPlayer, const QString& gameEndReasonText)
+{
+    const QString winningPlayerText = QStringLiteral("%1 PLAYER WINS!").arg(winningPlayer.getColor().toUpper());
+
+    gameResultInfo_ = GameResultInfo{winningPlayerText, gameEndReasonText};
+
+    emit gameResultInfoChanged();
+}
+
+void Model::clearGameResultInfo()
+{
+    gameResultInfo_.reset();
 }

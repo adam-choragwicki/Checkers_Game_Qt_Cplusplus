@@ -26,8 +26,27 @@ public:
         {
             activePlayer_ = SOUTH_PLAYER;
         }
+        else
+        {
+            qFatal("Invalid player");
+        }
 
         qDebug() << "Switched player to" << activePlayer_.toString();
+    }
+
+    static const Player& getOtherPlayer(const Player& player) noexcept
+    {
+        if (player == SOUTH_PLAYER)
+        {
+            return NORTH_PLAYER;
+        }
+
+        if (player == NORTH_PLAYER)
+        {
+            return SOUTH_PLAYER;
+        }
+
+        qFatal("Invalid player");
     }
 
 private:

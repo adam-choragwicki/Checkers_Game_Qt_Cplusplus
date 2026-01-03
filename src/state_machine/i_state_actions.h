@@ -1,7 +1,6 @@
 #pragma once
 
 #include "game_state_type.h"
-#include "game_result.h"
 
 class IStateActions
 {
@@ -14,7 +13,7 @@ public:
     // Overlays
     virtual void showEscapeMenuOverlay() = 0;
     virtual void hideEscapeMenuOverlay() = 0;
-    virtual void showEndGameOverlay(GameResult gameResult) = 0;
+    virtual void showEndGameOverlay() = 0;
     virtual void hideEndGameOverlay() = 0;
 
     // State transitions
