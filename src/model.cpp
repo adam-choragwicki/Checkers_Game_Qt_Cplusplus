@@ -16,8 +16,8 @@ void Model::reset()
 {
     piecesManager_->reset();
 
-    multiCaptureManager_ = std::make_unique<MultiCaptureManager>();
-    playerManager_ = std::make_unique<PlayerManager>();
+    multiCaptureManager_ = std::make_unique<MultiCaptureManager>(); // TODO make it reset
+    playerManager_->reset();
     moveInProgress_ = false;
 
     clearGameEndReason();

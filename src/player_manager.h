@@ -11,8 +11,20 @@ enum class Player
 class PlayerManager
 {
 public:
-    PlayerManager() { activePlayer_ = startingPlayer_; }
-    Player& getActivePlayer() { return activePlayer_; }
+    PlayerManager()
+    {
+        activePlayer_ = STARTING_PLAYER;
+    }
+
+    void reset()
+    {
+        activePlayer_ = STARTING_PLAYER;
+    }
+
+    Player& getActivePlayer()
+    {
+        return activePlayer_;
+    }
 
     void switchPlayer()
     {
@@ -22,5 +34,5 @@ public:
 
 private:
     Player activePlayer_;
-    inline static Player startingPlayer_ = Player::SOUTH;
+    static constexpr auto STARTING_PLAYER = Player::SOUTH;
 };
