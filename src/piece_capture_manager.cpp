@@ -6,12 +6,19 @@ std::vector<Piece*> PieceCaptureManager::whichPiecesCanCapture(const Player acti
 
     for (const auto& piece: piecesManager.getPieces())
     {
-        if (piece->getPlayer() == activePlayer)
+        if (!piece->isAlive())
         {
-            if (checkIfPieceCanCapture(*piece, piecesManager))
-            {
-                piecesWhichCanCapture.push_back(piece.get());
-            }
+            continue; // ignore dead pieces
+        }
+
+        if (piece->getPlayer() != activePlayer)
+        {
+            continue; // ignore non-active player's pieces
+        }
+
+        if (checkIfPieceCanCapture(*piece, piecesManager))
+        {
+            piecesWhichCanCapture.push_back(piece.get());
         }
     }
 

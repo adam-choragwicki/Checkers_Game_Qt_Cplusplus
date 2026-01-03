@@ -6,12 +6,19 @@ std::vector<Piece*> PieceMovementManager::whichPiecesCanMove(const Player active
 
     for (const auto& piece: piecesManager.getPieces())
     {
-        if (piece->getPlayer() == activePlayer)
+        if (!piece->isAlive())
         {
-            if (checkIfPieceCanMove(*piece, piecesManager))
-            {
-                piecesWhichCanMove.push_back(piece.get());
-            }
+            continue; // ignore dead pieces
+        }
+
+        if (piece->getPlayer() != activePlayer)
+        {
+            continue; // ignore non-active player's pieces
+        }
+
+        if (checkIfPieceCanMove(*piece, piecesManager))
+        {
+            piecesWhichCanMove.push_back(piece.get());
         }
     }
 
