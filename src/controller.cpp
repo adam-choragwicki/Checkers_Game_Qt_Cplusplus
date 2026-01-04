@@ -52,6 +52,19 @@ void Controller::restorePreviousState()
     gameStateManager_.restorePreviousGameState();
 }
 
+QString Controller::pieceStateToString(const int pieceState) const
+{
+    const QMetaEnum metaEnum = QMetaEnum::fromType<Piece::State>();
+
+    if (const char* key = metaEnum.valueToKey(pieceState))
+    {
+        return QString(key);
+    }
+
+    qFatal() << "Unknown piece state: " << pieceState;
+    return "NULL";
+}
+
 void Controller::processKeyPress(const int key)
 {
     // qDebug() << "Key pressed:" << key;

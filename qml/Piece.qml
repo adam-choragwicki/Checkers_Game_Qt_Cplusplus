@@ -69,7 +69,7 @@ Rectangle {
     }
 
     onStateRoleChanged: {
-        console.log("QML: Player " + player + " piece " + idRole + " piece state changed to " + stateRole)
+        console.log("QML: Player " + player + " piece " + idRole + " piece state changed to " + Controller.pieceStateToString(stateRole))
     }
 
     MouseArea {

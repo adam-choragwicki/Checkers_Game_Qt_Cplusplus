@@ -48,6 +48,8 @@ public:
     Q_PROPERTY(bool gameRunning READ isGameRunning NOTIFY gameStateChanged)
     bool isGameRunning() const { return gameStateManager_.getCurrentGameStateType() == GameStateType::Running; }
 
+    Q_INVOKABLE QString pieceStateToString(int pieceState) const;
+
 private:
     const GameConfig& gameConfig_;
     Model& model_;
