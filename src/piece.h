@@ -24,10 +24,7 @@ public:
 
     [[nodiscard]] const Player& getPlayer() const { return player_; }
 
-    [[nodiscard]] int getPlayerAsInt() const // TODO fix
-    {
-        return player_.toInt();
-    }
+    [[nodiscard]] int getPlayerAsInt() const { return player_.toInt(); }
 
     [[nodiscard]] bool isPromoted() const { return promoted_; }
 
@@ -47,14 +44,14 @@ public:
 
     int getId() const { return id_; }
 
-    enum class State // TODO expose to QML
+    enum class State
     {
         DISABLED = 1, ACTIVE = 2, SELECTED = 3
     };
 
-    Q_ENUM(State) // to be able to log the state as string
+    Q_ENUM(State) // enables logging the state as string
 
-    int getStateAsInt() { return static_cast<int>(state_); } // TODO expose state to QML?
+    State getState() const { return state_; }
     void setState(State newState);
 
     [[nodiscard]] bool isAnimationEnabled() const { return animationEnabled_; }

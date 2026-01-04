@@ -48,22 +48,22 @@ void GameCoordinator::checkAndMarkPlayerMoveOptions(const Player& player)
 
     if (const std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, model_.getPiecesManager()); piecesWhichCanCapture.empty())
     {
-        qDebug() << player.toString() << "has no pieces which can capture";
+        qDebug().noquote() << player.toString() << "has no pieces which can capture";
 
         if (const std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, model_.getPiecesManager()); piecesWhichCanMove.empty())
         {
-            qDebug() << player.toString() << "has no pieces which can move, game over";
+            qDebug().noquote() << player.toString() << "has no pieces which can move, game over";
             endGame(model_.getPlayerManager().getActivePlayer(), GameEndReason::NO_MOVES_LEFT);
         }
         else
         {
-            qDebug() << player.toString() << "has pieces which can move";
+            qDebug().noquote() << player.toString() << "has pieces which can move";
             model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanMove);
         }
     }
     else
     {
-        qDebug() << player.toString() << "has pieces which can capture";
+        qDebug().noquote() << player.toString() << "has pieces which can capture";
         model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanCapture);
     }
 }

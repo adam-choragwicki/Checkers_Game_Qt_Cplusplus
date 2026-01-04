@@ -92,9 +92,7 @@ void Piece::setState(const State newState)
 
     state_ = newState;
 
-    qDebug() << "C++: Piece" << id_ << "state changed to" << QMetaEnum::fromType<State>().valueToKey(static_cast<int>(state_));
-
-    // qDebug() << "C++: Piece" << id_ << " Emitting pieceChanged signal";
+    qDebug().noquote() << "C++: Player" << player_.toString() << "piece" << id_ << "state changed to" << QMetaEnum::fromType<State>().valueToKey(static_cast<int>(state_));
 
     emit pieceChanged(id_); // TODO only state changes here
 }
