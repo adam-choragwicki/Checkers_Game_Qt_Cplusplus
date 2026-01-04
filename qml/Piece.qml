@@ -1,4 +1,5 @@
 import QtQuick
+import PieceStateEnum
 
 Rectangle {
     required property int xRole
@@ -40,9 +41,11 @@ Rectangle {
     border.width: uiScaler.px(5) // outline width
 
     border.color: {
-        if (stateRole === 2) return activePieceOutlineColor;
-        if (stateRole === 3) return selectedPieceOutlineColor;
-        return disabledPieceOutlineColor; // Default / State 1
+        if (stateRole === PieceState.DISABLED) return disabledPieceOutlineColor;
+        if (stateRole === PieceState.ACTIVE) return activePieceOutlineColor;
+        if (stateRole === PieceState.SELECTED) return selectedPieceOutlineColor;
+
+        console.error("QML: Unknown piece state: " + stateRole)
     }
 
     // Animation

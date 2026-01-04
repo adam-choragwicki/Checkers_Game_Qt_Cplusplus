@@ -1,5 +1,6 @@
 #include "game.h"
 #include <QQmlContext>
+#include "piece.h"
 
 Game::Game()
 {
@@ -52,6 +53,8 @@ void Game::printAppInfo()
 
 void Game::exposeDataToQml() const
 {
+    qmlRegisterUncreatableType<Piece>("PieceStateEnum", 1, 0, "PieceState", "PieceState cannot be instantiated.");
+
     view_->rootContext()->setContextProperty("Controller", controller_.get());
     view_->rootContext()->setContextProperty("PieceMovementAnimationManager", model_->getPieceMovementAnimationManager());
 
