@@ -6,9 +6,27 @@ PiecesManager::PiecesManager()
 {
     // TODO eventually the PiecesManager cannot create pieces in constructor (tests require piece manager to be empty)
 
-    // Movement and capture testing
+    // Movement and capture testing 1 vs 1
     // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
     // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+
+    // Movement and capture testing 2 vs 2
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+
+    // Animation testing
+    createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
+    createPiece(Coordinates{4, 3}, NORTH_PLAYER);
+    createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+
+    // Z-position testing
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
+    // createPiece(Coordinates{3, 6}, NORTH_PLAYER);
+    // createPiece(Coordinates{2, 7}, NORTH_PLAYER);
 
     // Promotion testing
     // createPiece(Coordinates{2, 5}, SOUTH_PLAYER);
@@ -36,8 +54,8 @@ PiecesManager::PiecesManager()
     // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
 
     // End game testing 1 vs 1
-    createPiece(Coordinates{5, 4}, SOUTH_PLAYER);
-    createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+    // createPiece(Coordinates{5, 4}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
 }
 
 void PiecesManager::reset()
@@ -70,9 +88,6 @@ void PiecesManager::createPiece(const Coordinates& coordinates, const Player& pl
     if (!isPieceAtCoordinates(coordinates))
     {
         pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
-        // const auto& ref = pieces_.emplace_back(std::make_unique<Piece>(coordinates, player));
-        // piecesModels_.push_back(std::make_unique<PieceModel>(*ref));
-
         // qDebug() << "Piece created at coordinates: " << coordinates;
     }
     else

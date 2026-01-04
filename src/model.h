@@ -5,6 +5,7 @@
 #include "pieces_manager.h"
 #include "pieces_model.h"
 #include "game_result_info.h"
+#include "piece_movement_animation_manager.h"
 #include <memory>
 
 class Model : public QObject
@@ -26,6 +27,8 @@ public:
     void setMoveInProgress(const bool moveInProgress) { moveInProgress_ = moveInProgress; }
 
     PiecesManager& getPiecesManager() const { return *piecesManager_; }
+
+    PieceMovementAnimationManager* getPieceMovementAnimationManager() { return &pieceMovementAnimationManager_; }
 
     Q_PROPERTY(QObject* piecesModel READ getPiecesModel CONSTANT)
     [[nodiscard]] QObject* getPiecesModel() const { return piecesModel_.get(); }
@@ -49,4 +52,6 @@ private:
     std::unique_ptr<PiecesModel> piecesModel_;
 
     std::optional<GameResultInfo> gameResultInfo_;
+
+    PieceMovementAnimationManager pieceMovementAnimationManager_;
 };

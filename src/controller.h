@@ -19,9 +19,9 @@ signals:
     void gameStateChanged();
 
 public slots:
+    void onQmlEngineFullyInitialized();
     void onPieceClicked(int pieceId);
     void onTileClicked(int row, int column);
-    void onQmlEngineFullyInitialized();
     void processKeyPress(int key);
     void onResumeClicked();
     void onRestartClicked();

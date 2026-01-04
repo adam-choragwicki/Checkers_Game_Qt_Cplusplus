@@ -38,7 +38,8 @@ set(SOURCE_FILES
 
         game_result_info.h
         resolution.h
-        player.h)
+        player.h
+        piece_movement_animation_manager.h)
 
 add_library(lib${PROJECT_NAME}Core ${SOURCE_FILES})
 target_include_directories(lib${PROJECT_NAME}Core PUBLIC .)

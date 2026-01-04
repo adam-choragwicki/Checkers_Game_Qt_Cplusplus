@@ -6,9 +6,6 @@
 
 GameCoordinator::GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions& stateActions) : model_(model), qmlHelper_(qmlHelper), stateActions_(stateActions)
 {
-    pieceMovementAnimationTimer_.setSingleShot(true);
-    pieceMovementAnimationTimer_.setInterval(gameConfig.PIECE_MOVEMENT_ANIMATION_DURATION_MS);
-
     stateActions_.setGameState(GameStateType::ReadyToStart);
 }
 
@@ -23,7 +20,7 @@ void GameCoordinator::restartGame()
     qInfo() << "Restarting game";
 
     // defensive - stop any pending post-move logic, because the pieces are about to be deleted
-    pieceMovementAnimationTimer_.stop();
+    model_.getPieceMovementAnimationManager()->reset();
     model_.setMoveInProgress(false);
 
     QMetaObject::invokeMethod(qmlHelper_.getGameInput(), "refocus");
@@ -130,19 +127,28 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
 
         if (moveAccepted)
         {
+            if (movementIsCapture)
+            {
+                model_.getPieceMovementAnimationManager()->setDoublePieceMovementAnimationDuration();
+            }
+            else
+            {
+                model_.getPieceMovementAnimationManager()->setBasicPieceMovementAnimationDuration();
+            }
+
             // update logical position
             movePieceToCoordinates(selectedPiece, targetTileCoordinates);
 
             Piece* piecePtr = &selectedPiece;
 
-            pieceMovementAnimationTimer_.disconnect(); // Disconnect/Connect pattern for safety
+            model_.getPieceMovementAnimationManager()->disconnect(); // Disconnect/Connect pattern for safety
 
-            connect(&pieceMovementAnimationTimer_, &QTimer::timeout, this, [this, piecePtr, movementIsCapture, victimPiece]()
+            connect(&model_.getPieceMovementAnimationManager()->getPieceMovementAnimationTimer(), &QTimer::timeout, this, [this, piecePtr, movementIsCapture, victimPiece]()
             {
                 onPieceAnimationFinished(piecePtr, movementIsCapture, victimPiece);
             });
 
-            pieceMovementAnimationTimer_.start();
+            model_.getPieceMovementAnimationManager()->getPieceMovementAnimationTimer().start();
         }
         else
         {

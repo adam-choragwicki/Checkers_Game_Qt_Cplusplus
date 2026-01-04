@@ -1,7 +1,7 @@
 #include "model.h"
 #include "game.h"
 
-Model::Model(const GameConfig& gameConfig)
+Model::Model(const GameConfig& gameConfig) : pieceMovementAnimationManager_(gameConfig.PIECE_MOVEMENT_ANIMATION_DURATION_MS)
 {
     piecesManager_ = std::make_unique<PiecesManager>();
     // piecesManager_->createPieces(); // TODO eventually restore this

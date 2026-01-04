@@ -5,14 +5,13 @@
 #include "piece_capture_manager.h"
 #include "state_machine/game_state_manager.h"
 #include "game_end_reason.h"
-#include <QTimer>
 
 class GameCoordinator : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions&  stateActions);
+    explicit GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions& stateActions);
 
     void startGame();
     void restartGame();
@@ -34,8 +33,6 @@ private:
     Model& model_;
     QmlHelper& qmlHelper_;
     IStateActions& stateActions_;
-
-    QTimer pieceMovementAnimationTimer_;
 
     int turnCounter_{};
 };

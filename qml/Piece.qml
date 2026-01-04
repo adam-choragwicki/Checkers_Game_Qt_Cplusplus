@@ -51,7 +51,7 @@ Rectangle {
         enabled: animationEnabledRole
 
         NumberAnimation {
-            duration: pieceMovementAnimationDurationMs // exposed from C++
+            duration: PieceMovementAnimationManager.pieceMovementAnimationDurationMs // exposed from C++
             easing.type: Easing.Linear
         }
     }
@@ -60,7 +60,7 @@ Rectangle {
         enabled: animationEnabledRole
 
         NumberAnimation {
-            duration: pieceMovementAnimationDurationMs // exposed from C++
+            duration: PieceMovementAnimationManager.pieceMovementAnimationDurationMs  // exposed from C++
             easing.type: Easing.Linear
         }
     }
