@@ -30,7 +30,9 @@ void Piece::setState(const State newState)
 {
     auto handleIllegalStateTransition = [this, newState]()
     {
-        throw std::runtime_error("Error, unsupported piece state transition from state " + std::to_string(static_cast<int>(state_)) + " to state " + std::to_string(static_cast<int>(newState)) + "");
+        const QString message = QString("Illegal state transition from state %s to state %s").arg(QMetaEnum::fromType<State>().valueToKey(static_cast<int>(state_)), QMetaEnum::fromType<State>().valueToKey(static_cast<int>(newState)));
+        qFatal() << message;
+        throw std::runtime_error(message.toStdString());
     };
 
     if (state_ == State::DISABLED)
@@ -90,7 +92,7 @@ void Piece::setState(const State newState)
 
     state_ = newState;
 
-    qDebug() << "C++: Piece" << id_ << "state changed to" << static_cast<int>(state_);
+    qDebug() << "C++: Piece" << id_ << "state changed to" << QMetaEnum::fromType<State>().valueToKey(static_cast<int>(state_));
 
     // qDebug() << "C++: Piece" << id_ << " Emitting pieceChanged signal";
 

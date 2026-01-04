@@ -2,7 +2,7 @@
 
 #include "coordinates.h"
 #include "player_manager.h"
-#include <QObject>
+#include <QMetaEnum>
 
 class Piece : public QObject
 {
@@ -51,6 +51,8 @@ public:
     {
         DISABLED = 1, ACTIVE = 2, SELECTED = 3
     };
+
+    Q_ENUM(State) // to be able to log the state as string
 
     int getStateAsInt() { return static_cast<int>(state_); } // TODO expose state to QML?
     void setState(State newState);
