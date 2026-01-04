@@ -25,6 +25,8 @@ void GameCoordinator::restartGame()
 
     turnCounter_ = 0;
 
+    SelectedPieceManager::resetSelectedPiece();
+
     stateActions_.setGameState(GameStateType::ReadyToStart);
 
     startGame();
