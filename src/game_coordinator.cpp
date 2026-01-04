@@ -19,10 +19,6 @@ void GameCoordinator::restartGame()
 {
     qInfo() << "Restarting game";
 
-    // defensive - stop any pending post-move logic, because the pieces are about to be deleted
-    model_.getPieceMovementAnimationManager()->reset();
-    model_.setMoveInProgress(false);
-
     QMetaObject::invokeMethod(qmlHelper_.getGameInput(), "refocus");
 
     model_.reset();
@@ -141,14 +137,10 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
 
             Piece* piecePtr = &selectedPiece;
 
-            model_.getPieceMovementAnimationManager()->disconnect(); // Disconnect/Connect pattern for safety
-
-            connect(&model_.getPieceMovementAnimationManager()->getPieceMovementAnimationTimer(), &QTimer::timeout, this, [this, piecePtr, movementIsCapture, victimPiece]()
+            model_.getPieceMovementAnimationManager()->start([this, piecePtr, movementIsCapture, victimPiece]()
             {
                 onPieceAnimationFinished(piecePtr, movementIsCapture, victimPiece);
             });
-
-            model_.getPieceMovementAnimationManager()->getPieceMovementAnimationTimer().start();
         }
         else
         {

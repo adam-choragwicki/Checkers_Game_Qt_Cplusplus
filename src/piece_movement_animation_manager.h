@@ -8,27 +8,34 @@ class PieceMovementAnimationManager : public QObject
     Q_OBJECT
 
 signals:
-    void pieceMovementAnimationDurationChanged();
+    void pieceMovementAnimationDurationMsChanged();
 
 public:
-    explicit PieceMovementAnimationManager(const int pieceMovementAnimationDurationMs) : basicPieceMovementAnimationDurationMs_(pieceMovementAnimationDurationMs), doublePieceMovementAnimationDurationMs_(2 * pieceMovementAnimationDurationMs)
+    explicit PieceMovementAnimationManager(const int pieceMovementAnimationDurationMs) : basicPieceMovementAnimationDurationMs_(pieceMovementAnimationDurationMs), doublePieceMovementAnimationDurationMs_(2 * pieceMovementAnimationDurationMs),
+                                                                                         pieceMovementAnimationDurationMs_(pieceMovementAnimationDurationMs)
     {
         pieceMovementAnimationTimer_.setSingleShot(true);
+        pieceMovementAnimationTimer_.setInterval(pieceMovementAnimationDurationMs_);
     }
 
     void reset()
     {
+        if (animationFinishedConnection_)
+        {
+            disconnect(animationFinishedConnection_);
+        }
+
         pieceMovementAnimationTimer_.stop();
     }
 
-    void disconnect() const
+    void start(std::function<void()> onFinished)
     {
-        pieceMovementAnimationTimer_.disconnect();
+        disconnect(animationFinishedConnection_);
+        animationFinishedConnection_ = connect(&pieceMovementAnimationTimer_, &QTimer::timeout, this, std::move(onFinished));
+        pieceMovementAnimationTimer_.start();
     }
 
-    [[nodiscard]] QTimer& getPieceMovementAnimationTimer() { return pieceMovementAnimationTimer_; }
-
-    Q_PROPERTY(int pieceMovementAnimationDurationMs READ getPieceMovementAnimationDurationMs NOTIFY pieceMovementAnimationDurationChanged)
+    Q_PROPERTY(int pieceMovementAnimationDurationMs READ getPieceMovementAnimationDurationMs NOTIFY pieceMovementAnimationDurationMsChanged)
     [[nodiscard]] int getPieceMovementAnimationDurationMs() const { return pieceMovementAnimationDurationMs_; }
 
     void setBasicPieceMovementAnimationDuration()
@@ -36,7 +43,7 @@ public:
         qDebug() << "ANIMATION_MANAGER: Setting basic animation duration for normal move";
         pieceMovementAnimationDurationMs_ = basicPieceMovementAnimationDurationMs_;
         pieceMovementAnimationTimer_.setInterval(pieceMovementAnimationDurationMs_);
-        emit pieceMovementAnimationDurationChanged();
+        emit pieceMovementAnimationDurationMsChanged();
     }
 
     void setDoublePieceMovementAnimationDuration()
@@ -44,14 +51,15 @@ public:
         qDebug() << "ANIMATION_MANAGER: Setting double animation duration for capture";
         pieceMovementAnimationDurationMs_ = doublePieceMovementAnimationDurationMs_;
         pieceMovementAnimationTimer_.setInterval(pieceMovementAnimationDurationMs_);
-        emit pieceMovementAnimationDurationChanged();
+        emit pieceMovementAnimationDurationMsChanged();
     }
 
 private:
     const int basicPieceMovementAnimationDurationMs_;
     const int doublePieceMovementAnimationDurationMs_;
 
-    int pieceMovementAnimationDurationMs_{};
+    int pieceMovementAnimationDurationMs_;
 
+    QMetaObject::Connection animationFinishedConnection_;
     QTimer pieceMovementAnimationTimer_;
 };

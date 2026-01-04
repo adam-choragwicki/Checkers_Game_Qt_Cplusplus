@@ -21,6 +21,8 @@ void Model::reset()
     playerManager_->reset();
     moveInProgress_ = false;
 
+    pieceMovementAnimationManager_.reset();
+
     clearGameResultInfo();
 }
 
