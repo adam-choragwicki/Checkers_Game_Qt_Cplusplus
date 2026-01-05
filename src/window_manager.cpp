@@ -14,27 +14,29 @@ void WindowManager::setWindow(QQuickWindow* window)
     }
     else
     {
-        throw std::runtime_error("WindowManager::setWindow() called with nullptr");
+        qFatal() << "WindowManager::setWindow() called with nullptr";
     }
 }
 
 void WindowManager::toggleFullScreen()
 {
-    if (!window_)
+    if (window_)
     {
-        throw std::runtime_error("WindowManager::toggleFullScreen() called before window was set");
-    }
+        const bool isCurrentlyFullscreen = window_->windowState() & Qt::WindowFullScreen;
 
-    const bool isCurrentlyFullscreen = window_->windowState() & Qt::WindowFullScreen;
-
-    if (isCurrentlyFullscreen)
-    {
-        window_->showNormal();
-        // qDebug() << "Exited fullscreen mode";
+        if (isCurrentlyFullscreen)
+        {
+            window_->showNormal();
+            // qDebug() << "Exited fullscreen mode";
+        }
+        else
+        {
+            window_->showFullScreen();
+            // qDebug() << "Entered fullscreen mode";
+        }
     }
     else
     {
-        window_->showFullScreen();
-        // qDebug() << "Entered fullscreen mode";
+        qFatal() << "WindowManager::toggleFullScreen() called before window was set";
     }
 }

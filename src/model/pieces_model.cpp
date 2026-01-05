@@ -17,7 +17,7 @@ QVariant PiecesModel::data(const QModelIndex& index, const int role) const
 {
     if (!index.isValid())
     {
-        throw std::runtime_error("Invalid index");
+        qFatal() << "Invalid index";
     }
 
     // qDebug() << "C++: data called with model row" << index.row() << "and role" << role;

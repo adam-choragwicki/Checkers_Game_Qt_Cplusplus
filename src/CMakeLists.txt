@@ -44,8 +44,13 @@ set(SOURCE_FILES
         game_result_info.h
         player.h)
 
+# Create the backend library
 add_library(lib${PROJECT_NAME}Core ${SOURCE_FILES})
+
+# Include current directory for backend library
 target_include_directories(lib${PROJECT_NAME}Core PUBLIC .)
+
+# Link Qt Core library to backend
 target_link_libraries(lib${PROJECT_NAME}Core PUBLIC Qt6::Core Qt6::Quick)
 
 # Create the main executable
@@ -55,4 +60,8 @@ if (WIN32)
     set_target_properties(${PROJECT_NAME} PROPERTIES WIN32_EXECUTABLE $<CONFIG:Release>) # this avoids opening console window on Windows in Release mode
 endif ()
 
+# Link libraries for backend and frontend
 target_link_libraries(${PROJECT_NAME} PRIVATE lib${PROJECT_NAME}Core CheckersQmlLibplugin)
+
+# Set the output directory for the executable
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${PROJECT_ROOT}/bin)

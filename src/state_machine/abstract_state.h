@@ -31,7 +31,6 @@ protected:
     [[noreturn]] void handleIllegalTransition(AbstractState* newState) const
     {
         qFatal().noquote() << "Illegal transition:" << name_ << "->" << newState->getName();
-        throw std::runtime_error("Illegal transition: " + name_.toStdString() + " -> " + newState->getName().toStdString());
     }
 
     QString name_;

@@ -32,9 +32,7 @@ public:
         auto overlay = root->findChild<QObject*>(toString(overlayEnum));
         if (!overlay)
         {
-            const QString msg = QString("Overlay '%1' not found. It might not be defined in QML").arg(toString(overlayEnum));
-            qCritical() << msg;
-            throw std::runtime_error(msg.toStdString());
+            qFatal() << QString("Overlay '%1' not found. It might not be defined in QML").arg(toString(overlayEnum));
         }
 
         return overlay;
@@ -48,8 +46,7 @@ public:
 
         if (!window)
         {
-            qCritical() << "Root object is not a QQuickWindow";
-            throw std::runtime_error("Root object is not a QQuickWindow");
+            qFatal() << "Root object is not a QQuickWindow";
         }
 
         return window;
@@ -64,7 +61,6 @@ public:
         if (!gameInput)
         {
             qFatal("gameInput not found");
-            throw std::runtime_error("gameInput not found");
         }
 
         return gameInput;
@@ -77,15 +73,13 @@ private:
     {
         if (view_.rootObjects().isEmpty())
         {
-            qCritical() << "Root object not found";
-            throw std::runtime_error("Root object not found");
+            qFatal() << "Root object not found";
         }
 
         QObject* root = view_.rootObjects().first();
         if (!root)
         {
-            qCritical() << "Root object is nullptr";
-            throw std::runtime_error("Root object is nullptr");
+            qFatal() << "Root object is nullptr";
         }
 
         return root;

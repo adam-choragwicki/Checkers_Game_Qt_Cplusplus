@@ -8,7 +8,6 @@
 #include "states/ended_victory_north_player.h"
 #include "states/ended_victory_south_player.h"
 #include <ranges>
-#include <stdexcept>
 
 class GameStateManager : public QObject
 {
@@ -78,7 +77,7 @@ public:
     {
         if (!previousState_)
         {
-            throw std::runtime_error("No previous state to restore");
+            qFatal() << "No previous state to restore";
         }
 
         qDebug() << "Restoring previous state: " << previousState_->type();

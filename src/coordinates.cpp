@@ -1,7 +1,5 @@
 #include "coordinates.h"
 
-#include <stdexcept>
-
 Coordinates::Coordinates(int row, int column) : row_(row), column_(column)
 {}
 

@@ -39,7 +39,7 @@ void PiecesManager::createPiece(const Coordinates& coordinates, const Player& pl
     }
     else
     {
-        throw std::runtime_error("Error, piece is already present on given coordinates");
+        qFatal() << "Error, piece is already present on given coordinates";
     }
 }
 
@@ -79,7 +79,6 @@ Piece* PiecesManager::findPieceById(const int id) const
     }
 
     qFatal("Piece with id %d not found", id);
-    throw std::runtime_error("Error, piece with given id not found");
 }
 
 void PiecesManager::createPieces()
@@ -101,7 +100,7 @@ void PiecesManager::createPieces()
             }
             else
             {
-                throw std::runtime_error("Error, cannot place piece on non-playable tile");
+                qFatal() << "Error, cannot place piece on non-playable tile";
             }
         }
     };
@@ -145,7 +144,7 @@ Piece& PiecesManager::getPieceAtCoordinates(const Coordinates& coordinates) cons
         return *iter->get();
     }
 
-    throw std::runtime_error("Error, no (alive) piece at given coordinates");
+    qFatal() << "Error, no (alive) piece at given coordinates";
 }
 
 size_t PiecesManager::countPlayerPieces(const Player& player) const
@@ -179,7 +178,7 @@ const Player& PiecesManager::getPlayerWithNoPiecesLeft() const
         return NORTH_PLAYER;
     }
 
-    throw std::runtime_error("Error, both players have pieces left");
+    qFatal() << "Error, both players have pieces left";
 }
 
 void PiecesManager::loadVisualTestScenario()

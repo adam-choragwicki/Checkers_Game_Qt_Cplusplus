@@ -27,6 +27,6 @@ inline QDebug operator<<(QDebug debug, GameStateType state)
         case GameStateType::EndedVictorySouthPlayer: return debug << "EndedVictorySouthPlayer";
 
         default:
-            throw std::runtime_error("Unknown game state");
+            qFatal() << "Unknown game state";
     }
 }
