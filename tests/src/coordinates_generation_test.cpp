@@ -6,16 +6,16 @@ class CoordinatesGenerationTest : public CommonTestFixture
 
 TEST_F(CoordinatesGenerationTest, GeneratePlayableTilesCoordinates)
 {
-    std::set<Coordinates> playableTilesCoordinates = CoordinatesDatabase::getInstance().getPlayableCoordinates();
+    const std::set<Coordinates> playableTilesCoordinates = CoordinatesDatabase::getInstance().getPlayableCoordinates();
 
     EXPECT_EQ(playableTilesCoordinates.size(), 32);
 }
 
 TEST_F(CoordinatesGenerationTest, GenerateStartingPiecesCoordinates)
 {
-    std::set<Coordinates> playerUpStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesPlayerUpper();
-    std::set<Coordinates> playerDownStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesPlayerLower();
+    const std::set<Coordinates> northPlayerStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesOfNorthPlayer();
+    const std::set<Coordinates> southPlayerStartingPiecesCoordinates = CoordinatesDatabase::getInstance().getStartingPieceCoordinatesOfSouthPlayer();
 
-    EXPECT_EQ(playerUpStartingPiecesCoordinates.size(), 12);
-    EXPECT_EQ(playerDownStartingPiecesCoordinates.size(), 12);
+    EXPECT_EQ(northPlayerStartingPiecesCoordinates.size(), 12);
+    EXPECT_EQ(southPlayerStartingPiecesCoordinates.size(), 12);
 }

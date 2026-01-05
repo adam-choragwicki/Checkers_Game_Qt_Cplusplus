@@ -1,32 +1,14 @@
 #pragma once
 
 #include "gtest/gtest.h"
-#include "pieces_placement.h"
+#include "coordinates.h"
+#include "pieces_manager.h"
+#include "player_manager.h"
+#include "piece_managers/piece_state_manager.h"
 
-class CommonTestFixture : public ::testing ::Test
+class CommonTestFixture : public ::testing::Test
 {
 protected:
-    void SetUp() override
-    {}
-
-    void TearDown() override
-    {}
-
-    void placePiecesOnCheckerboard()
-    {
-        for(const auto& piece: piecesParameters_)
-        {
-            piecesPlacement_.createPiece(piece.coordinates, piece.player);
-
-            if(piece.isPromoted)
-            {
-                piecesPlacement_.getPieceAtCoordinates(piece.coordinates).promote();
-            }
-
-            piecesOnCheckerboard_.push_back(&piecesPlacement_.getPieceAtCoordinates(piece.coordinates));
-        }
-    }
-
     struct PieceParameters
     {
         Coordinates coordinates;
@@ -34,7 +16,24 @@ protected:
         bool isPromoted = false;
     };
 
-    PiecesPlacement piecesPlacement_;
-    std::vector<PieceParameters> piecesParameters_;
+    void setup(const std::initializer_list<PieceParameters> pieces)
+    {
+        for (const auto& [coordinates, player, isPromoted]: pieces)
+        {
+            piecesManager_.createPiece(coordinates, player);
+
+            Piece& piece = piecesManager_.getPieceAtCoordinates(coordinates);
+
+            if (isPromoted)
+            {
+                piece.promote();
+            }
+
+            piecesOnCheckerboard_.push_back(&piece);
+        }
+    }
+
+    PieceStateManager pieceStateManager_;
+    PiecesManager piecesManager_{pieceStateManager_};
     std::vector<Piece*> piecesOnCheckerboard_;
 };

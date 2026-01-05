@@ -1,39 +1,66 @@
 #pragma once
 
 #include "model/model.h"
-#include "frontend/main_window.h"
-#include "frontend/checkerboard.h"
-#include "pieces_placement.h"
-#include "multi_capture_manager.h"
+#include "input_handler.h"
+#include "game_coordinator.h"
+#include "window_manager.h"
+#include "overlay_manager.h"
+#include "qml_helper.h"
+#include "state_machine/i_state_actions.h"
+#include "state_machine/game_state_manager.h"
+#include <QQmlApplicationEngine>
 
-class Controller : public QObject
+class Controller : public QObject, public IStateActions
 {
-Q_OBJECT
+    Q_OBJECT
 
 signals:
-    void sceneUpdateSignal();
+    void applicationShutdownRequested();
+    void gameStateChanged();
 
 public slots:
-    void processTileClicked(const Coordinates& targetTileCoordinates);
-
-private slots:
-    void processNewGameRequest();
-    void processApplicationTerminationRequest();
+    void onQmlEngineFullyInitialized();
+    void onPieceClicked(int pieceId);
+    void onTileClicked(int row, int column);
+    void processKeyPress(int key);
+    void onResumeClicked();
+    void onRestartClicked();
+    void onQuitClicked();
+    void onPlayAgainClicked();
 
 public:
-    explicit Controller(Model& model, MainWindow& view);
+    explicit Controller(Model& model, QQmlApplicationEngine& view);
+
+    // IStateActions implementation
+    void enablePiecesAnimation() override;
+    void disablePiecesAnimation() override;
+
+    void showEscapeMenuOverlay() override;
+    void hideEscapeMenuOverlay() override;
+    void showEndGameOverlay() override;
+    void hideEndGameOverlay() override;
+
+    void setGameState(GameStateType newGameState) override;
+    void restorePreviousState() override;
+
+    [[nodiscard]] GameStateManager& getStateManager() { return gameStateManager_; }
+
+    Q_PROPERTY(bool gameRunning READ isGameRunning NOTIFY gameStateChanged)
+    bool isGameRunning() const { return gameStateManager_.getCurrentGameStateType() == GameStateType::Running; }
+
+    [[nodiscard]] bool isStartInFullScreenEnabled() const { return windowManager_.isStartInFullScreenEnabled(); }
+    Q_PROPERTY(bool startInFullScreenEnabled READ isStartInFullScreenEnabled CONSTANT)
+
+    Q_INVOKABLE QString pieceStateToString(int pieceState) const;
 
 private:
-    void disableAllPieces();
-    void movePiece(Piece& piece, const Coordinates& targetTileCoordinates);
-    void capturePiece(Piece& piece, const Coordinates& targetTileCoordinates);
-    void endTurn();
-    void endGame(Player losingPlayer, GameEndReason gameEndReason);
-
-    void processPieceMove(Piece& piece, const Coordinates& targetTileCoordinates);
-    void checkAndMarkPlayerMoveOptions(Player player);
-    bool checkEligibilityAndPromotePiece(Piece& piece);
-
     Model& model_;
-    MainWindow& view_;
+    QQmlApplicationEngine& view_;
+
+    QmlHelper qmlHelper_{view_};
+    GameStateManager gameStateManager_;
+    WindowManager windowManager_;
+    std::unique_ptr<OverlayManager> overlayManager_;
+    std::unique_ptr<InputHandler> inputHandler_;
+    std::unique_ptr<GameCoordinator> gameCoordinator_;
 };

@@ -1,0 +1,111 @@
+#pragma once
+
+#include "abstract_state.h"
+#include "states/initialization_state.h"
+#include "states/ready_to_start_state.h"
+#include "states/running_state.h"
+#include "states/escape_menu_state.h"
+#include "states/ended_victory_north_player.h"
+#include "states/ended_victory_south_player.h"
+#include <ranges>
+
+class GameStateManager : public QObject
+{
+    Q_OBJECT
+
+signals:
+    void gameStateChanged();
+
+public:
+    explicit GameStateManager(IStateActions& stateActions) : initializationState_(stateActions),
+                                                             readyToStartState_(stateActions),
+                                                             runningState_(stateActions),
+                                                             escapeMenuState_(stateActions),
+                                                             endedVictoryNorthPlayerState_(stateActions),
+                                                             endedVictorySouthPlayerState_(stateActions),
+
+                                                             states_{
+                                                                 {GameStateType::Initialization, &initializationState_},
+                                                                 {GameStateType::ReadyToStart, &readyToStartState_},
+                                                                 {GameStateType::Running, &runningState_},
+                                                                 {GameStateType::EscapeMenu, &escapeMenuState_},
+                                                                 {GameStateType::EndedVictoryNorthPlayer, &endedVictoryNorthPlayerState_},
+                                                                 {GameStateType::EndedVictorySouthPlayer, &endedVictorySouthPlayerState_},
+                                                             }
+    {
+        currentGameState_ = &initializationState_;
+    }
+
+    void setGameState(const GameStateType newType)
+    {
+        AbstractState* newState = getStateByType(newType);
+
+        // validate transition in old state
+        currentGameState_->transitionTo(newState);
+
+        // exit old state
+        currentGameState_->exited();
+
+        // update pointer
+        previousState_ = currentGameState_;
+        currentGameState_ = newState;
+
+        // enter a new state
+        currentGameState_->entered();
+
+        emit gameStateChanged();
+    }
+
+    [[nodiscard]] AbstractState* getCurrentGameState() const { return currentGameState_; }
+
+    [[nodiscard]] GameStateType getCurrentGameStateType() const
+    {
+        return currentGameState_->type();
+    }
+
+    [[nodiscard]] std::optional<GameStateType> getPreviousGameStateType() const
+    {
+        if (!previousState_)
+        {
+            return std::nullopt;
+        }
+
+        return previousState_->type();
+    }
+
+    void restorePreviousGameState()
+    {
+        if (!previousState_)
+        {
+            qFatal() << "No previous state to restore";
+        }
+
+        qDebug() << "Restoring previous state: " << previousState_->type();
+
+        setGameState(previousState_->type());
+        previousState_ = nullptr; // clear after use
+    }
+
+    void handleKeyPress(const int key)
+    {
+        currentGameState_->onKeyPress(key);
+    }
+
+private:
+    AbstractState* getStateByType(GameStateType type) const
+    {
+        return states_.at(type);
+    }
+
+    InitializationState initializationState_;
+    ReadyToStartState readyToStartState_;
+    RunningState runningState_;
+    EscapeMenuState escapeMenuState_;
+    EndedVictoryNorthPlayerState endedVictoryNorthPlayerState_;
+    EndedVictorySouthPlayerState endedVictorySouthPlayerState_;
+
+    AbstractState* currentGameState_{};
+    AbstractState* previousState_{};
+
+    std::map<GameStateType, AbstractState*> states_;
+};

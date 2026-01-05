@@ -1,19 +1,35 @@
 #include "game.h"
-#include <QApplication>
+#include "log_manager.h"
 
 int main(int argc, char* argv[])
 {
-    QApplication application(argc, argv);
-    Game game;
+    try
+    {
+#if defined(QT_DEBUG)
+        LogManager::initialize(LogManager::Mode::LogToFileAndConsole, LogManager::Verbosity::Debug);
+#else
+        LogManager::initialize(LogManager::Mode::LogToFileOnly, LogManager::Verbosity::Info);
+#endif
 
-    return QApplication::exec();
+        QGuiApplication app(argc, argv);
+
+        Game game;
+
+        return QGuiApplication::exec();
+    }
+    catch (const std::exception& e)
+    {
+        qCritical() << "Unhandled exception:" << e.what();
+        return 1;
+    }
+    catch (...)
+    {
+        qCritical() << "Unhandled unknown exception";
+        return 1;
+    }
 }
 
-//TODO add shadows showing possible movements
-//TODO get rid of Drawer class
-//TODO implement state pattern for Piece state
-//TODO optimize multi-capture manager
-//TODO optimize player manager
-//TODO encapsulate Model's move in progress boolean
-
-//TODO add complete logging and fix subtle movement bugs
+// TODO add shadows showing possible movements
+// TODO remake coordinates system to professional checkers/chess alphanumeric coordinates
+// TODO further optimize GameCoordinator logic
+// TODO add complete gameplay logging (chess-like notation)
