@@ -1,7 +1,7 @@
 #pragma once
 
-#include "piece.h"
-#include "pieces_manager.h"
+#include "../piece.h"
+#include "../pieces_manager.h"
 #include <set>
 
 class PieceMovementManager

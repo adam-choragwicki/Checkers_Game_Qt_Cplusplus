@@ -1,10 +1,9 @@
 #include "model.h"
-#include "game.h"
 
 Model::Model(const GameConfig& gameConfig) : pieceMovementAnimationManager_(gameConfig.PIECE_MOVEMENT_ANIMATION_DURATION_MS)
 {
-    piecesManager_ = std::make_unique<PiecesManager>();
-    // piecesManager_->createPieces(); // TODO eventually restore this
+    piecesManager_ = std::make_unique<PiecesManager>(pieceStateManager_);
+    piecesManager_->createPieces();
 
     piecesModel_ = std::make_unique<PiecesModel>(*piecesManager_);
 
@@ -22,6 +21,8 @@ void Model::reset()
     moveInProgress_ = false;
 
     pieceMovementAnimationManager_.reset();
+
+    pieceStateManager_.reset();
 
     clearGameResultInfo();
 }

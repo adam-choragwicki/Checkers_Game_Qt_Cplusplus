@@ -1,5 +1,5 @@
 #include "common_test_fixture.h"
-#include "piece_movement_manager.h"
+#include "piece_managers/piece_movement_manager.h"
 
 class PromotedPieceMovementTest : public CommonTestFixture
 {};

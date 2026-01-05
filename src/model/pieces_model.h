@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pieces_manager.h"
+#include "../pieces_manager.h"
 #include <QAbstractListModel>
 
 class PiecesModel : public QAbstractListModel

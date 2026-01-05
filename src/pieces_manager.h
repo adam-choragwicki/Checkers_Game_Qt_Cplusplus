@@ -4,12 +4,14 @@
 #include <vector>
 #include <QDebug>
 
+class PieceStateManager;
+
 class PiecesManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit PiecesManager();
+    explicit PiecesManager(PieceStateManager& pieceStateManager);
 
     void reset();
 
@@ -20,6 +22,7 @@ public:
     std::vector<std::unique_ptr<Piece>>& getPieces() { return pieces_; }
 
     void disableAllPieces();
+    void disableAllButOnePiece(const Piece& pieceToOmit);
 
     [[nodiscard]] Piece* findPieceById(int id) const;
 
@@ -35,5 +38,8 @@ public:
     [[nodiscard]] const Player& getPlayerWithNoPiecesLeft() const;
 
 private:
+    [[maybe_unused]] void loadVisualTestScenario();
+
+    PieceStateManager& pieceStateManager_;
     std::vector<std::unique_ptr<Piece>> pieces_;
 };

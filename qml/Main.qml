@@ -6,22 +6,22 @@ Window {
     minimumHeight: 800
     visible: true
 
-    // Component.onCompleted: {
-    //     if (Controller.startInFullScreenEnabled) {
-    //         console.log("Starting in fullscreen")
-    //         mainWindow.showFullScreen()
-    //     } else {
-    //         console.log("Starting in windowed mode")
-    //         mainWindow.showNormal()
-    //     }
-    // }
-    //
+    Component.onCompleted: {
+        if (Controller.startInFullScreenEnabled) {
+            console.log("Starting in fullscreen")
+            mainWindow.showFullScreen()
+        } else {
+            console.log("Starting in windowed mode")
+            mainWindow.showNormal()
+        }
+    }
+
     property real aspectRatio: width / height
 
-    onAspectRatioChanged: {
-        // console.log("Window size is now " + width + "x" + height)
-        // console.log("Aspect ratio is now " + aspectRatio)
-    }
+    // onAspectRatioChanged: {
+    //     console.log("Window size is now " + width + "x" + height)
+    //     console.log("Aspect ratio is now " + aspectRatio)
+    // }
 
     UiScaler {
         id: uiScaler

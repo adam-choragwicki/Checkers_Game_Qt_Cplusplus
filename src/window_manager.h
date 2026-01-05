@@ -13,15 +13,7 @@ public:
 
     void toggleFullScreen();
 
-    void setResolutionHD();
-    void setResolutionFullHD();
-    void setResolutionQHD();
-    void setResolutionUHD();
-
 private:
-    QSize determineInitialRenderResolution();
-    void setResolution(QSize resolution);
-
     QWindow* window_{};
 
     const bool startInFullScreenEnabled_ = true;

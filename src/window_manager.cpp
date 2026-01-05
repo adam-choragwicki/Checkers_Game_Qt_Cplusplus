@@ -1,5 +1,4 @@
 #include "window_manager.h"
-#include "resolution.h"
 #include <QWindow>
 #include <QDebug>
 
@@ -38,53 +37,4 @@ void WindowManager::toggleFullScreen()
         window_->showFullScreen();
         // qDebug() << "Entered fullscreen mode";
     }
-}
-
-void WindowManager::setResolution(const QSize resolution)
-{
-    if (!window_)
-    {
-        throw std::runtime_error("WindowManager::setResolution() called before window was set");
-    }
-
-    window_->showNormal();
-    window_->resize(resolution);
-    window_->setPosition(QGuiApplication::primaryScreen()->geometry().center() - QPoint(resolution.width() / 2, resolution.height() / 2));
-
-    // qDebug() << "Resolution set to" << resolution.width() << "x" << resolution.height();
-}
-
-QSize WindowManager::determineInitialRenderResolution()
-{
-    // try to detect primary screen resolution
-    if (const QScreen* screen = QGuiApplication::primaryScreen())
-    {
-        const QSize screenResolution = screen->size();
-        qDebug() << "Detected primary screen resolution:" << screenResolution.width() << "x" << screenResolution.height();
-        return screenResolution;
-    }
-
-    // fallback
-    qWarning() << "Failed to detect primary screen resolution. Using fallback:" << Resolution::FullHD.width() << "x" << Resolution::FullHD.height();
-    return Resolution::FullHD;
-}
-
-void WindowManager::setResolutionHD()
-{
-    setResolution(Resolution::HD);
-}
-
-void WindowManager::setResolutionFullHD()
-{
-    setResolution(Resolution::FullHD);
-}
-
-void WindowManager::setResolutionQHD()
-{
-    setResolution(Resolution::QHD);
-}
-
-void WindowManager::setResolutionUHD()
-{
-    setResolution(Resolution::UHD);
 }

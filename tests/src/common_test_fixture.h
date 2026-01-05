@@ -4,6 +4,7 @@
 #include "coordinates.h"
 #include "pieces_manager.h"
 #include "player_manager.h"
+#include "piece_managers/piece_state_manager.h"
 
 class CommonTestFixture : public ::testing::Test
 {
@@ -32,6 +33,7 @@ protected:
         }
     }
 
-    PiecesManager piecesManager_;
+    PieceStateManager pieceStateManager_;
+    PiecesManager piecesManager_{pieceStateManager_};
     std::vector<Piece*> piecesOnCheckerboard_;
 };

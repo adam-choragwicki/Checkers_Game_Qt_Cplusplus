@@ -1,62 +1,9 @@
 #include "pieces_manager.h"
 #include "coordinates_database.h"
-#include "piece_state_manager.h"
+#include "piece_managers/piece_state_manager.h"
 
-PiecesManager::PiecesManager()
-{
-    // TODO eventually the PiecesManager cannot create pieces in constructor (tests require piece manager to be empty)
-
-    // Movement and capture testing 1 vs 1
-    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
-    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
-
-    // Movement and capture testing 2 vs 2
-    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
-    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
-    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
-    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
-
-    // Animation testing
-    createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
-    createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
-    createPiece(Coordinates{4, 3}, NORTH_PLAYER);
-    createPiece(Coordinates{4, 5}, NORTH_PLAYER);
-
-    // Z-position testing
-    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
-    // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
-    // createPiece(Coordinates{3, 6}, NORTH_PLAYER);
-    // createPiece(Coordinates{2, 7}, NORTH_PLAYER);
-
-    // Promotion testing
-    // createPiece(Coordinates{2, 5}, SOUTH_PLAYER);
-    // createPiece(Coordinates{7, 6}, NORTH_PLAYER);
-
-    // Multi pieces testing 2 vs 2
-    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
-    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
-    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
-    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
-
-    // Multi pieces testing 4 vs 4
-    // createPiece(Coordinates{6, 1}, SOUTH_PLAYER);
-    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
-    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
-    // createPiece(Coordinates{6, 7}, SOUTH_PLAYER);
-    // createPiece(Coordinates{4, 1}, NORTH_PLAYER);
-    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
-    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
-    // createPiece(Coordinates{4, 7}, NORTH_PLAYER);
-
-    // Multi capture testing
-    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
-    // createPiece(Coordinates{3, 4}, NORTH_PLAYER);
-    // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
-
-    // End game testing 1 vs 1
-    // createPiece(Coordinates{5, 4}, SOUTH_PLAYER);
-    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
-}
+PiecesManager::PiecesManager(PieceStateManager& pieceStateManager) : pieceStateManager_(pieceStateManager)
+{}
 
 void PiecesManager::reset()
 {
@@ -106,9 +53,17 @@ void PiecesManager::disableAllPieces()
 {
     for (const auto& piece: pieces_)
     {
-        if (!piece->isDisabled())
+        pieceStateManager_.disablePiece(*piece);
+    }
+}
+
+void PiecesManager::disableAllButOnePiece(const Piece& pieceToOmit)
+{
+    for (const auto& piece: pieces_)
+    {
+        if (piece.get() != &pieceToOmit)
         {
-            PieceStateManager::disablePiece(*piece);
+            pieceStateManager_.disablePiece(*piece);
         }
     }
 }
@@ -164,7 +119,7 @@ void PiecesManager::markPiecesWhichCanMove(const std::vector<Piece*>& pieces)
     for (auto& piece: pieces)
     {
         qDebug() << "Piece" << piece->getId() << "can move";
-        PieceStateManager::markPieceHasValidMovePossible(*piece);
+        pieceStateManager_.activatePiece(*piece);
     }
 }
 
@@ -172,7 +127,7 @@ bool PiecesManager::isPieceAtCoordinates(const Coordinates& coordinates) const
 {
     return std::ranges::find_if(pieces_, [&coordinates](const auto& piece)
     {
-        // Consider a piece present at coordinates only if it is alive // TODO maybe go back to removing dead pieces?
+        // Consider a piece present at coordinates only if it is alive
         return piece->isAlive() && piece->getCoordinates() == coordinates;
     }) != pieces_.end();
 }
@@ -184,7 +139,7 @@ Piece& PiecesManager::getPieceAtCoordinates(const Coordinates& coordinates) cons
         const auto iter = std::ranges::find_if(pieces_, [coordinates](const std::unique_ptr<Piece>& piece)
         {
             // Only return alive piece
-            return piece->isAlive() && piece->getCoordinates() == coordinates; // TODO maybe go back to removing dead pieces?
+            return piece->isAlive() && piece->getCoordinates() == coordinates;
         });
 
         return *iter->get();
@@ -225,4 +180,71 @@ const Player& PiecesManager::getPlayerWithNoPiecesLeft() const
     }
 
     throw std::runtime_error("Error, both players have pieces left");
+}
+
+void PiecesManager::loadVisualTestScenario()
+{
+    // Movement and capture testing 1 vs 1
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+
+    // Movement and capture testing 2 vs 2
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+
+    // Animation testing
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+
+    // Z-position testing
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
+    // createPiece(Coordinates{3, 6}, NORTH_PLAYER);
+    // createPiece(Coordinates{2, 7}, NORTH_PLAYER);
+
+    // Promotion testing
+    // createPiece(Coordinates{2, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{7, 6}, NORTH_PLAYER);
+
+    // Multi pieces testing 2 vs 2
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+
+    // Multi pieces testing 4 vs 4
+    // createPiece(Coordinates{6, 1}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 3}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{6, 7}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 1}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 3}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+    // createPiece(Coordinates{4, 7}, NORTH_PLAYER);
+
+    // Multi capture testing
+    // createPiece(Coordinates{8, 1}, SOUTH_PLAYER);
+    // createPiece(Coordinates{7, 2}, NORTH_PLAYER);
+    // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
+    // createPiece(Coordinates{3, 4}, NORTH_PLAYER);
+    // createPiece(Coordinates{1, 8}, NORTH_PLAYER);
+
+    // Multi capture + end game testing
+    // createPiece(Coordinates{8, 1}, SOUTH_PLAYER);
+    //
+    // createPiece(Coordinates{7, 2}, NORTH_PLAYER);
+    // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
+    // createPiece(Coordinates{3, 4}, NORTH_PLAYER);
+
+    // End game testing 1 vs 1
+    // createPiece(Coordinates{5, 4}, SOUTH_PLAYER);
+    // createPiece(Coordinates{4, 5}, NORTH_PLAYER);
+
+    // Backward capture is not allowed testing
+    // createPiece(Coordinates{4, 5}, SOUTH_PLAYER);
+    // createPiece(Coordinates{5, 4}, NORTH_PLAYER);
 }

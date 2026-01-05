@@ -1,5 +1,5 @@
 #include "common_test_fixture.h"
-#include "piece_capture_manager.h"
+#include "piece_managers/piece_capture_manager.h"
 
 class PieceCaptureTest : public CommonTestFixture
 {};

@@ -1,5 +1,4 @@
 #include "piece.h"
-#include "selected_piece_manager.h"
 #include <QDebug>
 
 Piece::Piece(const Coordinates& coordinates, const Player& player, const bool promoted) : STARTING_COORDINATES_(coordinates), coordinates_(coordinates), player_(player)
@@ -28,73 +27,11 @@ void Piece::reset()
 
 void Piece::setState(const State newState)
 {
-    auto handleIllegalStateTransition = [this, newState]()
-    {
-        const QString message = QString("Illegal state transition from state %s to state %s").arg(QMetaEnum::fromType<State>().valueToKey(static_cast<int>(state_)), QMetaEnum::fromType<State>().valueToKey(static_cast<int>(newState)));
-        qFatal() << message;
-        throw std::runtime_error(message.toStdString());
-    };
-
-    if (state_ == State::DISABLED)
-    {
-        if (newState == State::ACTIVE)
-        {
-            /* New turn */
-        }
-        else if (newState == State::DISABLED)
-        {
-            /* Do nothing */
-        }
-        else
-        {
-            handleIllegalStateTransition();
-        }
-    }
-    else if (state_ == State::ACTIVE)
-    {
-        if (newState == State::SELECTED)
-        {
-            SelectedPieceManager::switchSelectedPiece(*this);
-        }
-        else if (newState == State::DISABLED)
-        {
-            /* End turn */
-        }
-        else if (newState == State::ACTIVE)
-        {
-            /* Do nothing */
-        }
-        else
-        {
-            handleIllegalStateTransition();
-        }
-    }
-    else if (state_ == State::SELECTED)
-    {
-        if (newState == State::ACTIVE)
-        {
-            /* ACTIVE piece clicked */
-        }
-        else if (newState == State::DISABLED)
-        {
-            /* End turn */
-            SelectedPieceManager::resetSelectedPiece();
-        }
-        else
-        {
-            handleIllegalStateTransition();
-        }
-    }
-    else
-    {
-        Q_UNREACHABLE();
-    }
-
     state_ = newState;
 
     qDebug().noquote() << "C++: Player" << player_.toString() << "piece" << id_ << "state changed to" << QMetaEnum::fromType<State>().valueToKey(static_cast<int>(state_));
 
-    emit pieceChanged(id_); // TODO only state changes here
+    emit pieceChanged(id_);
 }
 
 void Piece::setAnimationEnabled(const bool enabled)
@@ -103,17 +40,9 @@ void Piece::setAnimationEnabled(const bool enabled)
     emit pieceChanged(id_);
 }
 
-void Piece::onClicked()
+bool Piece::operator==(const Piece& other) const
 {
-    if (state_ == State::ACTIVE)
-    {
-        qDebug() << "C++: Setting piece" << id_ << "as selected";
-        setState(State::SELECTED);
-    }
-    else
-    {
-        qDebug() << "C++: Ignoring click on piece" << id_ << "because it is not active";
-    }
+    return id_ == other.id_;
 }
 
 void Piece::moveToCoordinates(const Coordinates& newCoordinates)
@@ -135,36 +64,6 @@ std::ostream& operator<<(std::ostream& os, const Piece& piece)
 {
     os << "(" << piece.getRow() << "," << piece.getColumn() << ")";
     return os;
-}
-
-bool Piece::isDisabled() const
-{
-    return state_ == State::DISABLED;
-}
-
-bool Piece::isActive() const
-{
-    return state_ == State::ACTIVE;
-}
-
-bool Piece::isSelected() const
-{
-    return state_ == State::SELECTED;
-}
-
-void Piece::setDisabled()
-{
-    setState(State::DISABLED);
-}
-
-void Piece::setActive()
-{
-    setState(State::ACTIVE);
-}
-
-void Piece::setSelected()
-{
-    setState(State::SELECTED);
 }
 
 void Piece::setAlive(const bool alive)

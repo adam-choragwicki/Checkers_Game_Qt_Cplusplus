@@ -1,11 +1,12 @@
 #pragma once
 
-#include "multi_capture_manager.h"
-#include "game_config.h"
-#include "pieces_manager.h"
+#include "../multi_capture_manager.h"
+#include "../game_config.h"
+#include "../pieces_manager.h"
 #include "pieces_model.h"
-#include "game_result_info.h"
-#include "piece_movement_animation_manager.h"
+#include "../game_result_info.h"
+#include "../piece_managers/piece_movement_animation_manager.h"
+#include "piece_managers/piece_state_manager.h"
 #include <memory>
 
 class Model : public QObject
@@ -41,6 +42,8 @@ public:
     Q_PROPERTY(QString gameEndReasonText READ getGameEndReasonText NOTIFY gameResultInfoChanged)
     QString getGameEndReasonText() const;
 
+    PieceStateManager& getPieceStateManager() { return pieceStateManager_; }
+
 private:
     void clearGameResultInfo();
 
@@ -48,6 +51,7 @@ private:
     std::unique_ptr<PlayerManager> playerManager_;
     bool moveInProgress_{};
 
+    PieceStateManager pieceStateManager_;
     std::unique_ptr<PiecesManager> piecesManager_;
     std::unique_ptr<PiecesModel> piecesModel_;
 

@@ -6,7 +6,7 @@ enum class GameStateType
 {
     Initialization, // App just started — loading assets, creating checkerboard, pieces etc.
     ReadyToStart, // Everything ready, waiting for the player's input to start.
-    Running, // Main game loop active.
+    Running, // Game loop active.
     EscapeMenu, // Escape menu overlay is displayed.
     EndedVictoryNorthPlayer, // Game stopped because win conditions have been satisfied for northern player. The end game overlay is displayed.
     EndedVictorySouthPlayer, // Game stopped because win conditions have been satisfied for southern player. The end game overlay is displayed.
@@ -30,14 +30,3 @@ inline QDebug operator<<(QDebug debug, GameStateType state)
             throw std::runtime_error("Unknown game state");
     }
 }
-
-// | From               | Action/Event                  | To                 | Notes                           | // TODO update this
-// | :---------------   | :--------------------------   | :---------------   | :------------------------------ |
-// | **Initialization** | load complete                 | **ReadyToStart**   | Checkerboard and pieces ready.  |
-// | **ReadyToStart**   | Player presses arrow/WSAD key | **Running**        | Begin game loop.                |
-// | **Running**        | Player presses *Esc*          | **EscapeMenu**     | Open escape menu.               |
-// | **EscapeMenu**     | Select “RESUME”               | **Running**        | Return to play.                 |
-// | **EscapeMenu**     | Select “QUIT”                 | **Exiting**        | Exit the game.                  |
-// | **Running**        | ?                             | **EndedVictory**   | Show end game overlay.          |
-// | **Running**        | ?                             | **EndedDefeat**    | Show end game overlay.          |
-// | **Stopped**        | Player presses “PLAY AGAIN”   | **ReadyToStart**   | Restart game                    |

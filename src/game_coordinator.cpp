@@ -1,10 +1,14 @@
 #include "game_coordinator.h"
-#include "piece_movement_manager.h"
-#include "piece_state_manager.h"
-#include "piece_promotion_manager.h"
-#include "selected_piece_manager.h"
+#include "piece_managers/piece_movement_manager.h"
+#include "piece_managers/piece_state_manager.h"
+#include "piece_managers/piece_promotion_manager.h"
 
-GameCoordinator::GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions& stateActions) : model_(model), qmlHelper_(qmlHelper), stateActions_(stateActions)
+GameCoordinator::GameCoordinator(Model& model, QmlHelper& qmlHelper, IStateActions& stateActions) : model_(model),
+                                                                                                    qmlHelper_(qmlHelper),
+                                                                                                    stateActions_(stateActions),
+                                                                                                    pieceStateManager_(model_.getPieceStateManager()),
+                                                                                                    multiCaptureManager_(model_.getMultiCaptureManager()),
+                                                                                                    piecesManager_(model_.getPiecesManager())
 {
     stateActions_.setGameState(GameStateType::ReadyToStart);
 }
@@ -25,8 +29,6 @@ void GameCoordinator::restartGame()
 
     turnCounter_ = 0;
 
-    SelectedPieceManager::resetSelectedPiece();
-
     stateActions_.setGameState(GameStateType::ReadyToStart);
 
     startGame();
@@ -34,48 +36,73 @@ void GameCoordinator::restartGame()
 
 void GameCoordinator::checkAndMarkPlayerMoveOptions(const Player& player)
 {
-    if (model_.getMultiCaptureManager().isMultiCaptureInProgress())
+    // If multi capture is in progress, it has the highest priority
+    if (multiCaptureManager_.isMultiCaptureInProgress())
     {
-        qDebug() << "Multi capture in progress";
+        const int multiCapturingPieceId = multiCaptureManager_.getMulticapturingPiece().getId();
 
-        if (PieceCaptureManager::checkIfPieceCanCapture(model_.getMultiCaptureManager().getMulticapturingPiece(), model_.getPiecesManager()))
+        qDebug() << "Multi capture is in progress";
+        qDebug().noquote() << QString("Checking if multi capturing piece %1 can capture any further piece").arg(multiCapturingPieceId);
+
+        if (PieceCaptureManager::checkIfPieceCanCapture(multiCaptureManager_.getMulticapturingPiece(), piecesManager_))
         {
-            const std::vector piecesWhichCanCapture{&model_.getMultiCaptureManager().getMulticapturingPiece()};
-            model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanCapture);
+            qDebug().noquote() << QString("Multi capturing piece %1 can capture at least one more piece").arg(multiCapturingPieceId);
+            // no need to do anything here, the multi-capturing piece just stays activated
             return;
         }
 
-        model_.getMultiCaptureManager().endMultiCapture();
+        qDebug().noquote() << QString("Multi capturing piece %1 cannot capture any more pieces. Ending multi capture and checking for other move options").arg(multiCapturingPieceId);
+        multiCaptureManager_.endMultiCapture();
     }
 
-    if (const std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, model_.getPiecesManager()); piecesWhichCanCapture.empty())
+    if (const std::vector<Piece*> piecesWhichCanCapture = PieceCaptureManager::whichPiecesCanCapture(player, piecesManager_); piecesWhichCanCapture.empty())
     {
-        qDebug().noquote() << player.toString() << "has no pieces which can capture";
+        qDebug().noquote() << QString("%1 has no pieces which can capture").arg(player.toString());
 
-        if (const std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, model_.getPiecesManager()); piecesWhichCanMove.empty())
+        if (const std::vector<Piece*> piecesWhichCanMove = PieceMovementManager::whichPiecesCanMove(player, piecesManager_); piecesWhichCanMove.empty())
         {
-            qDebug().noquote() << player.toString() << "has no pieces which can move, game over";
+            qDebug().noquote() << QString("%1 has no pieces which can move, game over").arg(player.toString());
             endGame(model_.getPlayerManager().getActivePlayer(), GameEndReason::NO_MOVES_LEFT);
         }
         else
         {
-            qDebug().noquote() << player.toString() << "has pieces which can move";
-            model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanMove);
+            qDebug().noquote() << QString("%1 has %2 pieces which can move").arg(player.toString()).arg(piecesWhichCanMove.size());
+            piecesManager_.markPiecesWhichCanMove(piecesWhichCanMove);
         }
     }
     else
     {
-        qDebug().noquote() << player.toString() << "has pieces which can capture";
-        model_.getPiecesManager().markPiecesWhichCanMove(piecesWhichCanCapture);
+        qDebug().noquote() << QString("%1 has %2 pieces which can capture").arg(player.toString(), piecesWhichCanCapture.size());
+        piecesManager_.markPiecesWhichCanMove(piecesWhichCanCapture);
+    }
+}
+
+void GameCoordinator::processPieceClicked(const int pieceId)
+{
+    if (Piece* piece = piecesManager_.findPieceById(pieceId))
+    {
+        Q_ASSERT(pieceId == piece->getId());
+
+        pieceStateManager_.onPieceClicked(*piece);
+    }
+    else
+    {
+        qFatal("Piece with id %d not found", pieceId);
     }
 }
 
 void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinates)
 {
     /*Ignore clicking on a tile unless any piece is selected*/
-    if (SelectedPieceManager::isAnyPieceSelected())
+    if (pieceStateManager_.isAnyPieceSelected())
     {
-        Piece& selectedPiece = SelectedPieceManager::getSelectedPiece();
+        Piece& selectedPiece = pieceStateManager_.getSelectedPiece();
+
+        if (const Coordinates selectedPieceCoordinates = selectedPiece.getCoordinates(); selectedPieceCoordinates == targetTileCoordinates)
+        {
+            qDebug().noquote() << QString("C++: Ignoring click on tile %1 because the selected piece is on it").arg(targetTileCoordinates);
+            return;
+        }
 
         // If a move is already happening, ignore input
         if (model_.isMoveInProgress())
@@ -83,49 +110,56 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
             return;
         }
 
-        // Lock the input. It will be unlocked after the animation finishes
+        // Lock the input. It will be unlocked after the animation finishes or if the move is rejected
         model_.setMoveInProgress(true);
         bool moveAccepted = false;
-        bool movementIsCapture = false;
+        bool moveIsCapture = false;
         std::optional<std::reference_wrapper<Piece>> victimPiece;
 
         /*If any capture is possible, then any capture has to be the next move*/
-        if (PieceCaptureManager::checkIfPieceCanCapture(selectedPiece, model_.getPiecesManager()))
+        if (PieceCaptureManager::checkIfPieceCanCapture(selectedPiece, piecesManager_))
         {
-            if (PieceCaptureManager::checkCapturePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
+            if (PieceCaptureManager::checkCapturePossibility(selectedPiece, piecesManager_, targetTileCoordinates))
             {
                 // Calculate victim piece coordinates BEFORE moving the attacking piece
-                const Coordinates victimCoordinates = getCapturedPieceCoordinates(selectedPiece, targetTileCoordinates);
+                const Coordinates victimPieceCoordinates = getCapturedPieceCoordinates(selectedPiece, targetTileCoordinates);
 
                 // Find the victim piece
-                if (model_.getPiecesManager().isPieceAtCoordinates(victimCoordinates))
+                if (piecesManager_.isPieceAtCoordinates(victimPieceCoordinates))
                 {
-                    victimPiece = model_.getPiecesManager().getPieceAtCoordinates(victimCoordinates);
+                    victimPiece = piecesManager_.getPieceAtCoordinates(victimPieceCoordinates);
                 }
 
-                movementIsCapture = true;
+                moveIsCapture = true;
                 moveAccepted = true;
             }
             else
             {
-                // Invalid capture attempt // TODO should I do something more here?
-                PieceStateManager::deselectPiece(selectedPiece);
+                qDebug().noquote() << QString("C++: Invalid capture attempt - piece %1 can capture, but this particular capture by moving to %2 is illegal").arg(selectedPiece.getId()).arg(targetTileCoordinates);
+                pieceStateManager_.deselectPiece(selectedPiece);
                 model_.setMoveInProgress(false);
                 return;
             }
         }
         // Check if a normal move is possible
-        else if (PieceMovementManager::checkIfPieceCanMove(selectedPiece, model_.getPiecesManager()))
+        else if (PieceMovementManager::checkIfPieceCanMove(selectedPiece, piecesManager_))
         {
-            if (PieceMovementManager::checkMovePossibility(selectedPiece, model_.getPiecesManager(), targetTileCoordinates))
+            if (PieceMovementManager::checkMovePossibility(selectedPiece, piecesManager_, targetTileCoordinates))
             {
                 moveAccepted = true;
+            }
+            else
+            {
+                qDebug().noquote() << QString("C++: Invalid move attempt - piece %1 can move, but this particular move to %2 is illegal").arg(selectedPiece.getId()).arg(targetTileCoordinates);
+                pieceStateManager_.deselectPiece(selectedPiece);
+                model_.setMoveInProgress(false);
+                return;
             }
         }
 
         if (moveAccepted)
         {
-            if (movementIsCapture)
+            if (moveIsCapture)
             {
                 model_.getPieceMovementAnimationManager()->setDoublePieceMovementAnimationDuration();
             }
@@ -139,15 +173,19 @@ void GameCoordinator::processTileClicked(const Coordinates& targetTileCoordinate
 
             Piece* piecePtr = &selectedPiece;
 
-            model_.getPieceMovementAnimationManager()->start([this, piecePtr, movementIsCapture, victimPiece]()
+            model_.getPieceMovementAnimationManager()->start([this, piecePtr, moveIsCapture, victimPiece]()
             {
-                onPieceAnimationFinished(piecePtr, movementIsCapture, victimPiece);
+                onPieceAnimationFinished(piecePtr, moveIsCapture, victimPiece);
             });
         }
         else
         {
-            throw std::runtime_error("Error, piece is in undefined state, cannot capture and cannot move");
+            qDebug().noquote() << QString("C++: Ignoring click on tile %1 because move from %2 to %1 is illegal").arg(targetTileCoordinates).arg(selectedPiece.getCoordinates());
         }
+    }
+    else
+    {
+        qDebug().noquote() << QString("C++: Ignoring click on tile %1 because no piece is selected").arg(targetTileCoordinates);
     }
 }
 
@@ -155,7 +193,7 @@ void GameCoordinator::onPieceAnimationFinished(Piece* piece, const bool movement
 {
     if (movementWasCapture && capturedPiece)
     {
-        model_.getPiecesManager().killPiece(*capturedPiece); // kill the specific piece identified earlier
+        piecesManager_.killPiece(*capturedPiece); // kill the specific piece identified earlier
     }
 
     // 2. Run the rules logic
@@ -163,15 +201,14 @@ void GameCoordinator::onPieceAnimationFinished(Piece* piece, const bool movement
     {
         if (checkEligibilityAndPromotePiece(*piece))
         {
-            model_.getMultiCaptureManager().endMultiCapture();
+            multiCaptureManager_.endMultiCapture();
             endTurn();
         }
-        else if (PieceCaptureManager::checkIfPieceCanCapture(*piece, model_.getPiecesManager()))
+        else if (PieceCaptureManager::checkIfPieceCanCapture(*piece, piecesManager_))
         {
             // Multi-capture available
-            model_.getMultiCaptureManager().startMultiCapture(*piece);
-            model_.getPiecesManager().disableAllPieces();
-            checkAndMarkPlayerMoveOptions(model_.getPlayerManager().getActivePlayer());
+            multiCaptureManager_.startMultiCapture(*piece);
+            piecesManager_.disableAllButOnePiece(*piece); // keep the multi-capturing piece selected
         }
         else
         {
@@ -209,17 +246,18 @@ void GameCoordinator::endTurn()
 {
     qDebug() << QString("=================================== END TURN %1 ===================================").arg(turnCounter_);
 
-    if (model_.getPiecesManager().didAnyPlayerRunOutOfPieces())
+    if (piecesManager_.didAnyPlayerRunOutOfPieces())
     {
-        const Player& playerWithNoPiecesLeft = model_.getPiecesManager().getPlayerWithNoPiecesLeft();
+        const Player& playerWithNoPiecesLeft = piecesManager_.getPlayerWithNoPiecesLeft();
 
         qDebug() << playerWithNoPiecesLeft.toString() << "has no pieces left";
         endGame(playerWithNoPiecesLeft, GameEndReason::NO_PIECES_LEFT);
         return;
     }
 
-    model_.getPiecesManager().disableAllPieces();
+    piecesManager_.disableAllPieces();
     model_.getPlayerManager().switchPlayer();
+    pieceStateManager_.resetSelectedPiece();
 
     startNewTurn();
 }
@@ -229,7 +267,7 @@ bool GameCoordinator::checkEligibilityAndPromotePiece(Piece& piece)
     if (PiecePromotionManager::checkPromotionEligibility(piece))
     {
         piece.promote();
-        qDebug() << "Piece" << piece.getId() << "has been promoted";
+        qDebug().noquote() << QString("Piece %1 has been promoted").arg(piece.getId());
         return true;
     }
 

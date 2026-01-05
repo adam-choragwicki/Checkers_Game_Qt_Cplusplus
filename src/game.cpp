@@ -4,13 +4,13 @@
 
 Game::Game()
 {
-    // printAppInfo(); // TODO restore this
+    printAppInfo();
 
     gameConfig_ = std::make_unique<GameConfig>();
 
     model_ = std::make_unique<Model>(*gameConfig_);
     view_ = std::make_unique<QQmlApplicationEngine>();
-    controller_ = std::make_unique<Controller>(*gameConfig_, *model_, *view_);
+    controller_ = std::make_unique<Controller>(*model_, *view_);
 
     exposeDataToQml();
 

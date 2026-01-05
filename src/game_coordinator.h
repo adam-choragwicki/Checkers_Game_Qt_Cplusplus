@@ -1,8 +1,8 @@
 #pragma once
 
-#include "model.h"
+#include "model/model.h"
 #include "qml_helper.h"
-#include "piece_capture_manager.h"
+#include "piece_managers/piece_capture_manager.h"
 #include "state_machine/game_state_manager.h"
 #include "game_end_reason.h"
 
@@ -11,10 +11,11 @@ class GameCoordinator : public QObject
     Q_OBJECT
 
 public:
-    explicit GameCoordinator(const GameConfig& gameConfig, Model& model, QmlHelper& qmlHelper, IStateActions& stateActions);
+    explicit GameCoordinator(Model& model, QmlHelper& qmlHelper, IStateActions& stateActions);
 
     void startGame();
     void restartGame();
+    void processPieceClicked(int pieceId);
     void processTileClicked(const Coordinates& targetTileCoordinates);
 
 private:
@@ -35,4 +36,8 @@ private:
     IStateActions& stateActions_;
 
     int turnCounter_{};
+
+    PieceStateManager& pieceStateManager_;
+    MultiCaptureManager& multiCaptureManager_;
+    PiecesManager& piecesManager_;
 };

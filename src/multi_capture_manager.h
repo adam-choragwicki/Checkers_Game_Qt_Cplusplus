@@ -19,15 +19,17 @@ public:
 
     void startMultiCapture(Piece& piece)
     {
+        qDebug() << "Starting multi capture";
         multiCapturingPiece_ = piece;
     }
 
     void endMultiCapture()
     {
+        qDebug() << "Ending multi capture";
         multiCapturingPiece_.reset();
     }
 
-    Piece& getMulticapturingPiece() const
+    [[nodiscard]] Piece& getMulticapturingPiece() const
     {
         if (!multiCapturingPiece_)
         {

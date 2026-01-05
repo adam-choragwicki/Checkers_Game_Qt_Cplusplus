@@ -31,14 +31,6 @@ public:
     void moveToCoordinates(const Coordinates& newCoordinates);
     void promote();
 
-    [[nodiscard]] bool isDisabled() const;
-    [[nodiscard]] bool isActive() const;
-    [[nodiscard]] bool isSelected() const;
-
-    void setDisabled();
-    void setActive();
-    void setSelected();
-
     [[nodiscard]] bool isAlive() const { return alive_; }
     void setAlive(bool alive);
 
@@ -57,7 +49,7 @@ public:
     [[nodiscard]] bool isAnimationEnabled() const { return animationEnabled_; }
     void setAnimationEnabled(bool enabled);
 
-    void onClicked();
+    bool operator==(const Piece& other) const;
 
 private:
     const Coordinates STARTING_COORDINATES_;

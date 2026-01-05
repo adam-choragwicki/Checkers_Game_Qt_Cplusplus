@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model.h"
+#include "model/model.h"
 #include "input_handler.h"
 #include "game_coordinator.h"
 #include "window_manager.h"
@@ -29,7 +29,7 @@ public slots:
     void onPlayAgainClicked();
 
 public:
-    explicit Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view);
+    explicit Controller(Model& model, QQmlApplicationEngine& view);
 
     // IStateActions implementation
     void enablePiecesAnimation() override;
@@ -48,10 +48,12 @@ public:
     Q_PROPERTY(bool gameRunning READ isGameRunning NOTIFY gameStateChanged)
     bool isGameRunning() const { return gameStateManager_.getCurrentGameStateType() == GameStateType::Running; }
 
+    [[nodiscard]] bool isStartInFullScreenEnabled() const { return windowManager_.isStartInFullScreenEnabled(); }
+    Q_PROPERTY(bool startInFullScreenEnabled READ isStartInFullScreenEnabled CONSTANT)
+
     Q_INVOKABLE QString pieceStateToString(int pieceState) const;
 
 private:
-    const GameConfig& gameConfig_;
     Model& model_;
     QQmlApplicationEngine& view_;
 

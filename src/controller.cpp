@@ -1,7 +1,7 @@
 #include "controller.h"
 #include "piece.h"
 
-Controller::Controller(const GameConfig& gameConfig, Model& model, QQmlApplicationEngine& view) : gameConfig_(gameConfig), model_(model), view_(view), gameStateManager_(*this)
+Controller::Controller(Model& model, QQmlApplicationEngine& view) : model_(model), view_(view), gameStateManager_(*this)
 {
     qInfo() << "Initializing controller";
 
@@ -17,7 +17,7 @@ void Controller::onQmlEngineFullyInitialized()
     windowManager_.setWindow(qmlHelper_.getMainWindow());
     overlayManager_ = std::make_unique<OverlayManager>(qmlHelper_);
 
-    gameCoordinator_ = std::make_unique<GameCoordinator>(gameConfig_, model_, qmlHelper_, *this);
+    gameCoordinator_ = std::make_unique<GameCoordinator>(model_, qmlHelper_, *this);
 
     gameCoordinator_->startGame();
 }
@@ -73,18 +73,8 @@ void Controller::processKeyPress(const int key)
 
 void Controller::onPieceClicked(const int pieceId)
 {
-    if (Piece* piece = model_.getPiecesManager().findPieceById(pieceId))
-    {
-        Q_ASSERT(pieceId == piece->getId());
-
-        qDebug() << "C++: Piece" << pieceId << "clicked";
-
-        piece->onClicked();
-    }
-    else
-    {
-        qFatal("Piece with id %d not found", pieceId);
-    }
+    qDebug() << "C++: Piece" << pieceId << "clicked";
+    gameCoordinator_->processPieceClicked(pieceId);
 }
 
 void Controller::onTileClicked(const int row, const int column)
@@ -92,7 +82,6 @@ void Controller::onTileClicked(const int row, const int column)
     const Coordinates clickedTileCoordinates(row, column);
 
     qDebug().noquote() << "C++: Tile clicked:" << clickedTileCoordinates;
-
     gameCoordinator_->processTileClicked(clickedTileCoordinates);
 }
 

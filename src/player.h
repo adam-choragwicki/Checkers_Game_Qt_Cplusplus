@@ -15,7 +15,7 @@ public:
         return position == Position::North ? QStringLiteral("NORTH PLAYER") : QStringLiteral("SOUTH PLAYER");
     }
 
-    QString getColor() const noexcept // TODO not used, convey color to QML eventually
+    QString getColor() const noexcept
     {
         return color;
     }

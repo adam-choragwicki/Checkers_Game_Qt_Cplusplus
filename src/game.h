@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model.h"
+#include "model/model.h"
 #include "controller.h"
 #include "game_config.h"
 

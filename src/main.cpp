@@ -29,10 +29,7 @@ int main(int argc, char* argv[])
     }
 }
 
-//TODO add shadows showing possible movements
-//TODO implement state pattern for Piece state
-//TODO optimize multi-capture manager
-//TODO optimize player manager
-//TODO encapsulate Model's move in progress boolean
-
-//TODO add complete logging and fix subtle movement bugs
+// TODO add shadows showing possible movements
+// TODO remake coordinates system to professional checkers/chess alphanumeric coordinates
+// TODO further optimize GameCoordinator logic
+// TODO add complete gameplay logging (chess-like notation)

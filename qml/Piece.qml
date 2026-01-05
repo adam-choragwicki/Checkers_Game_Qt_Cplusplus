@@ -12,7 +12,7 @@ Rectangle {
     required property bool promotedRole
 
     // Config
-    readonly property bool showId: true
+    readonly property bool showId: false
 
     readonly property color northPlayerMainColor: Qt.rgba(220 / 255, 0, 0, 1) // red
     readonly property color northPlayerDisabledPieceOutlineColor: Qt.rgba(170 / 255, 0, 0, 1)
@@ -25,7 +25,7 @@ Rectangle {
 
     width: uiScaler.px(50)
     height: uiScaler.px(50)
-    radius: 50 // circle
+    radius: 100 // circle
 
     readonly property bool isPlayerNorth: playerRole === 1
     readonly property string player: isPlayerNorth ? "NORTH" : "SOUTH"
